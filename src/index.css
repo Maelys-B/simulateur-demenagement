@@ -8,3 +8,63 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background-color: #f0f2f5;
 }
+
+.app-wrapper {
+  padding: 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.header-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.header-progression {
+  color: gray;
+  margin-top: 6px;
+}
+
+.progress-bar-track {
+  width: 400px;
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 99px;
+  margin-top: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #2563eb;
+  border-radius: 99px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 18px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-pdf {
+  background-color: #7c3aed;
+}
+
+.btn-reset {
+  background-color: #dc2626;
+}
