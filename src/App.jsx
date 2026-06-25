@@ -1,9 +1,12 @@
 import { useState } from 'react'
-
+import Navigation from './components/Navigation/Navigation'
 function App() {
   const [progression, setProgression] = useState(0)
+  const [ongletActif, setOngletActif] = useState('inventaire')
+
 
   return (
+    
     <div className="app-wrapper">
 
       <div className="header-card">
@@ -31,8 +34,9 @@ function App() {
             🔄 Réinitialiser
           </button>
         </div>
-
+      
       </div>
+      <Navigation ongletActif={ongletActif} setOngletActif={setOngletActif} />
     </div>
   )
 }
