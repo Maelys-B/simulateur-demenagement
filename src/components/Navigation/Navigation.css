@@ -1,0 +1,32 @@
+.nav-bar {
+  margin-top: 16px;
+  background-color: white;
+  border-radius: 16px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.nav-btn {
+  padding: 14px 0;
+  border: none;
+  background-color: transparent;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-btn:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.nav-btn.actif {
+  background-color: #2563eb;
+  color: white;
+}

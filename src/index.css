@@ -6,5 +6,79 @@
 
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #f0f2f5;
+  background-color: #f4f6fb;
+  min-height: 100vh;
+}
+
+.app-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.header-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+.header-progression {
+  color: #6b7280;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.progress-bar-track {
+  width: 340px;
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 99px;
+  margin-top: 10px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btn-pdf {
+  background-color: #7c3aed;
+}
+
+.btn-reset {
+  background-color: #ef4444;
 }
