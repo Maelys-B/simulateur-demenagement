@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import Navigation from './components/Navigation/Navigation'
+import Inventaire from './components/Inventaire/Inventaire'
+import Calculs from './components/Calculs/Calculs'
+import Comparaison from './components/Comparaison/Comparaison'
+import Checklist from './components/Checklist/Checklist'
 function App() {
   const [progression, setProgression] = useState(0)
   const [ongletActif, setOngletActif] = useState('inventaire')
@@ -37,6 +41,11 @@ function App() {
       
       </div>
       <Navigation ongletActif={ongletActif} setOngletActif={setOngletActif} />
+      {ongletActif === 'inventaire' && <Inventaire />}
+      {ongletActif === 'calculs' && <Calculs />}
+      {ongletActif === 'comparaison' && <Comparaison />}
+      {ongletActif === 'check-list' && <Checklist />}
+
     </div>
   )
 }

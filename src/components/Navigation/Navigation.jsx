@@ -8,7 +8,7 @@ function Navigation({ongletActif, setOngletActif}) {
             
             <button onClick={() => setOngletActif('inventaire')} className={ongletActif === 'inventaire' ? 'nav-btn actif' : 'nav-btn'}> Inventaire
             </button>
-            <button onClick={() => setOngletActif('calcul')} className={ongletActif === 'calcul' ? 'nav-btn actif' : 'nav-btn'}> Calcul
+            <button onClick={() => setOngletActif('calculs')} className={ongletActif === 'calculs' ? 'nav-btn actif' : 'nav-btn'}> Calculs
             </button>
             <button onClick={() => setOngletActif('comparaison')} className={ongletActif === 'comparaison' ? 'nav-btn actif' : 'nav-btn'}> Comparaison
             </button>

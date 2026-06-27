@@ -109,13 +109,12 @@ Avec la config ESLint par défaut de Vite (sans Airbnb), un test sur du code vol
 simulateur-demenagement/
 ├── src/
 │   ├── components/
-│   │   ├── Header.jsx                ✅ créé
 │   │   └── Navigation/
-│   │       ├── Navigation.jsx        🟡 en cours sur branche feature/navigation
-│   │       └── Navigation.css
-│   ├── App.jsx                        ✅ utilise Header + Navigation
-│   ├── App.css                        ⬜ vidé, non utilisé pour l'instant
-│   ├── index.css                      ✅ reset CSS global
+│   │       ├── Navigation.jsx        ✅ terminé
+│   │       └── Navigation.css        ✅ terminé
+│   ├── App.jsx                        ✅ utilise Navigation + header intégré
+│   ├── App.css                        🗑️ supprimé (était le CSS de démo Vite)
+│   ├── index.css                      ✅ styles globaux + composants header
 │   └── main.jsx
 ├── CLAUDE.md                          ← ce fichier
 ```
@@ -205,23 +204,24 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### ✅ Étape 2 — CSS global
 - [x] `index.css` : reset des marges (`* { margin: 0; padding: 0 }`)
-- [x] Compris la différence `index.css` (global) vs `App.css` (par composant, non utilisé ici)
-- [x] Décision : tous les styles en `style={{ }}` inline pour rester simple
+- [x] Compris la différence `index.css` (global) vs CSS par composant
+- [x] `App.css` supprimé (fichier de démo Vite, inutile)
+- [x] Styles inline remplacés par des classes CSS dans `index.css`
+- [x] Convention adoptée : un fichier CSS par composant dans son propre dossier (`Navigation/Navigation.css`)
 
 ### ✅ Étape 3 — Header en composant séparé
-- [x] Créé `src/components/Header.jsx`
-- [x] Compris les **props** : `App.jsx` passe `progression` à `<Header progression={progression} />`
-- [x] Header affiche : titre, progression, barre de progression, boutons PDF/Réinitialiser (visuel statique, pas encore fonctionnel)
+- [x] Header intégré directement dans `App.jsx` (pas de fichier séparé)
+- [x] Compris les **props** : `useState` pour `progression`
+- [x] Header affiche : titre, progression, barre de progression (dégradé), boutons PDF/Réinitialiser (visuel statique, pas encore fonctionnel)
 
-### 🟡 Étape 4 — Navigation (EN COURS — branche feature/navigation)
-- [x] Fichier `Navigation.jsx` créé (déplacé dans `components/Navigation/`)
-- [x] Importé et affiché dans `App.jsx`
-- [x] 3 commits faits sur la branche
-- [ ] Ajouter les 4 vrais boutons (Inventaire / Calculs / Comparaison / Check-list)
-- [ ] Gérer quel onglet est actif avec `useState` dans `App.jsx`
-- [ ] Passer `ongletActif` et `setOngletActif` en props à `Navigation`
-- [ ] Style dynamique : bouton actif en bleu, les autres transparents
-- [ ] Tester dans le navigateur que le changement d'onglet fonctionne
+### 🟡 Étape 4 — Navigation (EN COURS)
+- [x] Fichier `Navigation.jsx` créé dans `components/Navigation/`
+- [x] `Navigation.css` créé dans le même dossier, importé dans `Navigation.jsx`
+- [x] 4 boutons : Inventaire / Calculs / Comparaison / Check-list
+- [x] `useState` pour `ongletActif` dans `App.jsx` (valeur par défaut : `'inventaire'`)
+- [x] Props `ongletActif` et `setOngletActif` passées à `<Navigation />`
+- [x] Style dynamique : bouton actif en bleu via ternaire sur `className`
+- [x] CSS amélioré : ombres, transitions fluides, dégradé sur la barre de progression
 - [ ] Push + Pull Request + Merge dans `main`
 
 ### 🟡 Étape 4bis — Mise en place ESLint + Prettier (branche config/eslint-prettier)
@@ -318,6 +318,8 @@ demenagements (1) ──→ (N) checklist_items
 | **SPA** | Single Page Application — une seule page HTML, React simule les changements de page |
 | **Rendu conditionnel** | Afficher un composant ou un autre selon une condition (`if`, ternaire, etc.) |
 | **.map()** | Transformer un tableau de données en une liste de composants JSX |
+| **className dynamique** | Choisir une classe CSS selon une condition avec un ternaire : `className={condition ? 'classe-a' : 'classe-b'}` |
+| **CSS par composant** | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx` |
 
 ## 📚 Concepts Git appris (glossaire perso)
 
@@ -344,9 +346,9 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 🔜 Prochaine étape immédiate
 
-👉 Sur la branche `config/eslint-prettier` : installer les paquets ESLint Airbnb + Prettier, puis configurer `eslint.config.js` et `.prettierrc`.
+👉 **Étape 5 — Système de pages (SPA)** : créer les composants vides `Inventaire.jsx`, `Calculs.jsx`, `Comparaison.jsx`, `Checklist.jsx` et afficher le bon selon `ongletActif` (affichage conditionnel dans `App.jsx`).
 
-Ensuite reprendre `feature/navigation` : finir les 4 vrais boutons + `useState` de l'onglet actif.
+En parallèle : finir la branche `config/eslint-prettier` (ESLint Airbnb + Prettier).
 
 ---
 
