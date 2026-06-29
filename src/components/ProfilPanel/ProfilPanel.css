@@ -1,0 +1,63 @@
+.profil-panel {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px 32px;
+  margin-top: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profil-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profil-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profil-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.profil-field input,
+.profil-field select {
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.profil-field input:focus,
+.profil-field select:focus {
+  border-color: #2563eb;
+}
+
+.profil-field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.profil-field--checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
