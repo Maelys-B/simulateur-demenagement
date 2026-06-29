@@ -1,16 +1,18 @@
-import React from 'react'
-import './ProfilPanel.css'
-import {User, MapPin, Building, Car} from 'lucide-react'
+import { Building, Car, MapPin, User } from 'lucide-react';
+import './ProfilPanel.css';
 
 export default function ProfilPanel({ profil, setProfil }) {
   function handleChange(e) {
-    const { name, value, type, checked } = e.target
-    setProfil({ ...profil, [name]: type === 'checkbox' ? checked : value })
+    const { name, value, type, checked } = e.target;
+    setProfil({ ...profil, [name]: type === 'checkbox' ? checked : value });
   }
 
   return (
     <form className="profil-panel">
-      <h2 className="profil-title icon"> <User size={20}/> Mon profil</h2>
+      <h2 className="profil-title icon">
+        {' '}
+        <User size={20} /> Mon profil
+      </h2>
 
       <div className="profil-field">
         <label htmlFor="type">Type de déménagement</label>
@@ -21,7 +23,11 @@ export default function ProfilPanel({ profil, setProfil }) {
       </div>
 
       <div className="profil-field">
-        <label htmlFor="distance" className='icon'> <MapPin size={20}/>Distance (km)</label>
+        <label htmlFor="distance" className="icon">
+          {' '}
+          <MapPin size={20} />
+          Distance (km)
+        </label>
         <input
           id="distance"
           name="distance"
@@ -29,11 +35,15 @@ export default function ProfilPanel({ profil, setProfil }) {
           min="0"
           value={profil.distance}
           onChange={handleChange}
-          placeholder="ex : 50"/>
+          placeholder="ex : 50"
+        />
       </div>
 
       <div className="profil-field">
-        <label htmlFor="etage" className='icon'><Building size={20}/>Étage de départ</label>
+        <label htmlFor="etage" className="icon">
+          <Building size={20} />
+          Étage de départ
+        </label>
         <input
           id="etage"
           name="etage"
@@ -53,7 +63,10 @@ export default function ProfilPanel({ profil, setProfil }) {
           checked={profil.ascenseur}
           onChange={handleChange}
         />
-        <label htmlFor="ascenseur"  className='icon'><Building size={20}/>Ascenseur disponible</label>
+        <label htmlFor="ascenseur" className="icon">
+          <Building size={20} />
+          Ascenseur disponible
+        </label>
       </div>
 
       <div className="profil-field profil-field--checkbox">
@@ -64,8 +77,11 @@ export default function ProfilPanel({ profil, setProfil }) {
           checked={profil.parking}
           onChange={handleChange}
         />
-        <label htmlFor="parking"  className='icon'><Car size={20}/>Parking accessible</label>
+        <label htmlFor="parking" className="icon">
+          <Car size={20} />
+          Parking accessible
+        </label>
       </div>
     </form>
-  )
+  );
 }
