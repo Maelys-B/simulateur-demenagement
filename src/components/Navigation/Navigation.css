@@ -1,32 +1,36 @@
 .nav-bar {
-  margin-top: 16px;
-  background-color: white;
-  border-radius: 16px;
-  padding: 8px;
+  margin-top: var(--spacing-md);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--box-shadow);
 }
 
 .nav-btn {
   padding: 14px 0;
   border: none;
   background-color: transparent;
-  border-radius: 10px;
-  font-size: 15px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
   font-weight: 500;
-  color: #6b7280;
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
 }
 
 .nav-btn:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .nav-btn.actif {
-  background-color: #2563eb;
+  background-color: var(--color-primary);
   color: white;
 }

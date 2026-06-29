@@ -222,19 +222,22 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Props `ongletActif` et `setOngletActif` passées à `<Navigation />`
 - [x] Style dynamique : bouton actif en bleu via ternaire sur `className`
 - [x] CSS amélioré : ombres, transitions fluides, dégradé sur la barre de progression
-- [ ] Push + Pull Request + Merge dans `main`
+- [x] Push + Pull Request + Merge dans `main`
 
 ### 🟡 Étape 4bis — Mise en place ESLint + Prettier (branche config/eslint-prettier)
 - Voir section dédiée plus haut
 
-### ⬜ Étape 5 — Système de "pages" (SPA)
-- [ ] Comprendre l'affichage conditionnel selon `ongletActif`
-- [ ] Créer les composants vides : `Inventaire.jsx`, `Calculs.jsx`, `Comparaison.jsx`, `Checklist.jsx`
-- [ ] Afficher le bon composant selon l'onglet sélectionné
+### ✅ Étape 5 — Système de "pages" (SPA)
+- [x] Compris l'affichage conditionnel avec `&&`
+- [x] Créé les 4 composants vides dans leurs dossiers
+- [x] Affichage conditionnel dans `App.jsx` selon `ongletActif`
 
-### ⬜ Étape 6 — Panneau Profil (ProfilPanel.jsx)
-- [ ] Champs : type de profil, distance, étage, ascenseur, parking
-- [ ] State partagé entre tous les onglets (remonté dans `App.jsx`)
+### ✅ Étape 6 — Panneau Profil (ProfilPanel.jsx)
+- [x] Champs : type de déménagement, distance, étage, ascenseur, parking
+- [x] State `profil` remonté dans `App.jsx` et passé en props
+- [x] Mise en page grid : contenu principal à gauche, ProfilPanel fixe à droite
+- [x] Icônes lucide-react intégrées dans les labels
+- [x] Une seule fonction `handleChange` gère tous les types de champs
 
 ### ⬜ Étape 7 — Onglet Inventaire
 - [ ] Formulaire d'ajout de pièce
@@ -346,9 +349,7 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 🔜 Prochaine étape immédiate
 
-👉 **Étape 5 — Système de pages (SPA)** : créer les composants vides `Inventaire.jsx`, `Calculs.jsx`, `Comparaison.jsx`, `Checklist.jsx` et afficher le bon selon `ongletActif` (affichage conditionnel dans `App.jsx`).
-
-En parallèle : finir la branche `config/eslint-prettier` (ESLint Airbnb + Prettier).
+👉 **Étape 7 — Onglet Inventaire** : formulaire d'ajout de pièce, liste des pièces avec `.map()`, objets prédéfinis par pièce avec volumes, ajout/suppression d'objets.
 
 ---
 
