@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Truck, Download, Trash2 } from 'lucide-react'
 import Navigation from './components/Navigation/Navigation'
 import Inventaire from './components/Inventaire/Inventaire'
 import Calculs from './components/Calculs/Calculs'
@@ -24,7 +25,7 @@ function App() {
 
         <div>
           <h1 className="header-title">
-            🏠 Mon déménagement
+            <span className="icon"><Truck size={30} /> Mon déménagement</span>
           </h1>
           <p className="header-progression">
             Progression : {progression}%
@@ -39,10 +40,10 @@ function App() {
 
         <div className="header-actions">
           <button className="btn btn-pdf">
-            📥 Exporter en PDF
+            <span className="icon"><Download size={20} /> Exporter en PDF</span>
           </button>
           <button className="btn btn-reset">
-            🔄 Réinitialiser
+            <span className="icon"><Trash2 size={20} /> Réinitialiser</span>
           </button>
         </div>
       
