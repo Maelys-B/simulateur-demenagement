@@ -7,6 +7,7 @@ import Comparaison from './components/Comparaison/Comparaison'
 import Checklist from './components/Checklist/Checklist'
 import ProfilPanel from './components/ProfilPanel/ProfilPanel'
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [progression, setProgression] = useState(0)
   const [ongletActif, setOngletActif] = useState('inventaire')
   const [profil, setProfil] = useState({
