@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import {Package} from 'lucide-react'
+import {Package, Plus} from 'lucide-react'
 import './Inventaire.css'
-import { isFunctionDeclaration } from 'typescript';
 
 export default function Inventaire() {
   const [value, setValue] = useState('');
   const [pieces, setPieces] = useState([])
-
+  function ajouterPiece(e) {
+    e.preventDefault()
+    if(value !== ''){
+      const nouvellePiece = { id: Date.now(), nom: value, objets: [] };
+      setPieces([nouvellePiece, ...pieces ]);
+    }
+  }
   return (
+    <form onSubmit={ajouterPiece}>
   <div className="inv-ajout">
         <label htmlFor="pièce" className="icon">
           <Package size={20}/>Ajouter une pièce
@@ -21,8 +27,12 @@ export default function Inventaire() {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Nom de la pièce (ex: Salon, Chambre...)"
         />
-        <button className='btn'>+ Ajouter</button>
+        <button className='btn icon' type="submit"><Plus size={16}/>Ajouter</button>
         </div>
-      </div>
+  </div>
+  <div>
+    {pieces.map((piece) => <div key={piece.id}>{piece.nom}</div>)}
+  </div>
+</form>
       );
 }
