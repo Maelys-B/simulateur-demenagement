@@ -14,13 +14,11 @@
   border: none;
   background-color: transparent;
   border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: 500;
-  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
   cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;

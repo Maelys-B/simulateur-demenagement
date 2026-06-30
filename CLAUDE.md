@@ -92,15 +92,13 @@ Avec la config ESLint par défaut de Vite (sans Airbnb), un test sur du code vol
 
 - [x] Test ESLint réalisé (config par défaut, avant Airbnb)
 - [x] Fichier de test supprimé
-- [ ] Branche `config/eslint-prettier` créée
-- [ ] Paquets installés : `eslint-config-airbnb`, `eslint-config-airbnb-base`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `prettier`, `eslint-config-prettier`, `eslint-plugin-prettier`
-- [ ] `eslint.config.js` adapté pour intégrer Airbnb
-- [ ] `.prettierrc` créé
-- [ ] `.prettierignore` créé
-- [ ] `npx eslint src` relancé → liste des erreurs à corriger
-- [ ] Toutes les erreurs corrigées (y compris les 2 déjà identifiées)
-- [ ] VS Code configuré pour formater avec Prettier à la sauvegarde
-- [ ] Commit + push + Pull Request + merge dans `main`
+- [x] Branche `config/eslint-prettier` créée
+- [x] Paquets installés : `eslint-config-airbnb`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `prettier`, `eslint-config-prettier`, `eslint-plugin-prettier`
+- [x] `eslint.config.js` adapté pour intégrer Airbnb
+- [x] `.prettierrc` créé
+- [x] Toutes les erreurs corrigées (imports inutiles, `setProgression` non utilisé, style reformaté)
+- [x] VS Code configuré pour formater avec Prettier à la sauvegarde
+- [x] Commit + push + Pull Request + merge dans `main`
 
 ### Règle pour la suite du projet
 
@@ -241,9 +239,9 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] CSS amélioré : ombres, transitions fluides, dégradé sur la barre de progression
 - [x] Push + Pull Request + Merge dans `main`
 
-### 🟡 Étape 4bis — Mise en place ESLint + Prettier (branche config/eslint-prettier)
+### ✅ Étape 4bis — Mise en place ESLint + Prettier (TERMINÉE)
 
-- Voir section dédiée plus haut
+- Voir section dédiée plus haut — tous les points cochés, mergé dans `main`
 
 ### ✅ Étape 5 — Système de "pages" (SPA)
 

@@ -65,11 +65,9 @@ body {
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
   font-weight: 500;
-  transition:
-    opacity 0.2s,
-    transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
 .btn:hover {

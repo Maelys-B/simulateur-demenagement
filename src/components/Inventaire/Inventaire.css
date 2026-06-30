@@ -1,0 +1,36 @@
+.inv-ajout {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) 32px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-weight: 500;
+  font-size: var(--font-size-lg);
+}
+
+.inv-ajout input {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.inv-ajout input:focus{
+  border-color: var(--color-primary);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn{
+    background-color: var(--color-primary);
+}
