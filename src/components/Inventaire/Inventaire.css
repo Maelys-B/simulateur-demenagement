@@ -37,4 +37,5 @@
 .btn-blue{
     background-color: var(--color-primary);
     font-size: var(--font-size-md) !important; 
+    padding: 10px 22px !important;
 }
