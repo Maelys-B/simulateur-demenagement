@@ -13,26 +13,39 @@ export default function Inventaire() {
     }
   }
   return (
-    <form onSubmit={ajouterPiece}>
-  <div className="inv-ajout">
-        <label htmlFor="pièce" className="icon">
-          <Package size={20}/>Ajouter une pièce
-        </label>
+  <form onSubmit={ajouterPiece}>
+
+      <div className="inv-ajout">
+          <label htmlFor="pièce" className="icon">
+            <Package size={20}/>Ajouter une pièce
+          </label>
         <div className='grid'>
-        <input
-          id="pièce"
-          name="pièce"
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Nom de la pièce (ex: Salon, Chambre...)"
-        />
-        <button className='btn icon' type="submit"><Plus size={16}/>Ajouter</button>
+          <input
+            id="pièce"
+            name="pièce"
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Nom de la pièce (ex: Salon, Chambre...)"
+          />
+          <button className='btn btn-blue icon' type="submit"><Plus size={16}/>Ajouter</button>
         </div>
-  </div>
-  <div>
-    {pieces.map((piece) => <div key={piece.id}>{piece.nom}</div>)}
-  </div>
-</form>
+      </div>
+    
+      <label htmlFor="type">
+        {pieces.map((piece) => <div key={piece.id}>
+          <div className='inv-ajout'>
+            {piece.nom}
+            <div className='grid'>
+              <select id="type" name="type">
+                <option value="solo">Solo (je fais moi-même)</option>
+                <option value="pro">Professionnel</option>
+              </select>
+              <button className='btn btn-blue icon' type="submit"><Plus size={16}/>Ajouter</button>
+            </div>
+          </div>
+        </div>
+      )}</label>
+  </form>
       );
 }

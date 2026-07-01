@@ -65,7 +65,7 @@ body {
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   font-weight: 500;
   transition: opacity 0.2s, transform 0.2s;
   justify-content: center;
@@ -88,7 +88,7 @@ body {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   align-items: start;
 }
 

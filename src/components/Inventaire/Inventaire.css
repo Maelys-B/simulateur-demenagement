@@ -8,8 +8,10 @@
   gap: 20px;
   font-weight: 500;
   font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
+.inv-ajout select,
 .inv-ajout input {
   padding: 10px 14px;
   border: 1px solid var(--color-border);
@@ -20,6 +22,7 @@
   transition: border-color 0.2s;
 }
 
+.inv-ajout select,
 .inv-ajout input:focus{
   border-color: var(--color-primary);
 }
@@ -31,6 +34,7 @@
     gap: 10px;
 }
 
-.btn{
+.btn-blue{
     background-color: var(--color-primary);
+    font-size: var(--font-size-md) !important; 
 }
