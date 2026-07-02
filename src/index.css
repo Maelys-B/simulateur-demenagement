@@ -67,7 +67,9 @@ body {
   cursor: pointer;
   font-size: var(--font-size-base);
   font-weight: 500;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   justify-content: center;
 }
 

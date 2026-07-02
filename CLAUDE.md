@@ -356,16 +356,16 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 📚 Méthodes JavaScript utilisées
 
-| Méthode | Ce qu'elle fait |
-|---|---|
-| **.map()** | Parcourt un tableau et retourne un nouveau tableau transformé — en React : transforme des données en JSX |
-| **.filter()** | Parcourt un tableau et retourne un nouveau tableau avec seulement les éléments qui passent la condition |
-| **spread `...`** | Copie tous les éléments d'un tableau ou d'un objet : `[...pieces, nouvelle]` ajoute sans écraser |
+| Méthode                  | Ce qu'elle fait                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **.map()**               | Parcourt un tableau et retourne un nouveau tableau transformé — en React : transforme des données en JSX    |
+| **.filter()**            | Parcourt un tableau et retourne un nouveau tableau avec seulement les éléments qui passent la condition     |
+| **spread `...`**         | Copie tous les éléments d'un tableau ou d'un objet : `[...pieces, nouvelle]` ajoute sans écraser            |
 | **`e.preventDefault()`** | Empêche le comportement par défaut du navigateur (ex: rechargement de page à la soumission d'un formulaire) |
-| **`Date.now()`** | Retourne le timestamp actuel en ms — utilisé pour générer un id unique à chaque ajout |
-| **déstructuration `{}`** | Extrait des propriétés d'un objet : `const { name, value } = e.target` |
-| **ternaire `? :`** | Condition en une ligne : `condition ? valeurSiVrai : valeurSiFaux` |
-| **`&&` conditionnel** | Affiche quelque chose seulement si la condition est vraie : `{condition && <Composant />}` |
+| **`Date.now()`**         | Retourne le timestamp actuel en ms — utilisé pour générer un id unique à chaque ajout                       |
+| **déstructuration `{}`** | Extrait des propriétés d'un objet : `const { name, value } = e.target`                                      |
+| **ternaire `? :`**       | Condition en une ligne : `condition ? valeurSiVrai : valeurSiFaux`                                          |
+| **`&&` conditionnel**    | Affiche quelque chose seulement si la condition est vraie : `{condition && <Composant />}`                  |
 
 ## 📚 Concepts Git appris (glossaire perso)
 

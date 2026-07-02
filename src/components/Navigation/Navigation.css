@@ -18,7 +18,9 @@
   font-weight: 600;
   color: var(--color-text);
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
