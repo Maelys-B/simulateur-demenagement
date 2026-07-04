@@ -10,6 +10,7 @@ function App() {
   // eslint-disable-next-line no-unused-vars
   const [progression, setProgression] = useState(0);
   const [ongletActif, setOngletActif] = useState('inventaire');
+  const [pieces, setPieces] = useState([]);
   const [profil, setProfil] = useState({
     type: 'solo',
     distance: '',
@@ -49,12 +50,11 @@ function App() {
       <Navigation ongletActif={ongletActif} setOngletActif={setOngletActif} />
       <div className="app-content">
         <div className="app-main">
-          {ongletActif === 'inventaire' && <Inventaire />}
+          {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
           {ongletActif === 'calculs' && <Calculs />}
           {ongletActif === 'comparaison' && <Comparaison />}
           {ongletActif === 'check-list' && <Checklist />}
         </div>
-
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>
     </div>

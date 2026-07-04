@@ -193,8 +193,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `feature/navigation` → 3 commits, pas encore mergée (en attente de finir les 4 boutons + useState onglet actif)
-- `config/eslint-prettier` → en cours de création (installation ESLint Airbnb + Prettier)
+- `feature/inventaire` → en cours, pas encore mergée
 
 ---
 
@@ -257,17 +256,19 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Icônes lucide-react intégrées dans les labels
 - [x] Une seule fonction `handleChange` gère tous les types de champs
 
-### 🟡 Étape 7 — Onglet Inventaire (EN COURS)
+### ✅ Étape 7 — Onglet Inventaire (TERMINÉE)
 
 - [x] Formulaire d'ajout de pièce avec input + bouton
 - [x] Liste des pièces affichée avec `.map()` et `key`
-- [ ] Remise à zéro de l'input après ajout (`setValue('')`)
-- [ ] Liste des objets prédéfinis avec volumes dans un `<select>`
-- [ ] Champ quantité à côté du select
-- [ ] Ajout d'un objet dans une pièce → apparaît en dessous avec nom, quantité et volume
-- [ ] Bouton supprimer sur chaque objet (`.filter()`)
-- [ ] Bouton supprimer sur chaque pièce (`.filter()`)
-- [ ] Remonter le state `pieces` dans `App.jsx` pour que les données persistent au changement d'onglet
+- [x] Remise à zéro de l'input après ajout (`setValue('')`)
+- [x] Liste des objets prédéfinis avec volumes dans un `<select>` + placeholder "Sélectionner un objet"
+- [x] Champ quantité à côté du select
+- [x] Ajout d'un objet dans une pièce → apparaît en dessous avec nom, quantité et volume
+- [x] Bouton supprimer sur chaque objet (`.filter()`)
+- [x] Bouton supprimer sur chaque pièce (`.filter()`)
+- [x] Bouton "Ajouter" grisé tant qu'aucun objet n'est sélectionné (`disabled={!objetSelectionne}`)
+- [x] State `pieces` remonté dans `App.jsx` — données persistantes au changement d'onglet
+- [x] CSS : classe `.inv-input` partagée, grilles `inv-grid` et `inv-piece-add`, cartes pièces
 
 ### ⬜ Étape 8 — Onglet Calculs
 

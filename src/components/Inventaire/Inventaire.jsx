@@ -41,10 +41,9 @@ const OBJETS_PREDEFINIS = [
   { nom: 'Étagère', volume: 0.8 },
 ];
 
-export default function Inventaire() {
+export default function Inventaire({pieces, setPieces}) {
   const [value, setValue] = useState('');
-  const [pieces, setPieces] = useState([]);
-  const [objetSelectionne, setObjetSelectionne] = useState(OBJETS_PREDEFINIS[0]);
+  const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
 
   function ajouterPiece(e) {
@@ -68,6 +67,20 @@ export default function Inventaire() {
       return piece;
     });
 
+    setPieces(nouvellesPieces);
+  }
+
+  function supprimerPiece(pieceId) {
+    setPieces(pieces.filter((piece) => piece.id !== pieceId))
+  }
+
+  function supprimerObjet(pieceId, objetNom) {
+    const nouvellesPieces = pieces.map((piece) => {
+      if (piece.id === pieceId) {
+      return { ...piece, objets: piece.objets.filter((objet) => objet.nom !== objetNom) };
+    }
+      return piece;
+    });
     setPieces(nouvellesPieces);
   }
   return (
@@ -98,7 +111,7 @@ export default function Inventaire() {
         <div key={piece.id} className="inv-piece">
           <div className="inv-piece-header">
             <h3>{piece.nom}</h3>
-            <button className="btn-icon-danger" type="button">
+            <button className="btn-icon-danger" type="button" onClick={() => supprimerPiece(piece.id)}>
               <Trash2 size={18} />
             </button>
           </div>
@@ -106,12 +119,15 @@ export default function Inventaire() {
           <div className="inv-piece-add">
             <select
               className="inv-input"
-              value={objetSelectionne.nom}
+              value={objetSelectionne ? objetSelectionne.nom : ''}
               onChange={(e) => {
-                const objet = OBJETS_PREDEFINIS.find((o) => o.nom === e.target.value);
+                const objet = OBJETS_PREDEFINIS.find((o) => o.nom === e.target.value) ?? null;
                 setObjetSelectionne(objet);
               }}
             >
+              <option value="" disabled>
+                Sélectionner un objet
+              </option>
               {OBJETS_PREDEFINIS.map((objet) => (
                 <option key={objet.nom} value={objet.nom}>
                   {objet.nom} ({objet.volume}m³)
@@ -128,6 +144,7 @@ export default function Inventaire() {
             <button
               className="btn btn-blue icon"
               type="button"
+              disabled={!objetSelectionne}
               onClick={() => ajouterObjet(piece.id)}
             >
               <Plus size={16} /> Ajouter
@@ -141,7 +158,7 @@ export default function Inventaire() {
                 <span>× {objet.quantite}</span>
                 <span className="inv-objet-volume">({objet.volume}m³)</span>
               </div>
-              <button className="btn-icon-danger" type="button">
+              <button className="btn-icon-danger" type="button" onClick={() => supprimerObjet(piece.id, objet.nom)}>
                 <Trash2 size={16} />
               </button>
             </div>

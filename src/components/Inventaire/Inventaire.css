@@ -11,7 +11,6 @@
   margin-bottom: var(--spacing-md);
 }
 
-/* Classe commune pour tous les inputs/selects */
 .inv-input {
   padding: 10px 14px;
   border: 1px solid var(--color-border);
@@ -28,7 +27,7 @@
 
 .inv-grid {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 130px;
   align-items: center;
   gap: 10px;
 }
