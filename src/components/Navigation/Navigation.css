@@ -1,5 +1,5 @@
 .nav-bar {
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   background-color: var(--color-bg-card);
   border-radius: var(--radius-lg);
   padding: var(--spacing-sm);
@@ -14,9 +14,9 @@
   border: none;
   background-color: transparent;
   border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: 500;
-  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
   cursor: pointer;
   transition:
     background-color 0.2s,

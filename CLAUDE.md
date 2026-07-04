@@ -92,15 +92,13 @@ Avec la config ESLint par défaut de Vite (sans Airbnb), un test sur du code vol
 
 - [x] Test ESLint réalisé (config par défaut, avant Airbnb)
 - [x] Fichier de test supprimé
-- [ ] Branche `config/eslint-prettier` créée
-- [ ] Paquets installés : `eslint-config-airbnb`, `eslint-config-airbnb-base`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `prettier`, `eslint-config-prettier`, `eslint-plugin-prettier`
-- [ ] `eslint.config.js` adapté pour intégrer Airbnb
-- [ ] `.prettierrc` créé
-- [ ] `.prettierignore` créé
-- [ ] `npx eslint src` relancé → liste des erreurs à corriger
-- [ ] Toutes les erreurs corrigées (y compris les 2 déjà identifiées)
-- [ ] VS Code configuré pour formater avec Prettier à la sauvegarde
-- [ ] Commit + push + Pull Request + merge dans `main`
+- [x] Branche `config/eslint-prettier` créée
+- [x] Paquets installés : `eslint-config-airbnb`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `prettier`, `eslint-config-prettier`, `eslint-plugin-prettier`
+- [x] `eslint.config.js` adapté pour intégrer Airbnb
+- [x] `.prettierrc` créé
+- [x] Toutes les erreurs corrigées (imports inutiles, `setProgression` non utilisé, style reformaté)
+- [x] VS Code configuré pour formater avec Prettier à la sauvegarde
+- [x] Commit + push + Pull Request + merge dans `main`
 
 ### Règle pour la suite du projet
 
@@ -195,8 +193,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `feature/navigation` → 3 commits, pas encore mergée (en attente de finir les 4 boutons + useState onglet actif)
-- `config/eslint-prettier` → en cours de création (installation ESLint Airbnb + Prettier)
+- `feature/inventaire` → en cours, pas encore mergée
 
 ---
 
@@ -241,9 +238,9 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] CSS amélioré : ombres, transitions fluides, dégradé sur la barre de progression
 - [x] Push + Pull Request + Merge dans `main`
 
-### 🟡 Étape 4bis — Mise en place ESLint + Prettier (branche config/eslint-prettier)
+### ✅ Étape 4bis — Mise en place ESLint + Prettier (TERMINÉE)
 
-- Voir section dédiée plus haut
+- Voir section dédiée plus haut — tous les points cochés, mergé dans `main`
 
 ### ✅ Étape 5 — Système de "pages" (SPA)
 
@@ -259,12 +256,19 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Icônes lucide-react intégrées dans les labels
 - [x] Une seule fonction `handleChange` gère tous les types de champs
 
-### ⬜ Étape 7 — Onglet Inventaire
+### ✅ Étape 7 — Onglet Inventaire (TERMINÉE)
 
-- [ ] Formulaire d'ajout de pièce
-- [ ] Liste des pièces ajoutées (`.map()`)
-- [ ] Objets prédéfinis par pièce avec volumes
-- [ ] Ajout/suppression d'objets
+- [x] Formulaire d'ajout de pièce avec input + bouton
+- [x] Liste des pièces affichée avec `.map()` et `key`
+- [x] Remise à zéro de l'input après ajout (`setValue('')`)
+- [x] Liste des objets prédéfinis avec volumes dans un `<select>` + placeholder "Sélectionner un objet"
+- [x] Champ quantité à côté du select
+- [x] Ajout d'un objet dans une pièce → apparaît en dessous avec nom, quantité et volume
+- [x] Bouton supprimer sur chaque objet (`.filter()`)
+- [x] Bouton supprimer sur chaque pièce (`.filter()`)
+- [x] Bouton "Ajouter" grisé tant qu'aucun objet n'est sélectionné (`disabled={!objetSelectionne}`)
+- [x] State `pieces` remonté dans `App.jsx` — données persistantes au changement d'onglet
+- [x] CSS : classe `.inv-input` partagée, grilles `inv-grid` et `inv-piece-add`, cartes pièces
 
 ### ⬜ Étape 8 — Onglet Calculs
 
@@ -350,6 +354,19 @@ demenagements (1) ──→ (N) checklist_items
 | **.map()**              | Transformer un tableau de données en une liste de composants JSX                                                |
 | **className dynamique** | Choisir une classe CSS selon une condition avec un ternaire : `className={condition ? 'classe-a' : 'classe-b'}` |
 | **CSS par composant**   | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx`               |
+
+## 📚 Méthodes JavaScript utilisées
+
+| Méthode                  | Ce qu'elle fait                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **.map()**               | Parcourt un tableau et retourne un nouveau tableau transformé — en React : transforme des données en JSX    |
+| **.filter()**            | Parcourt un tableau et retourne un nouveau tableau avec seulement les éléments qui passent la condition     |
+| **spread `...`**         | Copie tous les éléments d'un tableau ou d'un objet : `[...pieces, nouvelle]` ajoute sans écraser            |
+| **`e.preventDefault()`** | Empêche le comportement par défaut du navigateur (ex: rechargement de page à la soumission d'un formulaire) |
+| **`Date.now()`**         | Retourne le timestamp actuel en ms — utilisé pour générer un id unique à chaque ajout                       |
+| **déstructuration `{}`** | Extrait des propriétés d'un objet : `const { name, value } = e.target`                                      |
+| **ternaire `? :`**       | Condition en une ligne : `condition ? valeurSiVrai : valeurSiFaux`                                          |
+| **`&&` conditionnel**    | Affiche quelque chose seulement si la condition est vraie : `{condition && <Composant />}`                  |
 
 ## 📚 Concepts Git appris (glossaire perso)
 

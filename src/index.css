@@ -60,7 +60,7 @@ body {
 }
 
 .btn {
-  padding: 10px 22px;
+  padding: 12px 22px;
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -70,11 +70,18 @@ body {
   transition:
     opacity 0.2s,
     transform 0.2s;
+  justify-content: center;
 }
 
 .btn:hover {
   opacity: 0.85;
   transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .btn-pdf {
@@ -89,7 +96,7 @@ body {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   align-items: start;
 }
 
