@@ -51,7 +51,7 @@ function App() {
       <div className="app-content">
         <div className="app-main">
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
-          {ongletActif === 'calculs' && <Calculs />}
+          {ongletActif === 'calculs' && <Calculs pieces={pieces}/>}
           {ongletActif === 'comparaison' && <Comparaison />}
           {ongletActif === 'check-list' && <Checklist />}
         </div>
