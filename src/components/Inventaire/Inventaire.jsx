@@ -56,10 +56,13 @@ export default function Inventaire({pieces, setPieces}) {
   }
   function ajouterObjet(pieceId) {
     const nouvelObjet = {
+      id: Date.now(),
       nom: objetSelectionne.nom,
       volume: objetSelectionne.volume,
       quantite: quantite,
     };
+    setObjetSelectionne(null);
+    
     const nouvellesPieces = pieces.map((piece) => {
       if (piece.id === pieceId) {
         return { ...piece, objets: [...piece.objets, nouvelObjet] };
@@ -74,10 +77,10 @@ export default function Inventaire({pieces, setPieces}) {
     setPieces(pieces.filter((piece) => piece.id !== pieceId))
   }
 
-  function supprimerObjet(pieceId, objetNom) {
+  function supprimerObjet(pieceId, objetID) {
     const nouvellesPieces = pieces.map((piece) => {
       if (piece.id === pieceId) {
-      return { ...piece, objets: piece.objets.filter((objet) => objet.nom !== objetNom) };
+      return { ...piece, objets: piece.objets.filter((objet) => objet.id !== objetID) };
     }
       return piece;
     });
@@ -152,13 +155,13 @@ export default function Inventaire({pieces, setPieces}) {
           </div>
 
           {piece.objets.map((objet) => (
-            <div key={objet.nom} className="inv-objet">
+            <div key={objet.id} className="inv-objet">
               <div className="inv-objet-info">
                 <strong>{objet.nom}</strong>
                 <span>× {objet.quantite}</span>
                 <span className="inv-objet-volume">({objet.volume}m³)</span>
               </div>
-              <button className="btn-icon-danger" type="button" onClick={() => supprimerObjet(piece.id, objet.nom)}>
+              <button className="btn-icon-danger" type="button" onClick={() => supprimerObjet(piece.id, objet.id)}>
                 <Trash2 size={16} />
               </button>
             </div>
