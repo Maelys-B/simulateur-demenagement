@@ -85,9 +85,9 @@ export default function Inventaire({pieces, setPieces}) {
   }
   return (
     <form onSubmit={ajouterPiece}>
-      <div className="inv-ajout">
+      <div className="card inv-ajout">
         <label htmlFor="pièce" className="icon">
-          <Package size={20} />
+          <Package size={22} />
           Ajouter une pièce
         </label>
         <div className="inv-grid">
@@ -108,7 +108,7 @@ export default function Inventaire({pieces, setPieces}) {
       </div>
 
       {pieces.map((piece) => (
-        <div key={piece.id} className="inv-piece">
+        <div key={piece.id} className="card inv-piece">
           <div className="inv-piece-header">
             <h3>{piece.nom}</h3>
             <button className="btn-icon-danger" type="button" onClick={() => supprimerPiece(piece.id)}>
