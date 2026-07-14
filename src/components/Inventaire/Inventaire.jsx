@@ -116,6 +116,7 @@ export default function Inventaire({pieces, setPieces}) {
       quantite: quantite,
     };
     setObjetSelectionne(null);
+    setQuantite(1);
     
     const nouvellesPieces = pieces.map((piece) => {
       if (piece.id === pieceId) {
@@ -135,6 +136,7 @@ export default function Inventaire({pieces, setPieces}) {
       quantite: quantiteEmballer,
     };
     setObjetAEmballerSelectionne(null);
+    setQuantiteEmballer(1) ;
     
     const nouvellesPieces = pieces.map((piece) => {
       if (piece.id === pieceId) {
@@ -245,6 +247,56 @@ export default function Inventaire({pieces, setPieces}) {
                 <span className="inv-objet-volume">({objet.volume}m³)</span>
               </div>
               <button className="btn-icon-danger" type="button" onClick={() => supprimerObjet(piece.id, objet.id)}>
+                <Trash2 size={16} />
+              </button>
+            </div>
+          ))}
+
+          <div className="inv-piece-add">
+            <select
+              className="inv-input"
+              value={objetAEmballerSelectionne ? objetAEmballerSelectionne.nom : ''}
+              onChange={(e) => {
+                const objet = OBJETS_A_EMBALLER.find((o) => o.nom === e.target.value) ?? null;
+                setObjetAEmballerSelectionne(objet);
+              }}
+            >
+              <option value="" disabled>
+                Sélectionner un objet à emballer
+              </option>
+              {OBJETS_A_EMBALLER.map((objet) => (
+                <option key={objet.nom} value={objet.nom}>
+                  {objet.nom} ({objet.volume}m³)
+                </option>
+              ))}
+            </select>
+            <input
+              type="number"
+              min="1"
+              className="inv-input"
+              value={quantiteEmballer}
+              onChange={(e) => setQuantiteEmballer(Number(e.target.value))}
+            />
+            <button
+              className="btn btn-blue icon"
+              type="button"
+              disabled={!objetAEmballerSelectionne}
+              onClick={() => ajouterObjetAEmballer(piece.id)}
+            >
+              <Plus size={16} /> Ajouter
+            </button>
+
+          </div>
+
+
+          {piece.objetsAEmballer.map((objet) => (
+            <div key={objet.id} className="inv-objet">
+              <div className="inv-objet-info">
+                <strong>{objet.nom}</strong>
+                <span>× {objet.quantite}</span>
+                <span className="inv-objet-volume">({objet.volume}m³)</span>
+              </div>
+              <button className="btn-icon-danger" type="button" onClick={() => supprimerObjetAEmballer(piece.id, objet.id)}>
                 <Trash2 size={16} />
               </button>
             </div>
