@@ -1,4 +1,4 @@
-import { Package, Plus, Trash2 } from 'lucide-react';
+import { Package, Plus, SpellCheck2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import './Inventaire.css';
 
@@ -41,15 +41,69 @@ const OBJETS_PREDEFINIS = [
   { nom: 'Étagère', volume: 0.8 },
 ];
 
+const OBJETS_A_EMBALLER = [
+  { nom: 'Assiette', volume: 0.0025, carton: 'petit' },
+  { nom: 'Bol / Saladier', volume: 0.003, carton: 'petit' },
+  { nom: 'Verre', volume: 0.0008, carton: 'petit' },
+  { nom: 'Tasse / Mug', volume: 0.0012, carton: 'petit' },
+  { nom: 'Couverts (lot de 6)', volume: 0.0015, carton: 'petit' },
+  { nom: 'Livre', volume: 0.0015, carton: 'petit' },
+  { nom: 'Magazine / BD', volume: 0.001, carton: 'petit' },
+  { nom: 'Classeur / Dossier', volume: 0.004, carton: 'petit' },
+  { nom: 'DVD / CD / Jeu vidéo', volume: 0.0004, carton: 'petit' },
+  { nom: 'Bouteille (vin, alcool)', volume: 0.0015, carton: 'petit' },
+  { nom: 'Conserve / Bocal', volume: 0.0008, carton: 'petit' },
+  { nom: 'Outil à main (marteau, tournevis...)', volume: 0.001, carton: 'petit' },
+  { nom: 'Cadre photo', volume: 0.002, carton: 'petit' },
+  { nom: 'Vase', volume: 0.005, carton: 'petit' },
+
+  { nom: 'Casserole', volume: 0.008, carton: 'standard' },
+  { nom: 'Poêle', volume: 0.006, carton: 'standard' },
+  { nom: 'Cocotte / Faitout', volume: 0.012, carton: 'standard' },
+  { nom: 'Petit électroménager (grille-pain, mixeur...)', volume: 0.015, carton: 'standard' },
+  { nom: 'Cafetière / Bouilloire', volume: 0.01, carton: 'standard' },
+  { nom: 'Boîte de rangement', volume: 0.02, carton: 'standard' },
+  { nom: 'Bibelot / Objet déco', volume: 0.004, carton: 'standard' },
+  { nom: 'Jouet', volume: 0.006, carton: 'standard' },
+  { nom: 'Peluche', volume: 0.008, carton: 'standard' },
+  { nom: 'Chaussures (paire)', volume: 0.006, carton: 'standard' },
+  { nom: 'Sac à main', volume: 0.008, carton: 'standard' },
+  { nom: 'Produit de salle de bain', volume: 0.0015, carton: 'standard' },
+  { nom: 'Serviette de bain', volume: 0.005, carton: 'standard' },
+  { nom: 'Plante (petite, en pot)', volume: 0.01, carton: 'standard' },
+  { nom: 'Câbles / Chargeurs (lot)', volume: 0.003, carton: 'standard' },
+  { nom: 'Clavier / Souris', volume: 0.004, carton: 'standard' },
+  { nom: 'Petit appareil électronique', volume: 0.005, carton: 'standard' },
+
+  { nom: 'Vêtement plié (t-shirt, pantalon...)', volume: 0.002, carton: 'grand' },
+  { nom: 'Pull / Gilet épais', volume: 0.004, carton: 'grand' },
+  { nom: 'Manteau / Veste', volume: 0.008, carton: 'grand' },
+  { nom: 'Drap / Housse de couette', volume: 0.006, carton: 'grand' },
+  { nom: 'Couverture / Plaid', volume: 0.012, carton: 'grand' },
+  { nom: 'Couette', volume: 0.04, carton: 'grand' },
+  { nom: 'Oreiller', volume: 0.015, carton: 'grand' },
+  { nom: 'Coussin', volume: 0.01, carton: 'grand' },
+  { nom: 'Rideau', volume: 0.008, carton: 'grand' },
+  { nom: 'Nappe / Linge de table', volume: 0.003, carton: 'grand' },
+  { nom: 'Sac de sport', volume: 0.02, carton: 'grand' },
+  { nom: 'Abat-jour', volume: 0.02, carton: 'grand' },
+
+  { nom: 'Vêtement sur cintre (chemise, robe...)', volume: 0.008, carton: 'penderie' },
+  { nom: 'Costume / Tailleur', volume: 0.015, carton: 'penderie' },
+  { nom: 'Manteau long sur cintre', volume: 0.02, carton: 'penderie' },
+]
+
 export default function Inventaire({pieces, setPieces}) {
   const [value, setValue] = useState('');
   const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
+  const [objetAEmballerSelectionne, setObjetAEmballerSelectionne] = useState(null);
+  const [quantiteEmballer, setQuantiteEmballer] = useState(1);
 
   function ajouterPiece(e) {
     e.preventDefault();
     if (value !== '') {
-      const nouvellePiece = { id: Date.now(), nom: value, objets: [] };
+      const nouvellePiece = { id: Date.now(), nom: value, objets: [], objetsAEmballer: [] };
       setPieces([nouvellePiece, ...pieces]);
       setValue('');
     }
@@ -73,6 +127,24 @@ export default function Inventaire({pieces, setPieces}) {
     setPieces(nouvellesPieces);
   }
 
+  function ajouterObjetAEmballer(pieceId) {
+    const nouvelObjetAEmballer = {
+      id: Date.now(),
+      nom: objetAEmballerSelectionne.nom,
+      volume: objetAEmballerSelectionne.volume,
+      quantite: quantiteEmballer,
+    };
+    setObjetAEmballerSelectionne(null);
+    
+    const nouvellesPieces = pieces.map((piece) => {
+      if (piece.id === pieceId) {
+        return { ...piece, objetsAEmballer: [...piece.objetsAEmballer, nouvelObjetAEmballer] };
+      }
+      return piece;
+    });
+
+    setPieces(nouvellesPieces);
+  }
   function supprimerPiece(pieceId) {
     setPieces(pieces.filter((piece) => piece.id !== pieceId))
   }
@@ -86,6 +158,17 @@ export default function Inventaire({pieces, setPieces}) {
     });
     setPieces(nouvellesPieces);
   }
+
+  function supprimerObjetAEmballer(pieceId, objetID) {
+    const nouvellesPieces = pieces.map((piece) => {
+      if (piece.id === pieceId) {
+      return { ...piece, objetsAEmballer: piece.objetsAEmballer.filter((objet) => objet.id !== objetID) };
+    }
+      return piece;
+    });
+    setPieces(nouvellesPieces);
+  }
+  
   return (
     <form onSubmit={ajouterPiece}>
       <div className="card inv-ajout">
