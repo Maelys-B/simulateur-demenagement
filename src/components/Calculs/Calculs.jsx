@@ -1,4 +1,4 @@
-import { Clock, Truck, Users } from 'lucide-react';
+import { Package, Clock, Truck, Users } from 'lucide-react';
 import './Calculs.css';
 
 export default function Calculs({ pieces, profil }) {
@@ -44,37 +44,97 @@ export default function Calculs({ pieces, profil }) {
       total: `${Math.floor(total)}h${String(Math.round((total % 1) * 60)).padStart(2, '0')}`,
     };
   }
+  function calculerCartons(pieces) {
+    const VOLUMES_CARTONS = {
+      petit: 0.032,
+      standard: 0.058,
+      grand: 0.077,
+    };
 
+    return pieces.map((piece) => {
+      const calculerGroupe = (taille) => {
+        const objets = piece.objetsAEmballer.filter((o) => o.carton === taille);
+        const volume = objets.reduce((acc, o) => acc + o.volume * o.quantite, 0);
+        const nb = Math.ceil(volume / (VOLUMES_CARTONS[taille] * 0.8));
+        return { nb, volume };
+      };
+
+      return {
+        nom: piece.nom,
+        petit: calculerGroupe('petit'),
+        standard: calculerGroupe('standard'),
+        grand: calculerGroupe('grand'),
+      };
+    });
+  }
 
   const volumeTotal = calculerVolume();
   const tailleCamion = determinerCamion(volumeTotal);
   const personneReco = determinerPersonne(volumeTotal);
   const tempsEstime = calculerTemps(volumeTotal, profil.distance);
+  const cartonsParPiece = calculerCartons(pieces);
 
   return (
-    <div className="card calc-section">
-      <h2 className="calc-titre icon">
-        <Truck size={22} /> Résumé des calculs
-      </h2>
-      <div className="calc-grid">
-        <div className="calc-card calc-card--blue">
-          <span className="calc-label">Volume total</span>
-          <span className="calc-valeur">{volumeTotal.toFixed(2)} m³</span>
-        </div>
-        <div className="calc-card calc-card--green">
-          <span className="calc-label">Taille de camion</span>
-          <span className="calc-valeur">{tailleCamion}</span>
-        </div>
-        <div className="calc-card calc-card--purple">
-          <span className="calc-label icon"><Users size={14} /> Personnes recommandées</span>
-          <span className="calc-valeur">{personneReco}</span>
-        </div>
-        <div className="calc-card calc-card--orange">
-          <span className="calc-label icon"><Clock size={14} /> Temps estimé</span>
-          <span className="calc-valeur">{tempsEstime.total}</span>
-          <span className="calc-detail">({tempsEstime.emballage} emballage + {tempsEstime.chargement} chargement + {tempsEstime.trajet} trajet)</span>
+    <div>
+      <div className="card calc-section">
+        <h2 className="calc-titre icon">
+          <Truck size={22} /> Résumé des calculs
+        </h2>
+        <div className="calc-grid">
+          <div className="calc-card calc-card--blue">
+            <span className="calc-label">Volume total</span>
+            <span className="calc-valeur">{volumeTotal.toFixed(2)} m³</span>
+          </div>
+          <div className="calc-card calc-card--green">
+            <span className="calc-label">Taille de camion</span>
+            <span className="calc-valeur">{tailleCamion}</span>
+          </div>
+          <div className="calc-card calc-card--purple">
+            <span className="calc-label icon"><Users size={14} /> Personnes recommandées</span>
+            <span className="calc-valeur">{personneReco}</span>
+          </div>
+          <div className="calc-card calc-card--orange">
+            <span className="calc-label icon"><Clock size={14} /> Temps estimé</span>
+            <span className="calc-valeur">{tempsEstime.total}</span>
+            <span className="calc-detail">({tempsEstime.emballage} emballage + {tempsEstime.chargement} chargement + {tempsEstime.trajet} trajet)</span>
+          </div>
+        </div>    
+      </div>
+      <div className="card calc-section">
+        <h2 className="calc-cartons-titre icon">
+          <Package size={20} /> Cartons nécessaires
+        </h2>
+        {cartonsParPiece.map((piece) => {
+          const lignes = [
+            { label: 'Petits cartons', data: piece.petit },
+            { label: 'Cartons standards', data: piece.standard },
+            { label: 'Grands cartons', data: piece.grand },
+          ].filter((l) => l.data.nb > 0);
+
+          if (lignes.length === 0) return null;
+
+          return (
+            <div key={piece.nom} className="calc-cartons-piece">
+              <span className="calc-cartons-piece-nom">{piece.nom}</span>
+              {lignes.map((l) => (
+                <div key={l.label} className="calc-cartons-ligne">
+                  <span>{l.label} / {l.data.nb} carton(s)</span>
+                  <span>{(l.data.nb * 1.5).toFixed(2)} €</span>
+                </div>
+              ))}
+            </div>
+          );
+        })}
+        <div className="calc-cartons-total">
+          <span>Total cartons</span>
+          <span>
+            {cartonsParPiece
+              .reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0)
+              .toFixed(2)} €
+          </span>
         </div>
       </div>
-    </div>
+
+   </div>
   );
 }

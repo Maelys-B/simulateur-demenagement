@@ -134,6 +134,7 @@ export default function Inventaire({pieces, setPieces}) {
       nom: objetAEmballerSelectionne.nom,
       volume: objetAEmballerSelectionne.volume,
       quantite: quantiteEmballer,
+      carton: objetAEmballerSelectionne.carton,
     };
     setObjetAEmballerSelectionne(null);
     setQuantiteEmballer(1) ;

@@ -48,3 +48,47 @@
 .calc-card--green  { background-color: #F0FDF4; }
 .calc-card--purple { background-color: #FAF5FF; }
 .calc-card--orange { background-color: #FFF7ED; }
+
+.calc-cartons-titre {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calc-cartons-titre svg {
+  color: #16a34a;
+}
+
+.calc-cartons-piece {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.calc-cartons-piece-nom {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.calc-cartons-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  padding: var(--spacing-xs) 0;
+}
+
+.calc-cartons-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
