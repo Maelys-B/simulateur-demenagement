@@ -41,8 +41,8 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 | Middleware               | ⬜ Pas commencé                                               |
 | Base de données (schéma) | 🟡 Réfléchi, pas encore créé                                  |
 | Documentation Swagger    | ⬜ Pas commencé                                               |
-| ESLint + Prettier        | 🟡 En cours d'installation (branche `config/eslint-prettier`) |
-| Tests unitaires (Vitest) | ⬜ Pas commencé — prévu une fois Calculs.jsx codé             |
+| ESLint + Prettier        | ✅ Installé et configuré (mergé dans `main`)                   |
+| Tests unitaires (Vitest) | ⬜ Pas commencé — prévu une fois Calculs.jsx terminé          |
 | Authentification         | ⬜ Pas commencé                                               |
 
 ---
@@ -60,7 +60,7 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 | Solution pour tester comportements anormaux                      | ⬜ À faire                 | **Confirmé : Vitest** (tests unitaires) — ex : volume négatif, inventaire vide, distance invalide                        |
 | 3 choix parmi 4 (client lourd / web / mobile / serveur)          | ✅ **Confirmé et complet** | 1. Web (React) — 2. Serveur (Node.js) — 3. Mobile (fait sur l'**autre projet**)                                          |
 | Authentification                                                 | ⬜ Prévu, pas codé         | JWT ou OAuth2.0                                                                                                          |
-| Normes de code (ESLint Airbnb + Prettier)                        | 🟡 En cours                | Voir section dédiée ci-dessous                                                                                           |
+| Normes de code (ESLint Airbnb + Prettier)                        | ✅ OK                      | Voir section dédiée ci-dessous — mergé dans `main`                                                                       |
 
 **Plus aucun point bloquant en attente côté répartition des projets.** ✅
 
@@ -112,12 +112,27 @@ Avec la config ESLint par défaut de Vite (sans Airbnb), un test sur du code vol
 simulateur-demenagement/
 ├── src/
 │   ├── components/
-│   │   └── Navigation/
-│   │       ├── Navigation.jsx        ✅ terminé
-│   │       └── Navigation.css        ✅ terminé
-│   ├── App.jsx                        ✅ utilise Navigation + header intégré
+│   │   ├── Navigation/
+│   │   │   ├── Navigation.jsx        ✅ terminé
+│   │   │   └── Navigation.css        ✅ terminé
+│   │   ├── ProfilPanel/
+│   │   │   ├── ProfilPanel.jsx       ✅ terminé
+│   │   │   └── ProfilPanel.css       ✅ terminé
+│   │   ├── Inventaire/
+│   │   │   ├── Inventaire.jsx        ✅ terminé
+│   │   │   ├── Inventaire.css        ✅ terminé
+│   │   │   ├── PieceCard.jsx         ✅ sous-composant avec states locaux
+│   │   │   └── listes.js             ✅ OBJETS_PREDEFINIS + OBJETS_A_EMBALLER
+│   │   ├── Calculs/
+│   │   │   ├── Calculs.jsx           🟡 en cours
+│   │   │   └── Calculs.css           🟡 en cours
+│   │   ├── Comparaison/
+│   │   │   └── Comparaison.jsx       ⬜ vide
+│   │   └── Checklist/
+│   │       └── Checklist.jsx         ⬜ vide
+│   ├── App.jsx                        ✅ state pieces + profil remontés ici
 │   ├── App.css                        🗑️ supprimé (était le CSS de démo Vite)
-│   ├── index.css                      ✅ styles globaux + composants header
+│   ├── index.css                      ✅ styles globaux + classe .card partagée
 │   └── main.jsx
 ├── CLAUDE.md                          ← ce fichier
 ```
@@ -193,7 +208,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `feature/inventaire` → en cours, pas encore mergée
+- `feature/carton-calcul` → en cours, pas encore mergée
 
 ---
 
@@ -227,7 +242,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Compris les **props** : `useState` pour `progression`
 - [x] Header affiche : titre, progression, barre de progression (dégradé), boutons PDF/Réinitialiser (visuel statique, pas encore fonctionnel)
 
-### 🟡 Étape 4 — Navigation (EN COURS)
+### ✅ Étape 4 — Navigation (TERMINÉE)
 
 - [x] Fichier `Navigation.jsx` créé dans `components/Navigation/`
 - [x] `Navigation.css` créé dans le même dossier, importé dans `Navigation.jsx`
@@ -269,13 +284,22 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Bouton "Ajouter" grisé tant qu'aucun objet n'est sélectionné (`disabled={!objetSelectionne}`)
 - [x] State `pieces` remonté dans `App.jsx` — données persistantes au changement d'onglet
 - [x] CSS : classe `.inv-input` partagée, grilles `inv-grid` et `inv-piece-add`, cartes pièces
+- [x] Deuxième section par pièce : objets à emballer (petit/standard/grand/penderie) avec type de carton
+- [x] Listes externalisées dans `listes.js` (`OBJETS_PREDEFINIS`, `OBJETS_A_EMBALLER`) — importées là où besoin
+- [x] Extraction en sous-composant `PieceCard.jsx` avec states locaux → corrige le bug du compteur partagé entre pièces
+- [x] Bug suppression doublons corrigé : chaque objet ajouté reçoit un `id: Date.now()` unique, utilisé comme `key` et dans `.filter()`
 
-### ⬜ Étape 8 — Onglet Calculs
+### 🟡 Étape 8 — Onglet Calculs (EN COURS)
 
-- [ ] Fonction de calcul du volume total
-- [ ] Détermination taille camion / nb personnes / temps
+- [x] Fonction de calcul du volume total (meubles + volume physique des cartons, marge 15% sur le camion)
+- [x] Détermination taille camion selon seuils de volume
+- [x] Nombre de personnes recommandées selon volume
+- [x] Temps estimé : emballage + chargement + trajet, formaté en `Xh00`
+- [x] Calcul du nombre de cartons par pièce et par type (petit/standard/grand) avec taux de remplissage 80%
+- [x] Estimation du coût des cartons (1,50 €/unité)
+- [x] CSS : grille de cartes colorées, section cartons avec total
 - [ ] Estimation budgétaire solo vs pro
-- [ ] **→ Une fois fait : mettre en place Vitest et écrire les premiers tests unitaires**
+- [ ] **→ Une fois terminé : mettre en place Vitest et écrire les premiers tests unitaires**
 
 ### ⬜ Étape 9 — Onglet Comparaison
 
@@ -353,20 +377,29 @@ demenagements (1) ──→ (N) checklist_items
 | **Rendu conditionnel**  | Afficher un composant ou un autre selon une condition (`if`, ternaire, etc.)                                    |
 | **.map()**              | Transformer un tableau de données en une liste de composants JSX                                                |
 | **className dynamique** | Choisir une classe CSS selon une condition avec un ternaire : `className={condition ? 'classe-a' : 'classe-b'}` |
-| **CSS par composant**   | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx`               |
+| **CSS par composant**         | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx`               |
+| **Extraction sous-composant** | Déplacer du JSX répété dans un composant enfant avec ses propres `useState` — évite le state partagé dans `.map()` |
+| **Constante de module**       | `const` déclarée en dehors du composant (au niveau du fichier) — partageable entre plusieurs fonctions, recréée à chaque rendu si elle était dans le composant |
 
 ## 📚 Méthodes JavaScript utilisées
 
-| Méthode                  | Ce qu'elle fait                                                                                             |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| **.map()**               | Parcourt un tableau et retourne un nouveau tableau transformé — en React : transforme des données en JSX    |
-| **.filter()**            | Parcourt un tableau et retourne un nouveau tableau avec seulement les éléments qui passent la condition     |
-| **spread `...`**         | Copie tous les éléments d'un tableau ou d'un objet : `[...pieces, nouvelle]` ajoute sans écraser            |
-| **`e.preventDefault()`** | Empêche le comportement par défaut du navigateur (ex: rechargement de page à la soumission d'un formulaire) |
-| **`Date.now()`**         | Retourne le timestamp actuel en ms — utilisé pour générer un id unique à chaque ajout                       |
-| **déstructuration `{}`** | Extrait des propriétés d'un objet : `const { name, value } = e.target`                                      |
-| **ternaire `? :`**       | Condition en une ligne : `condition ? valeurSiVrai : valeurSiFaux`                                          |
-| **`&&` conditionnel**    | Affiche quelque chose seulement si la condition est vraie : `{condition && <Composant />}`                  |
+| Méthode                        | Ce qu'elle fait                                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **.map()**                     | Parcourt un tableau et retourne un nouveau tableau transformé — en React : transforme des données en JSX    |
+| **.filter()**                  | Parcourt un tableau et retourne un nouveau tableau avec seulement les éléments qui passent la condition     |
+| **.reduce()**                  | Parcourt un tableau et accumule un résultat unique (ex : somme des volumes)                                 |
+| **spread `...`**               | Copie tous les éléments d'un tableau ou d'un objet : `[...pieces, nouvelle]` ajoute sans écraser            |
+| **`e.preventDefault()`**       | Empêche le comportement par défaut du navigateur (ex: rechargement de page à la soumission d'un formulaire) |
+| **`Date.now()`**               | Retourne le timestamp actuel en ms — utilisé pour générer un id unique à chaque ajout                       |
+| **déstructuration `{}`**       | Extrait des propriétés d'un objet : `const { name, value } = e.target`                                      |
+| **ternaire `? :`**             | Condition en une ligne : `condition ? valeurSiVrai : valeurSiFaux`                                          |
+| **`&&` conditionnel**          | Affiche quelque chose seulement si la condition est vraie : `{condition && <Composant />}`                  |
+| **`Math.ceil()`**              | Arrondit vers le haut — ex : nombre de cartons nécessaires (on ne peut pas avoir un demi-carton)            |
+| **`Math.floor()`**             | Arrondit vers le bas — ex : partie entière des heures dans un temps formaté                                 |
+| **`Math.round()`**             | Arrondit au plus proche — ex : minutes dans un temps formaté                                                |
+| **`.padStart(n, '0')`**        | Complète une chaîne à gauche jusqu'à n caractères : `'5'` → `'05'` (pour afficher `1h05` et non `1h5`)     |
+| **`String()`**                 | Convertit une valeur en chaîne de caractères — nécessaire avant `.padStart()` qui n'existe que sur string   |
+| **Arrow fn dans une variable** | `const fn = (param) => { ... }` — permet de déclarer une fonction locale à l'intérieur d'une autre fonction |
 
 ## 📚 Concepts Git appris (glossaire perso)
 
@@ -393,7 +426,8 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 🔜 Prochaine étape immédiate
 
-👉 **Étape 7 — Onglet Inventaire** : formulaire d'ajout de pièce, liste des pièces avec `.map()`, objets prédéfinis par pièce avec volumes, ajout/suppression d'objets.
+👉 **Finir Étape 8** : estimation budgétaire solo vs pro, puis merger `feature/carton-calcul` dans `main`.
+👉 **Ensuite** : Étape 9 (Comparaison) ou Étape 10 (Checklist).
 
 ---
 

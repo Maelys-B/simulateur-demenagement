@@ -1,11 +1,24 @@
 import { Package, Clock, Truck, Users } from 'lucide-react';
 import './Calculs.css';
 
+const VOLUMES_CARTONS = {
+  petit: 0.032,
+  standard: 0.058,
+  grand: 0.077,
+};
+
 export default function Calculs({ pieces, profil }) {
   function calculerVolume() {
     return pieces.reduce((total, piece) => {
-      const volumePiece = piece.objets.reduce((acc, objet) => acc + objet.volume * objet.quantite, 0); 
-      return total + volumePiece;
+      const volumeMeubles = piece.objets.reduce((acc, o) => acc + o.volume * o.quantite, 0);
+      const volumeCartons = ['petit', 'standard', 'grand'].reduce((acc, taille) => {
+        const vol = piece.objetsAEmballer
+          .filter((o) => o.carton === taille)
+          .reduce((a, o) => a + o.volume * o.quantite, 0);
+        const nb = Math.ceil(vol / (VOLUMES_CARTONS[taille] * 0.8));
+        return acc + nb * VOLUMES_CARTONS[taille];
+      }, 0);
+      return total + volumeMeubles + volumeCartons;
     }, 0);
   }
   function determinerCamion(volume) {
@@ -44,14 +57,8 @@ export default function Calculs({ pieces, profil }) {
       total: `${Math.floor(total)}h${String(Math.round((total % 1) * 60)).padStart(2, '0')}`,
     };
   }
-  function calculerCartons(pieces) {
-    const VOLUMES_CARTONS = {
-      petit: 0.032,
-      standard: 0.058,
-      grand: 0.077,
-    };
-
-    return pieces.map((piece) => {
+  function calculerCartons(piecesData) {
+    return piecesData.map((piece) => {
       const calculerGroupe = (taille) => {
         const objets = piece.objetsAEmballer.filter((o) => o.carton === taille);
         const volume = objets.reduce((acc, o) => acc + o.volume * o.quantite, 0);
@@ -69,10 +76,11 @@ export default function Calculs({ pieces, profil }) {
   }
 
   const volumeTotal = calculerVolume();
-  const tailleCamion = determinerCamion(volumeTotal);
+  const tailleCamion = determinerCamion(volumeTotal * 1.15);
   const personneReco = determinerPersonne(volumeTotal);
   const tempsEstime = calculerTemps(volumeTotal, profil.distance);
   const cartonsParPiece = calculerCartons(pieces);
+
 
   return (
     <div>
