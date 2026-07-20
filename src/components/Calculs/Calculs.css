@@ -4,14 +4,24 @@
   gap: var(--spacing-lg);
 }
 
-.calc-titre {
+.calc-title {
   font-size: var(--font-size-xl);
   font-weight: 500;
   color: var(--color-text);
 }
 
-.calc-titre svg {
+.calc-budget-title {
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.calc-title svg {
   color: var(--color-primary);
+}
+
+.calc-budget-title svg {
+  color: #D08700;
 }
 
 .calc-grid {
@@ -22,10 +32,17 @@
 
 .calc-card {
   border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+}
+
+.calc-budget-card {
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
 }
 
 .calc-label {
@@ -34,7 +51,7 @@
   font-weight: 500;
 }
 
-.calc-valeur {
+.calc-value {
   font-size: var(--font-size-xl);
   color: var(--color-text);
 }
@@ -48,3 +65,70 @@
 .calc-card--green  { background-color: #F0FDF4; }
 .calc-card--purple { background-color: #FAF5FF; }
 .calc-card--orange { background-color: #FFF7ED; }
+.calc-border--blue { 
+  border: 2px solid;
+  border-color: #BEDBFF;
+  }
+.calc-border--green { 
+  border: 2px solid;
+  border-color: #B9F8CF;
+  }
+
+.calc-cartons-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calc-cartons-title svg {
+  color: #16a34a;
+}
+
+.calc-cartons-piece {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.calc-cartons-piece-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.calc-cartons-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  padding: var(--spacing-xs) 0;
+}
+
+.calc-cartons-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.calc-budget-label{
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+}
+
+.calc-budget-value {
+  font-size: var(--font-size-2xl);
+  padding: var(--spacing-sm) 0 var(--spacing-xs);
+}
+
+.calc-budget-detail{
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
