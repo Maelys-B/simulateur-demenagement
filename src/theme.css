@@ -41,6 +41,8 @@
   --font-size-md: 16px;
   --font-size-lg: 18px;
   --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+
 
   --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }

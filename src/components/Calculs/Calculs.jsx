@@ -1,4 +1,4 @@
-import { Package, Clock, Truck, Users } from 'lucide-react';
+import { Package, Clock, Truck, Users, Euro } from 'lucide-react';
 import './Calculs.css';
 
 const VOLUMES_CARTONS = {
@@ -129,31 +129,31 @@ export default function Calculs({ pieces, profil }) {
   return (
     <div>
       <div className="card calc-section">
-        <h2 className="calc-titre icon">
+        <h2 className="calc-title icon">
           <Truck size={22} /> Résumé des calculs
         </h2>
         <div className="calc-grid">
           <div className="calc-card calc-card--blue">
             <span className="calc-label">Volume total</span>
-            <span className="calc-valeur">{volumeTotal.toFixed(2)} m³</span>
+            <span className="calc-value">{volumeTotal.toFixed(2)} m³</span>
           </div>
           <div className="calc-card calc-card--green">
             <span className="calc-label">Taille de camion</span>
-            <span className="calc-valeur">{tailleCamion}</span>
+            <span className="calc-value">{tailleCamion}</span>
           </div>
           <div className="calc-card calc-card--purple">
             <span className="calc-label icon"><Users size={14} /> Personnes recommandées</span>
-            <span className="calc-valeur">{personneReco}</span>
+            <span className="calc-value">{personneReco}</span>
           </div>
           <div className="calc-card calc-card--orange">
             <span className="calc-label icon"><Clock size={14} /> Temps estimé</span>
-            <span className="calc-valeur">{tempsEstime.total}</span>
+            <span className="calc-value">{tempsEstime.total}</span>
             <span className="calc-detail">({tempsEstime.emballage} emballage + {tempsEstime.chargement} chargement + {tempsEstime.trajet} trajet)</span>
           </div>
         </div>    
       </div>
       <div className="card calc-section">
-        <h2 className="calc-cartons-titre icon">
+        <h2 className="calc-cartons-title icon">
           <Package size={20} /> Cartons nécessaires
         </h2>
         {cartonsParPiece.map((piece) => {
@@ -167,9 +167,9 @@ export default function Calculs({ pieces, profil }) {
 
           return (
             <div key={piece.nom} className="calc-cartons-piece">
-              <span className="calc-cartons-piece-nom">{piece.nom}</span>
+              <span className="calc-cartons-piece-name">{piece.nom}</span>
               {lignes.map((l) => (
-                <div key={l.label} className="calc-cartons-ligne">
+                <div key={l.label} className="calc-cartons-line">
                   <span>{l.label} / {l.data.nb} carton(s)</span>
                   <span>{(l.data.nb * 1.5).toFixed(2)} €</span>
                 </div>
@@ -187,14 +187,19 @@ export default function Calculs({ pieces, profil }) {
         </div>
       </div>
       <div className="card calc-section">
-        <h2 className="calc-cartons-titre">Estimation du budget</h2>
-        <div className="calc-budget-ligne">
+        <h2 className="calc-budget-title icon">
+          <Euro size={20} />Estimation du budget</h2>
+        <div className="calc-grid">
+        <div className="calc-budget-card calc-card--blue calc-border--blue">
           <span className="calc-budget-label">Déménagement solo</span>
-          <span className="calc-budget-valeur">{budgetSolo.min.toFixed(0)} € – {budgetSolo.max.toFixed(0)} €</span>
+          <span className="calc-budget-value"> {budgetSolo.min.toFixed(0)} – {budgetSolo.max.toFixed(0)} €</span>
+          <p className="calc-budget-detail">Location camion + cartons + carburant</p>
         </div>
-        <div className="calc-budget-ligne">
+        <div className="calc-budget-card calc-card--green calc-border--green">
           <span className="calc-budget-label">Déménagement professionnel</span>
-          <span className="calc-budget-valeur">{budgetPro.min.toFixed(0)} € – {budgetPro.max.toFixed(0)} €</span>
+          <span className="calc-budget-value"> {budgetPro.min.toFixed(0)} – {budgetPro.max.toFixed(0)} €</span>
+          <p className="calc-budget-detail">Service complet avec déménageurs</p>
+        </div>
         </div>
       </div>
    </div>
