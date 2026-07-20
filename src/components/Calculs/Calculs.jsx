@@ -74,12 +74,56 @@ export default function Calculs({ pieces, profil }) {
       };
     });
   }
+  function calculerBudgetSolo(volume, distance, coutCartons) {
+    let camionMin;
+    let camionMax;
+
+    if (volume <= 5) {
+      camionMin = 80; camionMax = 120;
+    } else if (volume <= 10) {
+      camionMin = 70; camionMax = 170;
+    } else if (volume <= 20) {
+      camionMin = 120; camionMax = 200;
+    } else if (volume <= 30) {
+      camionMin = 150; camionMax = 250;
+    } else {
+      camionMin = 200; camionMax = 300;
+    }
+
+    const carburant = distance * 0.55 + 25;
+
+    return {
+      min: camionMin + carburant + coutCartons,
+      max: camionMax + carburant + coutCartons,
+    };
+  }
+
+  function calculerBudgetPro(volume, distance, etage, ascenseur) {
+    let proMin = volume * 35;
+    let proMax = volume * 90;
+
+    if (distance > 300) {
+      proMin *= 2; proMax *= 2;
+    } else if (distance > 100) {
+      proMin *= 1.5; proMax *= 1.5;
+    }
+
+    if (etage >= 3 && !ascenseur) {
+      proMin *= 1.30; proMax *= 1.30;
+    }
+
+    return { min: proMin, max: proMax };
+  }
 
   const volumeTotal = calculerVolume();
   const tailleCamion = determinerCamion(volumeTotal * 1.15);
   const personneReco = determinerPersonne(volumeTotal);
   const tempsEstime = calculerTemps(volumeTotal, profil.distance);
   const cartonsParPiece = calculerCartons(pieces);
+  const coutCartons = cartonsParPiece.reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0);
+  const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
+  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur);
+
 
 
   return (
@@ -142,7 +186,17 @@ export default function Calculs({ pieces, profil }) {
           </span>
         </div>
       </div>
-
+      <div className="card calc-section">
+        <h2 className="calc-cartons-titre">Estimation du budget</h2>
+        <div className="calc-budget-ligne">
+          <span className="calc-budget-label">Déménagement solo</span>
+          <span className="calc-budget-valeur">{budgetSolo.min.toFixed(0)} € – {budgetSolo.max.toFixed(0)} €</span>
+        </div>
+        <div className="calc-budget-ligne">
+          <span className="calc-budget-label">Déménagement professionnel</span>
+          <span className="calc-budget-valeur">{budgetPro.min.toFixed(0)} € – {budgetPro.max.toFixed(0)} €</span>
+        </div>
+      </div>
    </div>
   );
 }
