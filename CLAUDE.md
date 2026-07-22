@@ -434,3 +434,19 @@ demenagements (1) ──→ (N) checklist_items
 ## 📝 Notes / questions en attente
 
 - Aucune en attente actuellement — tous les points de conformité au cahier des charges sont clarifiés.
+
+---
+
+## 📦 Références tarifaires (sources 2026)
+
+### Déménagement professionnel — prix au m³
+- Fourchette : **30 à 90 €/m³** selon volume, distance et services inclus
+- Formule retenue : `proMin = volume * 35` / `proMax = volume * 90`
+- Ajustement distance : > 100 km → ×1.5 / > 300 km → ×2
+- Ajustement étage sans ascenseur : ×1.30 (+25 à 35%)
+
+### Déménagement solo — location camion
+- Camionnette (~10m³) : 70–170 €/jour
+- Camion 20m³ : 120–200 €/jour
+- Camion 30m³ : 150–250 €/jour
+- Carburant estimé : distance × 0.55 + 25 € (péages inclus, base 15L/100km à 1.8€/L, aller-retour)

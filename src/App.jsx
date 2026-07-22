@@ -6,6 +6,8 @@ import Comparaison from './components/Comparaison/Comparaison';
 import Inventaire from './components/Inventaire/Inventaire';
 import Navigation from './components/Navigation/Navigation';
 import ProfilPanel from './components/ProfilPanel/ProfilPanel';
+import { calculerBudgetPro, calculerBudgetSolo, calculerCartons, calculerVolume } from './utils/calculs';
+
 function App() {
   // eslint-disable-next-line no-unused-vars
   const [progression, setProgression] = useState(0);
@@ -18,6 +20,12 @@ function App() {
     ascenseur: false,
     parking: false,
   });
+  const volumeTotal = calculerVolume(pieces);
+  const cartonsParPiece = calculerCartons(pieces);
+  const coutCartons = cartonsParPiece.reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0);
+  const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
+  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur);
+
 
   return (
     <div className="app-wrapper">
@@ -52,7 +60,7 @@ function App() {
         <div className="app-main">
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
           {ongletActif === 'calculs' && <Calculs pieces={pieces} profil={profil}/>}
-          {ongletActif === 'comparaison' && <Comparaison />}
+          {ongletActif === 'comparaison' && <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />}
           {ongletActif === 'check-list' && <Checklist />}
         </div>
         <ProfilPanel profil={profil} setProfil={setProfil} />
