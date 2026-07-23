@@ -32,8 +32,10 @@
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;
+  --spacing-base: 10px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
+  --spacing-xl: 30px;
 
   --font-family: 'Segoe UI', Arial, sans-serif;
   --font-size-sm: 12px;

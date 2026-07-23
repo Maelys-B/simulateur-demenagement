@@ -208,7 +208,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `feature/carton-calcul` → en cours, pas encore mergée
+- `feature/comparaison` → en cours, pas encore mergée
 
 ---
 
@@ -289,7 +289,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Extraction en sous-composant `PieceCard.jsx` avec states locaux → corrige le bug du compteur partagé entre pièces
 - [x] Bug suppression doublons corrigé : chaque objet ajouté reçoit un `id: Date.now()` unique, utilisé comme `key` et dans `.filter()`
 
-### 🟡 Étape 8 — Onglet Calculs (EN COURS)
+### ✅ Étape 8 — Onglet Calculs (TERMINÉE)
 
 - [x] Fonction de calcul du volume total (meubles + volume physique des cartons, marge 15% sur le camion)
 - [x] Détermination taille camion selon seuils de volume
@@ -298,13 +298,15 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Calcul du nombre de cartons par pièce et par type (petit/standard/grand) avec taux de remplissage 80%
 - [x] Estimation du coût des cartons (1,50 €/unité)
 - [x] CSS : grille de cartes colorées, section cartons avec total
-- [ ] Estimation budgétaire solo vs pro
-- [ ] **→ Une fois terminé : mettre en place Vitest et écrire les premiers tests unitaires**
+- [x] Estimation budgétaire solo vs pro (location camion + carburant + cartons / prix au m³ pro)
+- [x] Fonctions de calcul extraites dans `src/utils/calculs.js` et partagées avec App.jsx et Comparaison.jsx
 
-### ⬜ Étape 9 — Onglet Comparaison
+### 🟡 Étape 9 — Onglet Comparaison (EN COURS)
 
-- [ ] Graphique avec `recharts`
-- [ ] Tableaux avantages/inconvénients
+- [x] Graphique barres avec `recharts` (budget min/max solo vs pro)
+- [x] Encart dynamique : économie / surcoût / équivalence avec icône `TrendingUp` / `TrendingDown` / `Scale`
+- [x] Tableaux avantages/inconvénients avec icônes `Check` / `X` (lucide-react)
+- [x] CSS : grille 2 colonnes, titres colorés par modificateur (`--blue` / `--green`)
 
 ### ⬜ Étape 10 — Onglet Checklist
 
@@ -426,8 +428,8 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 🔜 Prochaine étape immédiate
 
-👉 **Finir Étape 8** : estimation budgétaire solo vs pro, puis merger `feature/carton-calcul` dans `main`.
-👉 **Ensuite** : Étape 9 (Comparaison) ou Étape 10 (Checklist).
+👉 **Finir Étape 9** : merger `feature/comparaison` dans `main`.
+👉 **Ensuite** : Étape 10 (Checklist).
 
 ---
 
