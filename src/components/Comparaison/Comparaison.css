@@ -1,0 +1,27 @@
+.comp-economie{
+    background-color: #FEFCE8;   
+    border: 2px solid;
+    border-color: #FFF085;
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+.comp-titre{
+    font-size: var(--font-size-xl);
+    font-weight: 500;
+    color: var(--color-text);
+}
+.comp-economie-titre{
+    color:#894B00;
+    font-weight: 500;
+    font-size: var(--font-size-md);
+}
+
+.comp-economie-detail {
+    color: #a65f26;
+    font-size: var(--font-size-base);
+    padding-left: 24px;
+}
+p svg{
+    color: #894B00;
+}
