@@ -19,7 +19,7 @@ function App() {
     etage: '',
     ascenseur: false,
     parking: false,
-    dateDemenagement: '',
+    dateDemenagement: new Date().toISOString().split('T')[0],
   });
   const volumeTotal = calculerVolume(pieces);
   const cartonsParPiece = calculerCartons(pieces);
@@ -40,7 +40,12 @@ function App() {
           <div className='flex'>
             <div className="header-date-wrapper">
               <Calendar size={16} />
-              <input type="date" className="header-date" />
+              <input
+                type="date"
+                className="header-date"
+                value={profil.dateDemenagement}
+                onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
+              />
             </div>
             <p className="header-progression">Progression : {progression}%</p>
           </div>

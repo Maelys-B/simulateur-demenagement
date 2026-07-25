@@ -127,7 +127,6 @@ body {
 
 .header-date-wrapper {
   display: flex;
-  align-items: center;
   gap: 6px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
