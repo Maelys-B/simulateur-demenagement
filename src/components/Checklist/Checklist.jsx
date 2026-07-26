@@ -150,6 +150,13 @@ export const TACHES_PREDEFINIES = [
 
 export default function Checklist({ profil }) {
   const [completes, setCompletes] = useState([]);
+  const [nouvelleTache, setNouvelleTache] = useState({
+  titre: '',
+  description: '',   
+  dateLimite: '',
+  type: 'Demarche',
+})
+  const [tachesPerso, setTachesPerso] = useState([]);
 
   const toggleComplete = (id) => {
     setCompletes((prev) =>
@@ -157,17 +164,78 @@ export default function Checklist({ profil }) {
     );
   };
 
-const tachesAvecDates = TACHES_PREDEFINIES.map((item) => {
+  const now = new Date();
+
+  const tachesAvecDates = TACHES_PREDEFINIES.map((item) => {
     const dateEcheance = new Date(profil.dateDemenagement);
     dateEcheance.setDate(dateEcheance.getDate() - item.joursAvant);
-    const enRetard = dateEcheance < new Date();
-    const enUrgence = !enRetard && dateEcheance <= new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
-    return { ...item, dateEcheance, enRetard, enUrgence };
+    return { ...item, dateEcheance };
   });
 
+  const toutesLesTaches = [...tachesAvecDates, ...tachesPerso]
+    .map((t) => {
+      const enRetard = t.dateEcheance < now;
+      const enUrgence = !enRetard && t.dateEcheance <= new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      return { ...t, enRetard, enUrgence };
+    })
+    .sort((a, b) => a.dateEcheance - b.dateEcheance);
+
+function ajouterTache() {
+  if (!nouvelleTache.titre.trim() || !nouvelleTache.dateLimite) return;
+
+  setTachesPerso((prev) => [
+    ...prev,
+    {
+      id: `perso-${Date.now()}`,
+      titre: nouvelleTache.titre.trim(),
+      description: nouvelleTache.description.trim(),
+      dateEcheance: new Date(nouvelleTache.dateLimite),
+      type: nouvelleTache.type,
+      personnalisee: true,
+    },
+  ]);
+
+  setNouvelleTache({ titre: '', description: '', dateLimite: '', type: 'Demarche' });
+}
   return (
     <div className='card'>
-      {tachesAvecDates.map((tache) => (
+        <div className="chk-form">
+    <h3>Ajouter une démarche</h3>
+
+    <input
+      type="text"
+      placeholder="Titre (ex: Prévenir la crèche)"
+      value={nouvelleTache.titre}
+      onChange={(e) => setNouvelleTache({ ...nouvelleTache, titre: e.target.value })}
+    />
+
+    <textarea
+      placeholder="Description (facultatif)"
+      rows={2}
+      value={nouvelleTache.description}
+      onChange={(e) => setNouvelleTache({ ...nouvelleTache, description: e.target.value })}
+    />
+
+    <div className="chk-form-ligne">
+      <input
+        type="date"
+        value={nouvelleTache.dateLimite}
+        onChange={(e) => setNouvelleTache({ ...nouvelleTache, dateLimite: e.target.value })}
+      />
+
+      <select
+        value={nouvelleTache.type}
+        onChange={(e) => setNouvelleTache({ ...nouvelleTache, type: e.target.value })}
+      >
+        <option value="Resiliation">Résiliation</option>
+        <option value="Souscription">Souscription</option>
+        <option value="Demarche">Démarche</option>
+      </select>
+
+      <button className="btn-primary" onClick={ajouterTache}>Ajouter</button>
+    </div>
+  </div>
+      {toutesLesTaches.map((tache) => (
         <div key={tache.id} className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${completes.includes(tache.id) ? 'chk-card--done' : ''}`}>
             <button className={`chk-checkbox ${completes.includes(tache.id) ? 'chk-checkbox--checked' : ''}`} onClick={() => toggleComplete(tache.id)}>
               {completes.includes(tache.id) && <Check size={14} color="#16a34a " strokeWidth={3} />}
