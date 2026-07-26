@@ -65,18 +65,3 @@
 }
 
 
-.btn-icon-danger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-danger);
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.2s;
-}
-
-.btn-icon-danger:hover {
-  background-color: var(--color-bg-red-light);
-}

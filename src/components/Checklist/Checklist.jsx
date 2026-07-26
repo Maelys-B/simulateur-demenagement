@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Calendar, Plus, ListPlus } from 'lucide-react';
+import { Check, Calendar, Plus, ListPlus, Trash2 } from 'lucide-react';
 import './Checklist.css'
 
 export const TACHES_PREDEFINIES = [
@@ -157,6 +157,7 @@ export default function Checklist({ profil }) {
   type: 'Demarche',
 })
   const [tachesPerso, setTachesPerso] = useState([]);
+  const [tachesPredefinies, setTachesPredefinies] = useState(TACHES_PREDEFINIES);
 
   const toggleComplete = (id) => {
     setCompletes((prev) =>
@@ -164,9 +165,18 @@ export default function Checklist({ profil }) {
     );
   };
 
+  const supprimerTache = (id, personnalisee) => {
+    if (personnalisee) {
+      setTachesPerso((prev) => prev.filter((t) => t.id !== id));
+    } else {
+      setTachesPredefinies((prev) => prev.filter((t) => t.id !== id));
+    }
+  };
+
+
   const now = new Date();
 
-  const tachesAvecDates = TACHES_PREDEFINIES.map((item) => {
+  const tachesAvecDates = tachesPredefinies.map((item) => {
     const dateEcheance = new Date(profil.dateDemenagement);
     dateEcheance.setDate(dateEcheance.getDate() - item.joursAvant);
     return { ...item, dateEcheance };
@@ -211,7 +221,12 @@ function ajouterTache() {
                   <span className={`chk-item-title ${completes.includes(tache.id) ? 'chk-item-title--done' : ''}`}>{tache.titre}</span>
                   <span className="chk-item-description">{tache.description}</span>
                 </div>
-                <span className={`chk-item-type chk-item-type--${tache.type}`}>{tache.type}</span>
+                <div className='icon'>
+                  <span className={`chk-item-type chk-item-type--${tache.type}`}>{tache.type}</span>
+                  <button className='btn-icon-danger' onClick={() => supprimerTache(tache.id, tache.personnalisee)}>
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
               <div className='chk-section-date'>
                 <span className="chk-item-date icon"><Calendar size={14} />{tache.dateEcheance.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
@@ -246,6 +261,8 @@ function ajouterTache() {
             <span style={{ marginLeft: 'var(--spacing-xs)' }}><Calendar size={16} /></span>
             <input
               type="date"
+              min="2000-01-01"
+              max="9999-12-31"
               value={nouvelleTache.dateLimite}
               onChange={(e) => setNouvelleTache({ ...nouvelleTache, dateLimite: e.target.value })}
               className='header-date'

@@ -42,6 +42,8 @@ function App() {
               <Calendar size={16} />
               <input
                 type="date"
+                min="2000-01-01"
+                max="9999-12-31"
                 className="header-date"
                 value={profil.dateDemenagement}
                 onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
