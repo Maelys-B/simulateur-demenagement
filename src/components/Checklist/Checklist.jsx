@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Calendar } from 'lucide-react';
+import { Check, Calendar, Plus, ListPlus } from 'lucide-react';
 import './Checklist.css'
 
 export const TACHES_PREDEFINIES = [
@@ -198,64 +198,73 @@ function ajouterTache() {
   setNouvelleTache({ titre: '', description: '', dateLimite: '', type: 'Demarche' });
 }
   return (
-    <div className='card'>
-        <div className="chk-form">
-    <h3>Ajouter une démarche</h3>
-
-    <input
-      type="text"
-      placeholder="Titre (ex: Prévenir la crèche)"
-      value={nouvelleTache.titre}
-      onChange={(e) => setNouvelleTache({ ...nouvelleTache, titre: e.target.value })}
-    />
-
-    <textarea
-      placeholder="Description (facultatif)"
-      rows={2}
-      value={nouvelleTache.description}
-      onChange={(e) => setNouvelleTache({ ...nouvelleTache, description: e.target.value })}
-    />
-
-    <div className="chk-form-ligne">
-      <input
-        type="date"
-        value={nouvelleTache.dateLimite}
-        onChange={(e) => setNouvelleTache({ ...nouvelleTache, dateLimite: e.target.value })}
-      />
-
-      <select
-        value={nouvelleTache.type}
-        onChange={(e) => setNouvelleTache({ ...nouvelleTache, type: e.target.value })}
-      >
-        <option value="Resiliation">Résiliation</option>
-        <option value="Souscription">Souscription</option>
-        <option value="Demarche">Démarche</option>
-      </select>
-
-      <button className="btn-primary" onClick={ajouterTache}>Ajouter</button>
-    </div>
-  </div>
-      {toutesLesTaches.map((tache) => (
-        <div key={tache.id} className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${completes.includes(tache.id) ? 'chk-card--done' : ''}`}>
+    <div>
+      <div className='card'>
+        {toutesLesTaches.map((tache) => (
+          <div key={tache.id} className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${completes.includes(tache.id) ? 'chk-card--done' : ''}`}>
             <button className={`chk-checkbox ${completes.includes(tache.id) ? 'chk-checkbox--checked' : ''}`} onClick={() => toggleComplete(tache.id)}>
               {completes.includes(tache.id) && <Check size={14} color="#16a34a " strokeWidth={3} />}
             </button>
             <div className='chk-card-item'>
               <div className='chk-section-badge'>
                 <div className='chk-section-texte'>
-                <span className={`chk-item-title ${completes.includes(tache.id) ? 'chk-item-title--done' : ''}`}>{tache.titre}</span>
-                <span className="chk-item-description">{tache.description}</span>
+                  <span className={`chk-item-title ${completes.includes(tache.id) ? 'chk-item-title--done' : ''}`}>{tache.titre}</span>
+                  <span className="chk-item-description">{tache.description}</span>
                 </div>
                 <span className={`chk-item-type chk-item-type--${tache.type}`}>{tache.type}</span>
               </div>
-            <div className='chk-section-date'>
-              <span className="chk-item-date icon"><Calendar size={14} />{tache.dateEcheance.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-              {tache.enRetard && <span className="chk-item-badge chk-item-badge--late">En retard</span>}
-              {tache.enUrgence && <span className="chk-item-badge chk-item-badge--urgent">Urgent</span>}
+              <div className='chk-section-date'>
+                <span className="chk-item-date icon"><Calendar size={14} />{tache.dateEcheance.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                {tache.enRetard && <span className="chk-item-badge chk-item-badge--late">En retard</span>}
+                {tache.enUrgence && <span className="chk-item-badge chk-item-badge--urgent">Urgent</span>}
+              </div>
             </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="card chk-form">
+        <h3 className='chk-form-title icon'><ListPlus size={20} />Ajouter une tâche</h3>
+        <div className='chk-form-text'>
+          <input
+            type="text"
+            placeholder="Titre (ex: Prévenir la crèche)"
+            value={nouvelleTache.titre}
+            onChange={(e) => setNouvelleTache({ ...nouvelleTache, titre: e.target.value })}
+            className='input'
+          />
+          <textarea
+            placeholder="Description (facultatif)"
+            rows={2}
+            value={nouvelleTache.description}
+            onChange={(e) => setNouvelleTache({ ...nouvelleTache, description: e.target.value })}
+            className='input'
+          />
         </div>
+        <div className="chk-form-ligne">
+          <div className='icon header-date-wrapper' style={{ gap: 'var(--spacing-md)!important' }}>
+            <span style={{ marginLeft: 'var(--spacing-xs)' }}><Calendar size={16} /></span>
+            <input
+              type="date"
+              value={nouvelleTache.dateLimite}
+              onChange={(e) => setNouvelleTache({ ...nouvelleTache, dateLimite: e.target.value })}
+              className='header-date'
+            />
+          </div>
+          <select
+            value={nouvelleTache.type}
+            onChange={(e) => setNouvelleTache({ ...nouvelleTache, type: e.target.value })}
+            className='input'
+          >
+            <option value="Resiliation">Résiliation</option>
+            <option value="Souscription">Souscription</option>
+            <option value="Demarche">Démarche</option>
+          </select>
         </div>
-      ))}
+        <button className="btn btn-primary icon chk-form-btn" type="submit" onClick={ajouterTache}>
+          <Plus size={16} /> Ajouter
+        </button>
+      </div>
     </div>
   );
 }

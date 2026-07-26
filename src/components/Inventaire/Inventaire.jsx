@@ -78,12 +78,12 @@ export default function Inventaire({pieces, setPieces}) {
             id="pièce"
             name="pièce"
             type="text"
-            className="inv-input"
+            className="input"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="Nom de la pièce (ex: Salon, Chambre...)"
           />
-          <button className="btn btn-blue icon" type="submit">
+          <button className="btn btn-primary icon" type="submit">
             <Plus size={16} />
             Ajouter
           </button>

@@ -6,19 +6,6 @@
   font-size: var(--font-size-xl);
 }
 
-.inv-input {
-  padding: 10px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.inv-input:focus {
-  border-color: var(--color-primary);
-}
 
 .inv-grid {
   display: grid;
@@ -77,9 +64,6 @@
   font-size: var(--font-size-sm);
 }
 
-.btn-blue {
-  background-color: var(--color-primary);
-}
 
 .btn-icon-danger {
   background: none;

@@ -143,7 +143,29 @@ body {
   background: transparent;
 }
 
+.header-date-wrapper:focus-within{
+  border-color: var(--color-primary);
+}
+
 
 .header-date::-webkit-calendar-picker-indicator {
   display: none;
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
 }

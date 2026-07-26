@@ -19,7 +19,7 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
 
       <div className="inv-piece-add">
         <select
-          className="inv-input"
+          className="input"
           value={objetSelectionne ? objetSelectionne.nom : ''}
           onChange={(e) => {
             const objet = OBJETS_PREDEFINIS.find((o) => o.nom === e.target.value) ?? null;
@@ -36,12 +36,12 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
         <input
           type="number"
           min="1"
-          className="inv-input"
+          className="input"
           value={quantite}
           onChange={(e) => setQuantite(Number(e.target.value))}
         />
         <button
-          className="btn btn-blue icon"
+          className="btn btn-primary icon"
           type="button"
           disabled={!objetSelectionne}
           onClick={() => {
@@ -69,7 +69,7 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
 
       <div className="inv-piece-add">
         <select
-          className="inv-input"
+          className="input"
           value={objetAEmballerSelectionne ? objetAEmballerSelectionne.nom : ''}
           onChange={(e) => {
             const objet = OBJETS_A_EMBALLER.find((o) => o.nom === e.target.value) ?? null;
@@ -86,12 +86,12 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
         <input
           type="number"
           min="1"
-          className="inv-input"
+          className="input"
           value={quantiteEmballer}
           onChange={(e) => setQuantiteEmballer(Number(e.target.value))}
         />
         <button
-          className="btn btn-blue icon"
+          className="btn btn-primary icon"
           type="button"
           disabled={!objetAEmballerSelectionne}
           onClick={() => {
