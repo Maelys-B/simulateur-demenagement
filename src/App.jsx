@@ -1,4 +1,4 @@
-import { Download, Trash2, Truck } from 'lucide-react';
+import { Calendar, Download, Trash2, Truck } from 'lucide-react';
 import { useState } from 'react';
 import Calculs from './components/Calculs/Calculs';
 import Checklist from './components/Checklist/Checklist';
@@ -19,6 +19,7 @@ function App() {
     etage: '',
     ascenseur: false,
     parking: false,
+    dateDemenagement: new Date().toISOString().split('T')[0],
   });
   const volumeTotal = calculerVolume(pieces);
   const cartonsParPiece = calculerCartons(pieces);
@@ -36,7 +37,20 @@ function App() {
               <Truck size={30} /> Mon déménagement
             </span>
           </h1>
-          <p className="header-progression">Progression : {progression}%</p>
+          <div className='flex'>
+            <div className="header-date-wrapper">
+              <Calendar size={16} />
+              <input
+                type="date"
+                min="2000-01-01"
+                max="9999-12-31"
+                className="header-date"
+                value={profil.dateDemenagement}
+                onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
+              />
+            </div>
+            <p className="header-progression">Progression : {progression}%</p>
+          </div>
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${progression}%` }} />
           </div>
@@ -61,7 +75,7 @@ function App() {
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
           {ongletActif === 'calculs' && <Calculs pieces={pieces} profil={profil}/>}
           {ongletActif === 'comparaison' && <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />}
-          {ongletActif === 'check-list' && <Checklist />}
+          {ongletActif === 'check-list' && <Checklist profil={profil}/>}
         </div>
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>

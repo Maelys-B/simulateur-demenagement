@@ -1,0 +1,203 @@
+.chk-card {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.chk-card--late {
+  border-color: #FFA2A2;
+  background-color: #FEF2F2;
+}
+
+.chk-card--urgent {
+  border-color: #FFDF20;
+  background-color: #FEFCE8;
+}
+
+.chk-card--done {
+  opacity: 0.5;
+}
+
+.chk-item-badge {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+}
+
+.chk-item-badge--late {
+  color: #dc2626;
+}
+
+.chk-item-badge--urgent {
+  color: #d97706;
+}
+
+.chk-item-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  width: fit-content;
+  line-height: 1;
+}
+
+.chk-section-badge {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.chk-item-type--Resiliation {
+  background-color: #FEF2F2;
+  border: 1px solid #FFC9C9;
+  color: #C10007;
+}
+
+.chk-item-type--Souscription {
+  background-color: #F0FDF4;
+  border: 1px solid #B9F8CF;
+  color: #008236;
+}
+
+.chk-item-type--Demarche {
+  background-color: #FAF5FF;
+  border: 1px solid #E9D4FF;
+  color: #8200DB;
+}
+
+.chk-item-title {
+  font-weight: 500;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+.chk-item-title--done {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.chk-card-item {
+  flex: 1;
+}
+
+.chk-section-texte {
+  display: flex;
+  flex-direction: column;
+}
+
+.chk-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #99A1AF;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.5s;
+  margin-top:var(--spacing-xs);
+}
+
+.chk-checkbox:not(.chk-checkbox--checked):hover {
+  border-color: var(--color-primary);
+}
+
+
+.chk-checkbox--checked {
+  border-color: #16a34a;
+  animation: chk-pop 0.25s ease;
+}
+
+@keyframes chk-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.chk-section-date{
+    margin-top: var(--spacing-sm);
+    display:flex;
+    align-items: center;
+    gap: var(--spacing-md)
+}
+
+.chk-item-description{
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+.chk-item-date{
+    color: var(--color-text-muted);
+}
+
+.chk-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chk-form-text{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-base);
+}
+
+.chk-form-ligne{
+    display:flex;
+    gap: var(--spacing-base);
+    margin: 0 var(--spacing-base) var(--spacing-base) var(--spacing-base);
+}
+
+.chk-form-ligne input,
+.chk-form-ligne select {
+  flex: 1;
+}
+
+.chk-calendar::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.chk-form-title{
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-base);
+}
+
+.chk-form textarea {
+  resize: vertical;
+}
+
+.chk-form-btn{
+  margin: var(--spacing-base) var(--spacing-base) 0 var(--spacing-base);
+}
+
+.chk-header-top{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+}
+
+.chk-title{ 
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+} 
+
+.chk-title svg{
+  color:var(--color-primary);
+}
+
+.chk-compteur{
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
