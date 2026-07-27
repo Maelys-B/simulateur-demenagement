@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Calendar, Plus, ListPlus, Trash2 } from 'lucide-react';
+import { Check, Calendar, Plus, ListPlus, Trash2, ClipboardList } from 'lucide-react';
 import './Checklist.css'
 
 export const TACHES_PREDEFINIES = [
@@ -190,6 +190,8 @@ export default function Checklist({ profil }) {
     })
     .sort((a, b) => a.dateEcheance - b.dateEcheance);
 
+  const progression = Math.round((completes.length / toutesLesTaches.length) * 100);
+
 function ajouterTache() {
   if (!nouvelleTache.titre.trim() || !nouvelleTache.dateLimite) return;
 
@@ -209,6 +211,15 @@ function ajouterTache() {
 }
   return (
     <div>
+      <div className='card chk-header'>
+        <div className='chk-header-top'>
+          <h2 className='icon chk-title'><ClipboardList size={20} />Checklist administrative</h2>
+          <span className='chk-compteur'>{completes.length}/{toutesLesTaches.length} tâches complétées</span>
+        </div>
+        <div className='progress-bar-track'>
+          <div className='progress-bar-fill' style={{ width: `${progression}%` }} />
+        </div>
+      </div>
       <div className='card'>
         {toutesLesTaches.map((tache) => (
           <div key={tache.id} className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${completes.includes(tache.id) ? 'chk-card--done' : ''}`}>
