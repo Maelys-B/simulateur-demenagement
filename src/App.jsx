@@ -9,9 +9,8 @@ import ProfilPanel from './components/ProfilPanel/ProfilPanel';
 import { calculerBudgetPro, calculerBudgetSolo, calculerCartons, calculerVolume } from './utils/calculs';
 
 function App() {
-  // eslint-disable-next-line no-unused-vars
-  const [progression, setProgression] = useState(0);
   const [ongletActif, setOngletActif] = useState('inventaire');
+  const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
   const [profil, setProfil] = useState({
     type: 'solo',
@@ -33,13 +32,21 @@ function App() {
       <div className="header-card">
         <div>
           <h1 className="header-title">
-            <span className="icon">
-              <Truck size={30} /> Mon déménagement
+            <span className="icon icon-title">
+              <Truck size={30} />
+              <span
+                className="header-title-input"
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => setTitre(e.currentTarget.textContent)}
+              >
+                {titre}
+              </span>
             </span>
           </h1>
           <div className='flex'>
+            <Calendar size={16} color="#4A5565" />
             <div className="header-date-wrapper">
-              <Calendar size={16} />
               <input
                 type="date"
                 min="2000-01-01"
@@ -49,10 +56,7 @@ function App() {
                 onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
               />
             </div>
-            <p className="header-progression">Progression : {progression}%</p>
-          </div>
-          <div className="progress-bar-track">
-            <div className="progress-bar-fill" style={{ width: `${progression}%` }} />
+
           </div>
         </div>
 

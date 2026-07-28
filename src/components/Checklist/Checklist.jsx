@@ -240,7 +240,7 @@ function ajouterTache() {
                 </div>
               </div>
               <div className='chk-section-date'>
-                <span className="chk-item-date icon"><Calendar size={14} />{tache.dateEcheance.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                <span className="chk-item-date icon"><Calendar size={14} color="#4A5565"/>{tache.dateEcheance.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 {tache.enRetard && <span className="chk-item-badge chk-item-badge--late">En retard</span>}
                 {tache.enUrgence && <span className="chk-item-badge chk-item-badge--urgent">Urgent</span>}
               </div>
@@ -269,7 +269,7 @@ function ajouterTache() {
         </div>
         <div className="chk-form-ligne">
           <div className='icon header-date-wrapper' style={{ gap: 'var(--spacing-md)!important' }}>
-            <span style={{ marginLeft: 'var(--spacing-xs)' }}><Calendar size={16} /></span>
+            <span style={{ marginLeft: 'var(--spacing-xs)' }}><Calendar size={16} color="#4A5565"/></span>
             <input
               type="date"
               min="2000-01-01"

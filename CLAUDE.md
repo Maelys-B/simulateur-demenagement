@@ -124,15 +124,19 @@ simulateur-demenagement/
 │   │   │   ├── PieceCard.jsx         ✅ sous-composant avec states locaux
 │   │   │   └── listes.js             ✅ OBJETS_PREDEFINIS + OBJETS_A_EMBALLER
 │   │   ├── Calculs/
-│   │   │   ├── Calculs.jsx           🟡 en cours
-│   │   │   └── Calculs.css           🟡 en cours
+│   │   │   ├── Calculs.jsx           ✅ terminé
+│   │   │   └── Calculs.css           ✅ terminé
 │   │   ├── Comparaison/
-│   │   │   └── Comparaison.jsx       ⬜ vide
+│   │   │   ├── Comparaison.jsx       ✅ terminé
+│   │   │   └── Comparaison.css       ✅ terminé
 │   │   └── Checklist/
-│   │       └── Checklist.jsx         ⬜ vide
+│   │       ├── Checklist.jsx         ✅ terminé
+│   │       └── Checklist.css         ✅ terminé
 │   ├── App.jsx                        ✅ state pieces + profil remontés ici
 │   ├── App.css                        🗑️ supprimé (était le CSS de démo Vite)
-│   ├── index.css                      ✅ styles globaux + classe .card partagée
+│   ├── index.css                      ✅ styles globaux + classes partagées
+│   ├── utils/
+│   │   └── calculs.js                ✅ fonctions de calcul partagées
 │   └── main.jsx
 ├── CLAUDE.md                          ← ce fichier
 ```
@@ -208,7 +212,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `feature/comparaison` → en cours, pas encore mergée
+- `config/css-variables` → en cours
 
 ---
 
@@ -301,18 +305,21 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Estimation budgétaire solo vs pro (location camion + carburant + cartons / prix au m³ pro)
 - [x] Fonctions de calcul extraites dans `src/utils/calculs.js` et partagées avec App.jsx et Comparaison.jsx
 
-### 🟡 Étape 9 — Onglet Comparaison (EN COURS)
+### ✅ Étape 9 — Onglet Comparaison (TERMINÉE)
 
 - [x] Graphique barres avec `recharts` (budget min/max solo vs pro)
 - [x] Encart dynamique : économie / surcoût / équivalence avec icône `TrendingUp` / `TrendingDown` / `Scale`
 - [x] Tableaux avantages/inconvénients avec icônes `Check` / `X` (lucide-react)
 - [x] CSS : grille 2 colonnes, titres colorés par modificateur (`--blue` / `--green`)
 
-### ⬜ Étape 10 — Onglet Checklist
+### ✅ Étape 10 — Onglet Checklist (TERMINÉE)
 
-- [ ] Liste de tâches avec checkbox
-- [ ] Génération selon profil utilisateur
-- [ ] Calcul progression globale
+- [x] Tâches prédéfinies avec dates calculées selon la date de déménagement
+- [x] Cases à cocher avec animation, badges statut (urgent/retard) et badges type (Résiliation/Souscription/Démarche)
+- [x] Formulaire d'ajout de tâches personnalisées fusionnées avec les prédéfinies, triées par date
+- [x] Suppression des tâches (prédéfinies et personnalisées)
+- [x] Barre de progression et décompte des tâches complétées
+- [x] Date de déménagement dans le header (input date partagé via profil)
 
 ### ⬜ Étape 11 — Tests unitaires (Vitest)
 
@@ -426,10 +433,51 @@ demenagements (1) ──→ (N) checklist_items
 
 ---
 
-## 🔜 Prochaine étape immédiate
+## 💡 Améliorations prévues (backlog)
 
-👉 **Finir Étape 9** : merger `feature/comparaison` dans `main`.
-👉 **Ensuite** : Étape 10 (Checklist).
+> Idées validées à implémenter, dans l'ordre logique suggéré.
+
+### 1. CSS / Design (`config/css-variables`)
+- [x] Mettre toutes les variables CSS en anglais (déjà en anglais, confirmé)
+- [x] Ajouter les `font-weight` dans `theme.css` et remplacer les valeurs hardcodées dans tous les CSS
+- [x] Supprimer la barre de progression globale du header (inutile — la checklist a la sienne)
+- [x] Améliorations CSS du header (icône calendrier sortie du cadre, padding date wrapper aligné sur `.input`, couleur icône)
+- [x] Rendre le titre principal modifiable par l'utilisateur (input stylisé comme le h1, soulignement bleu au focus)
+
+### 2. Profil & Inventaire
+- [ ] Ajouter le nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé
+- [ ] Case à cocher "mélanger les cartons entre pièces" → si cochée, afficher les cartons par taille uniquement (sans distinction de pièce) — à débattre : gain de place et d'argent réel ?
+- [ ] Créer plus de catégories d'objets (meubles, objets divers…)
+
+### 3. Calculs — déménagement professionnel
+- [ ] Remplacer le calcul actuel par 3 formules au choix :
+  - **Économique** (transport seul) : 35–60 €/m³
+  - **Standard** (démontage/montage inclus) : 50–100 €/m³
+  - **Tout compris** (emballage + installation) : 60–160 €/m³
+- [ ] Nouveau calcul de la distance (coût additif au coût volume) :
+
+| Distance | Prix par km |
+|----------|-------------|
+| 0–50 km | 2,50 €/km |
+| 51–200 km | 2,00 €/km |
+| 201–500 km | 1,70 €/km |
+| > 500 km | 1,40 €/km |
+
+### 4. Checklist
+- [ ] Créer plus de types de démarches (ex : Logement, Administratif, Services…)
+
+### 5. Tests unitaires — Étape 11 (`feature/tests`)
+- [ ] Installer Vitest (`npm install -D vitest`)
+- [ ] Tests sur les fonctions de calcul (cas normaux)
+- [ ] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance invalide
+
+### 6. Fonctionnalités transverses — Étape 12 (`feature/transverses`)
+- [ ] Export PDF
+- [ ] Bouton Réinitialiser fonctionnel
+- [ ] Sauvegarde (localStorage ou backend)
+
+### 7. Accessibilité
+- [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
 
 ---
 
