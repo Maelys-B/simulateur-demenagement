@@ -9,14 +9,14 @@
 
 .comp-title {
     font-size: var(--font-size-xl);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: var(--color-text);
     margin-bottom: var(--spacing-md);
 }
 
 .comp-savings-title {
     color: #894B00;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     font-size: var(--font-size-md);
 }
 
@@ -44,7 +44,7 @@ p svg {
 .comp-table-title {
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-md);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
 .comp-table-title--green {

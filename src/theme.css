@@ -45,6 +45,10 @@
   --font-size-xl: 20px;
   --font-size-2xl: 24px;
 
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
 
   --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
