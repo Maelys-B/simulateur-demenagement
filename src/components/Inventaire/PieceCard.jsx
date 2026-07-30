@@ -1,12 +1,24 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { OBJETS_A_EMBALLER, OBJETS_PREDEFINIS } from './listes';
 
-export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onSupprimerObjet, onAjouterObjetAEmballer, onSupprimerObjetAEmballer }) {
+export default function PieceCard({ piece, listeObjets, listeEmballer, onSupprimerPiece, onAjouterObjet, onSupprimerObjet, onAjouterObjetAEmballer, onSupprimerObjetAEmballer }) {
   const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
+  const [recherche, setRecherche] = useState('');
+  const [listeVisible, setListeVisible] = useState(false);
   const [objetAEmballerSelectionne, setObjetAEmballerSelectionne] = useState(null);
   const [quantiteEmballer, setQuantiteEmballer] = useState(1);
+  const [rechercheEmballer, setRechercheEmballer] = useState('');
+  const [listeEmballerVisible, setListeEmballerVisible] = useState(false);
+
+  const resultats = listeObjets.filter((o) =>
+    o.nom.toLowerCase().includes(recherche.toLowerCase()),
+  );
+
+  const resultatsEmballer = listeEmballer.filter((o) =>
+    o.nom.toLowerCase().includes(rechercheEmballer.toLowerCase()),
+  );
+
 
   return (
     <div className="card inv-piece">
@@ -18,21 +30,42 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
       </div>
 
       <div className="inv-piece-add">
-        <select
-          className="input"
-          value={objetSelectionne ? objetSelectionne.nom : ''}
-          onChange={(e) => {
-            const objet = OBJETS_PREDEFINIS.find((o) => o.nom === e.target.value) ?? null;
-            setObjetSelectionne(objet);
-          }}
-        >
-          <option value="" disabled>Sélectionner un objet</option>
-          {OBJETS_PREDEFINIS.map((objet) => (
-            <option key={objet.nom} value={objet.nom}>
-              {objet.nom} ({objet.volume}m³)
-            </option>
-          ))}
-        </select>
+        <div className="inv-recherche-wrapper">
+          <input
+            type="text"
+            className="input inv-recherche-input"
+            placeholder="Rechercher un objet..."
+            autoComplete="off"
+            value={objetSelectionne ? objetSelectionne.nom : recherche}
+            onChange={(e) => {
+              setRecherche(e.target.value);
+              setObjetSelectionne(null);
+              setListeVisible(true);
+            }}
+            onFocus={() => setListeVisible(true)}
+            onBlur={() => setTimeout(() => setListeVisible(false), 150)}
+          />
+          {listeVisible && resultats.length > 0 && (
+            <ul className="inv-recherche-liste">
+              <div className="inv-recherche-liste-inner">
+                {resultats.map((o) => (
+                  <li
+                    key={o.nom}
+                    className="inv-recherche-item"
+                    onMouseDown={() => {
+                      setObjetSelectionne(o);
+                      setRecherche('');
+                      setListeVisible(false);
+                    }}
+                  >
+                    <span>{o.nom}</span>
+                    <span className="inv-recherche-volume">{o.volume} m³</span>
+                  </li>
+                ))}
+              </div>
+            </ul>
+          )}
+        </div>
         <input
           type="number"
           min="1"
@@ -68,21 +101,42 @@ export default function PieceCard({ piece, onSupprimerPiece, onAjouterObjet, onS
       ))}
 
       <div className="inv-piece-add">
-        <select
-          className="input"
-          value={objetAEmballerSelectionne ? objetAEmballerSelectionne.nom : ''}
-          onChange={(e) => {
-            const objet = OBJETS_A_EMBALLER.find((o) => o.nom === e.target.value) ?? null;
-            setObjetAEmballerSelectionne(objet);
-          }}
-        >
-          <option value="" disabled>Sélectionner un objet à emballer</option>
-          {OBJETS_A_EMBALLER.map((objet) => (
-            <option key={objet.nom} value={objet.nom}>
-              {objet.nom} ({objet.volume}m³)
-            </option>
-          ))}
-        </select>
+        <div className="inv-recherche-wrapper">
+          <input
+            type="text"
+            className="input inv-recherche-input"
+            placeholder="Rechercher un objet à emballer..."
+            autoComplete="off"
+            value={objetAEmballerSelectionne ? objetAEmballerSelectionne.nom : rechercheEmballer}
+            onChange={(e) => {
+              setRechercheEmballer(e.target.value);
+              setObjetAEmballerSelectionne(null);
+              setListeEmballerVisible(true);
+            }}
+            onFocus={() => setListeEmballerVisible(true)}
+            onBlur={() => setTimeout(() => setListeEmballerVisible(false), 150)}
+          />
+          {listeEmballerVisible && resultatsEmballer.length > 0 && (
+            <ul className="inv-recherche-liste">
+              <div className="inv-recherche-liste-inner">
+                {resultatsEmballer.map((o) => (
+                  <li
+                    key={o.nom}
+                    className="inv-recherche-item"
+                    onMouseDown={() => {
+                      setObjetAEmballerSelectionne(o);
+                      setRechercheEmballer('');
+                      setListeEmballerVisible(false);
+                    }}
+                  >
+                    <span>{o.nom}</span>
+                    <span className="inv-recherche-volume">{o.volume} m³</span>
+                  </li>
+                ))}
+              </div>
+            </ul>
+          )}
+        </div>
         <input
           type="number"
           min="1"

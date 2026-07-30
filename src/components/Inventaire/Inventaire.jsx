@@ -2,10 +2,20 @@ import { Package, Plus } from 'lucide-react';
 import { useState } from 'react';
 import './Inventaire.css';
 import PieceCard from './PieceCard';
+import { OBJETS_A_EMBALLER, OBJETS_PREDEFINIS } from './listes';
 
 
 export default function Inventaire({pieces, setPieces}) {
   const [value, setValue] = useState('');
+  const [listeObjets, setListeObjets] = useState(OBJETS_PREDEFINIS);
+  const [listeEmballer, setListeEmballer] = useState(OBJETS_A_EMBALLER);
+  const [persoNom, setPersoNom] = useState('');
+  const [persoH, setPersoH] = useState('');
+  const [persoL, setPersoL] = useState('');
+  const [persol, setPersol] = useState('');
+  const [persoType, setPersoType] = useState('meuble');
+  const [persoCarton, setPersoCarton] = useState('petit');
+
 
   function ajouterPiece(e) {
     e.preventDefault();
@@ -42,6 +52,20 @@ export default function Inventaire({pieces, setPieces}) {
       return piece;
     }));
   }
+  function ajouterObjetPerso() {
+    const volume = (Number(persoH) * Number(persoL) * Number(persol)) / 1000000;
+    const nouvelObjet = { nom: persoNom, volume: Math.round(volume * 1000) / 1000 };
+    if (persoType === 'meuble') {
+      setListeObjets([...listeObjets, nouvelObjet]);
+    } else {
+      setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
+    }
+    setPersoNom('');
+    setPersoH('');
+    setPersoL('');
+    setPersol('');
+  }
+
   function supprimerPiece(pieceId) {
     setPieces(pieces.filter((piece) => piece.id !== pieceId))
   }
@@ -94,6 +118,8 @@ export default function Inventaire({pieces, setPieces}) {
         <PieceCard
           key={piece.id}
           piece={piece}
+          listeObjets={listeObjets}
+          listeEmballer={listeEmballer}
           onSupprimerPiece={supprimerPiece}
           onAjouterObjet={ajouterObjet}
           onSupprimerObjet={supprimerObjet}
@@ -101,6 +127,40 @@ export default function Inventaire({pieces, setPieces}) {
           onSupprimerObjetAEmballer={supprimerObjetAEmballer}
         />
       ))}
+          <div className="card chk-form">
+        <div className="chk-form-text">
+          <p className="chk-form-title">Ajouter un objet personnalisé</p>
+          <div className='chk-form-grid'>
+          <input className="input" placeholder="Nom de l'objet" value={persoNom} onChange={(e) => setPersoNom(e.target.value)} />
+          <select className="input" value={persoType} onChange={(e) => setPersoType(e.target.value)}>
+            <option value="meuble">Meuble / Objet encombrant</option>
+            <option value="emballer">Objet à emballer</option>
+          </select>
+          </div>
+          {persoType === 'emballer' && (
+            <select className="input" value={persoCarton} onChange={(e) => setPersoCarton(e.target.value)}>
+              <option value="petit">Petit carton</option>
+              <option value="standard">Carton standard</option>
+              <option value="grand">Grand carton</option>
+            </select>
+          )}
+        </div>
+        <div className="chk-form-ligne">
+          <input className="input" type="number" min="0" placeholder="Hauteur (cm)" value={persoH} onChange={(e) => setPersoH(e.target.value)} />
+          <input className="input" type="number" min="0" placeholder="Largeur (cm)" value={persoL} onChange={(e) => setPersoL(e.target.value)} />
+          <input className="input" type="number" min="0" placeholder="Longueur (cm)" value={persol} onChange={(e) => setPersol(e.target.value)} />
+        </div>
+        <div className="chk-form-btn">
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={!persoNom || !persoH || !persoL || !persol}
+            onClick={ajouterObjetPerso}
+          >
+            Ajouter à la liste
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

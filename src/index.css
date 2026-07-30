@@ -118,7 +118,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-base);
 }
 
 .header-date-wrapper {
