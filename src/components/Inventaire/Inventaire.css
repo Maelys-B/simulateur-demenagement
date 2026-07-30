@@ -119,9 +119,9 @@
   border-radius: var(--radius-full);
 }
 
-.chk-form-grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-sm);
+.inv-desc {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
 }
 

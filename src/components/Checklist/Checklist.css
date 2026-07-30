@@ -153,47 +153,8 @@
     color: var(--color-text-muted);
 }
 
-.chk-form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.chk-form-text{
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    margin: var(--spacing-base) var(--spacing-base) var(--spacing-sm);
-}
-
-.chk-form-ligne{
-    display:flex;
-    gap: var(--spacing-base);
-    margin: 0 var(--spacing-base) var(--spacing-base) var(--spacing-base);
-}
-
-.chk-form-ligne input,
-.chk-form-ligne select {
-  flex: 1;
-}
-
 .chk-calendar::-webkit-calendar-picker-indicator {
   display: none;
-}
-
-.chk-form-title{
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text);
-    margin-bottom: var(--spacing-base);
-}
-
-.chk-form textarea {
-  resize: vertical;
-}
-
-.chk-form-btn{
-  margin: var(--spacing-base) var(--spacing-base) 0 var(--spacing-base);
 }
 
 .chk-header-top{

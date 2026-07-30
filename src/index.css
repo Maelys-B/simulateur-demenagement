@@ -182,3 +182,48 @@ body {
 .btn-icon-danger:hover {
   background-color: var(--color-bg-red-light);
 }
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.form-ligne {
+  display: flex;
+  gap: var(--spacing-base);
+  margin-bottom: var(--spacing-base);
+}
+
+.form-ligne input,
+.form-ligne select {
+  flex: 1;
+}
+
+.form-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-base);
+}
+
+.form-card textarea {
+  resize: vertical;
+}
+
+.form-btn {
+  margin-top: var(--spacing-base);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+}
