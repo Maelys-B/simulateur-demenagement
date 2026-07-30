@@ -132,3 +132,20 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+.calc-melanger-label {
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+}
+
+.calc-melanger-label input {
+  cursor: pointer;
+}
+
+.calc-melanger-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-top: var(--spacing-xs);
+  font-weight: var(--font-weight-regular);
+}

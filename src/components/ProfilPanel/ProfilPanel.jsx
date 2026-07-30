@@ -1,4 +1,4 @@
-import { Building, Car, MapPin, User } from 'lucide-react';
+import { Building, Car, MapPin, User, Users } from 'lucide-react';
 import './ProfilPanel.css';
 
 export default function ProfilPanel({ profil, setProfil }) {
@@ -18,9 +18,28 @@ export default function ProfilPanel({ profil, setProfil }) {
         <label htmlFor="type">Type de déménagement</label>
         <select id="type" name="type" value={profil.type} onChange={handleChange}>
           <option value="solo">Solo (je fais moi-même)</option>
+          <option value="plusieurs">Je me fais aider</option>
           <option value="pro">Professionnel</option>
         </select>
       </div>
+
+      {profil.type === 'plusieurs' && (
+        <div className="profil-field">
+          <label htmlFor="nbPersonnes" className="icon">
+            <Users size={20} />
+            Personnes aidantes
+          </label>
+          <input
+            id="nbPersonnes"
+            name="nbPersonnes"
+            type="number"
+            min="1"
+            max="10"
+            value={profil.nbPersonnes}
+            onChange={handleChange}
+          />
+        </div>
+      )}
 
       <div className="profil-field">
         <label htmlFor="distance" className="icon">

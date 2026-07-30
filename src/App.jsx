@@ -18,6 +18,7 @@ function App() {
     etage: '',
     ascenseur: false,
     parking: false,
+    nbPersonnes: 1,
     dateDemenagement: new Date().toISOString().split('T')[0],
   });
   const volumeTotal = calculerVolume(pieces);
