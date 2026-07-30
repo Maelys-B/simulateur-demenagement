@@ -373,10 +373,6 @@ export const OBJETS_PREDEFINIS = [
   { nom: 'Objet personnalisé', volume: 0 },
 ];
 
-// ═══════════════════════════════════════════════════════════
-//  OBJETS À EMBALLER (mis dans des cartons, avec quantité)
-//  carton = taille de carton conseillée
-// ═══════════════════════════════════════════════════════════
 export const OBJETS_A_EMBALLER = [
   // ─── CUISINE / VAISSELLE ───
   { nom: 'Assiette', volume: 0.0025, carton: 'petit' },

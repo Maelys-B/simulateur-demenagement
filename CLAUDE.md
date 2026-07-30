@@ -451,8 +451,8 @@ demenagements (1) ──→ (N) checklist_items
 - [x] Créer plus de catégories d'objets (meubles, objets divers…)
 
 ### 2b. Inventaire amélioré (`backlog/inventaire-ameliore`)
-- [ ] **Barre de recherche** — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
-- [ ] **"Autre objet"** — option pour ajouter un objet absent de la liste : saisie libre du nom + hauteur × largeur × longueur (en cm), volume calculé automatiquement (H × L × l ÷ 1 000 000 → m³). Les objets prédéfinis gardent leur volume fixe.
+- [x] **Barre de recherche** — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
+- [x] **"Autre objet"** — formulaire global (hors pièce) avec nom + hauteur × largeur × longueur (cm) → volume calculé automatiquement. L'objet est ajouté à `listeObjets` ou `listeEmballer` selon le type choisi (meuble ou objet à emballer + taille de carton). Ces listes sont des copies dynamiques de `OBJETS_PREDEFINIS` et `OBJETS_A_EMBALLER`.
 
 ### 3. Calculs — déménagement professionnel
 - [ ] Remplacer le calcul actuel par 3 formules au choix :
@@ -480,6 +480,7 @@ demenagements (1) ──→ (N) checklist_items
 - [ ] Export PDF
 - [ ] Bouton Réinitialiser fonctionnel
 - [ ] Sauvegarde (localStorage ou backend)
+- [ ] Confirmation de suppression 
 
 ### 7. Accessibilité
 - [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)

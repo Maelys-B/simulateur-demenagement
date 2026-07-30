@@ -249,9 +249,9 @@ function ajouterTache() {
         ))}
       </div>
 
-      <div className="card chk-form">
-        <h3 className='chk-form-title icon'><ListPlus size={20} />Ajouter une tâche</h3>
-        <div className='chk-form-text'>
+      <div className="card form-card">
+        <h3 className='form-title icon'><ListPlus size={20} />Ajouter une tâche</h3>
+        <div className='form-text'>
           <input
             type="text"
             placeholder="Titre (ex: Prévenir la crèche)"
@@ -267,7 +267,7 @@ function ajouterTache() {
             className='input'
           />
         </div>
-        <div className="chk-form-ligne">
+        <div className="form-ligne">
           <div className='icon header-date-wrapper' style={{ gap: 'var(--spacing-md)!important' }}>
             <span style={{ marginLeft: 'var(--spacing-xs)' }}><Calendar size={16} color="#4A5565"/></span>
             <input
@@ -289,7 +289,7 @@ function ajouterTache() {
             <option value="Demarche">Démarche</option>
           </select>
         </div>
-        <button className="btn btn-primary icon chk-form-btn" type="submit" onClick={ajouterTache}>
+        <button className="btn btn-primary icon form-btn" type="submit" onClick={ajouterTache}>
           <Plus size={16} /> Ajouter
         </button>
       </div>
