@@ -182,12 +182,13 @@ git branch -d nom-de-la-branche
 
 ### Convention de nommage des branches
 
-| Préfixe       | Usage                                                                             |
-| ------------- | --------------------------------------------------------------------------------- |
-| `feature/...` | Nouvelle fonctionnalité — ex: `feature/navigation`                                |
-| `fix/...`     | Correction de bug                                                                 |
-| `config/...`  | Mise en place ou changement d'outils/configuration — ex: `config/eslint-prettier` |
-| `docs/...`    | Documentation                                                                     |
+| Préfixe        | Usage                                                                             |
+| -------------- | --------------------------------------------------------------------------------- |
+| `feature/...`  | Nouvelle fonctionnalité — ex: `feature/navigation`                                |
+| `fix/...`      | Correction de bug                                                                 |
+| `config/...`   | Mise en place ou changement d'outils/configuration — ex: `config/eslint-prettier` |
+| `backlog/...`  | Amélioration ou ajout mineur issu du backlog — ex: `backlog/profil-inventaire`    |
+| `docs/...`     | Documentation                                                                     |
 
 ### Convention des messages de commit (Conventional Commits)
 
@@ -445,9 +446,13 @@ demenagements (1) ──→ (N) checklist_items
 - [x] Rendre le titre principal modifiable par l'utilisateur (input stylisé comme le h1, soulignement bleu au focus)
 
 ### 2. Profil & Inventaire
-- [ ] Ajouter le nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé
-- [ ] Case à cocher "mélanger les cartons entre pièces" → si cochée, afficher les cartons par taille uniquement (sans distinction de pièce) — à débattre : gain de place et d'argent réel ?
-- [ ] Créer plus de catégories d'objets (meubles, objets divers…)
+- [x] Ajouter le nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé
+- [x] Case à cocher "mélanger les cartons entre pièces" → affiche les cartons par taille uniquement, réduit le nombre total par meilleur remplissage
+- [x] Créer plus de catégories d'objets (meubles, objets divers…)
+
+### 2b. Inventaire amélioré (`backlog/inventaire-ameliore`)
+- [ ] **Barre de recherche** — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
+- [ ] **"Autre objet"** — option pour ajouter un objet absent de la liste : saisie libre du nom + hauteur × largeur × longueur (en cm), volume calculé automatiquement (H × L × l ÷ 1 000 000 → m³). Les objets prédéfinis gardent leur volume fixe.
 
 ### 3. Calculs — déménagement professionnel
 - [ ] Remplacer le calcul actuel par 3 formules au choix :

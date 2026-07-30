@@ -1,8 +1,11 @@
-import { Clock, Euro, Package, Truck, Users } from 'lucide-react';
+import { Clock, Euro, Package, Shuffle, Truck, Users } from 'lucide-react';
+import { useState } from 'react';
 import {
+  PRIX_CARTONS,
   calculerBudgetPro,
   calculerBudgetSolo,
   calculerCartons,
+  calculerCartonsGlobal,
   calculerTemps,
   calculerVolume,
   determinerCamion,
@@ -11,12 +14,32 @@ import {
 import './Calculs.css';
 
 export default function Calculs({ pieces, profil }) {
+  const [melangerCartons, setMelangerCartons] = useState(false);
   const volumeTotal = calculerVolume(pieces);
   const tailleCamion = determinerCamion(volumeTotal * 1.15);
   const personneReco = determinerPersonne(volumeTotal);
-  const tempsEstime = calculerTemps(volumeTotal, profil.distance);
+  const tempsEstime = calculerTemps(volumeTotal, profil.distance, profil.nbPersonnes);
   const cartonsParPiece = calculerCartons(pieces);
-  const coutCartons = cartonsParPiece.reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0);
+  const cartonsGlobal = calculerCartonsGlobal(pieces);
+
+  const coutCartons = melangerCartons
+    ? cartonsGlobal.petit.nb * PRIX_CARTONS.petit + cartonsGlobal.standard.nb * PRIX_CARTONS.standard + cartonsGlobal.grand.nb * PRIX_CARTONS.grand
+    : cartonsParPiece.reduce(
+        (acc, p) =>
+          acc +
+          p.petit.nb * PRIX_CARTONS.petit +
+          p.standard.nb * PRIX_CARTONS.standard +
+          p.grand.nb * PRIX_CARTONS.grand,
+        0,
+      );
+
+  const totalCartons = melangerCartons
+    ? { petit: cartonsGlobal.petit.nb, standard: cartonsGlobal.standard.nb, grand: cartonsGlobal.grand.nb }
+    : {
+        petit: cartonsParPiece.reduce((acc, p) => acc + p.petit.nb, 0),
+        standard: cartonsParPiece.reduce((acc, p) => acc + p.standard.nb, 0),
+        grand: cartonsParPiece.reduce((acc, p) => acc + p.grand.nb, 0),
+      };
   const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
   const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur);
 
@@ -51,11 +74,24 @@ export default function Calculs({ pieces, profil }) {
         <h2 className="calc-cartons-title icon">
           <Package size={20} /> Cartons nécessaires
         </h2>
-        {cartonsParPiece.map((piece) => {
+        {melangerCartons ? (
+          <div>
+            {[
+              { label: 'Petits cartons', nb: totalCartons.petit, prix: PRIX_CARTONS.petit },
+              { label: 'Cartons standards', nb: totalCartons.standard, prix: PRIX_CARTONS.standard },
+              { label: 'Grands cartons', nb: totalCartons.grand, prix: PRIX_CARTONS.grand },
+            ].filter((l) => l.nb > 0).map((l) => (
+              <div key={l.label} className="calc-cartons-line">
+                <span>{l.label} / {l.nb} carton(s)</span>
+                <span>{(l.nb * l.prix).toFixed(2)} €</span>
+              </div>
+            ))}
+          </div>
+        ) : cartonsParPiece.map((piece) => {
           const lignes = [
-            { label: 'Petits cartons', data: piece.petit },
-            { label: 'Cartons standards', data: piece.standard },
-            { label: 'Grands cartons', data: piece.grand },
+            { label: 'Petits cartons', data: piece.petit, prix: PRIX_CARTONS.petit },
+            { label: 'Cartons standards', data: piece.standard, prix: PRIX_CARTONS.standard },
+            { label: 'Grands cartons', data: piece.grand, prix: PRIX_CARTONS.grand },
           ].filter((l) => l.data.nb > 0);
 
           if (lignes.length === 0) return null;
@@ -66,14 +102,26 @@ export default function Calculs({ pieces, profil }) {
               {lignes.map((l) => (
                 <div key={l.label} className="calc-cartons-line">
                   <span>{l.label} / {l.data.nb} carton(s)</span>
-                  <span>{(l.data.nb * 1.5).toFixed(2)} €</span>
+                  <span>{(l.data.nb * l.prix).toFixed(2)} €</span>
                 </div>
               ))}
             </div>
           );
         })}
         <div className="calc-cartons-total">
-          <span>Total cartons</span>
+          <div>
+            <label className="icon calc-melanger-label">
+              <input
+                type="checkbox"
+                checked={melangerCartons}
+                onChange={(e) => setMelangerCartons(e.target.checked)}
+              />
+              <Shuffle size={14} /> Mélanger les cartons
+            </label>
+            <p className="calc-melanger-desc">
+              (Regroupe les objets de toutes les pièces par taille de carton, réduit le nombre total grâce à un meilleur remplissage.)
+            </p>
+          </div>
           <span>{coutCartons.toFixed(2)} €</span>
         </div>
       </div>

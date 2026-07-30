@@ -4,6 +4,12 @@ export const VOLUMES_CARTONS = {
   grand: 0.077,
 };
 
+export const PRIX_CARTONS = {
+  petit: 1.0,
+  standard: 1.5,
+  grand: 2.5,
+};
+
 export function calculerVolume(pieces) {
   return pieces.reduce((total, piece) => {
     const volumeMeubles = piece.objets.reduce((acc, o) => acc + o.volume * o.quantite, 0);
@@ -33,9 +39,10 @@ export function determinerPersonne(volume) {
   return '4 personnes +';
 }
 
-export function calculerTemps(volume, distance) {
-  const emballage = volume / 5;
-  const chargement = volume / 7;
+export function calculerTemps(volume, distance, nbPersonnes = 1) {
+  const nb = Math.max(1, Number(nbPersonnes) || 1);
+  const emballage = volume / (5 * nb);
+  const chargement = volume / (7 * nb);
   const trajet = (distance / 60) * 2;
   const total = emballage + chargement + trajet;
   const fmt = (h) =>
@@ -63,6 +70,23 @@ export function calculerCartons(pieces) {
       grand: calculerGroupe('grand'),
     };
   });
+}
+
+export function calculerCartonsGlobal(pieces) {
+  const calculerGroupe = (taille) => {
+    const volume = pieces.reduce((acc, piece) => acc + piece.objetsAEmballer
+          .filter((o) => o.carton === taille)
+          .reduce((a, o) => a + o.volume * o.quantite, 0),
+      0,
+    );
+    const nb = Math.ceil(volume / (VOLUMES_CARTONS[taille] * 0.8));
+    return { nb, volume };
+  };
+  return {
+    petit: calculerGroupe('petit'),
+    standard: calculerGroupe('standard'),
+    grand: calculerGroupe('grand'),
+  };
 }
 
 export function calculerBudgetSolo(volume, distance, coutCartons) {
