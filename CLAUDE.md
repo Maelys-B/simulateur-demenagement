@@ -455,11 +455,11 @@ demenagements (1) ──→ (N) checklist_items
 - [x] **"Autre objet"** — formulaire global (hors pièce) avec nom + hauteur × largeur × longueur (cm) → volume calculé automatiquement. L'objet est ajouté à `listeObjets` ou `listeEmballer` selon le type choisi (meuble ou objet à emballer + taille de carton). Ces listes sont des copies dynamiques de `OBJETS_PREDEFINIS` et `OBJETS_A_EMBALLER`.
 
 ### 3. Calculs — déménagement professionnel
-- [ ] Remplacer le calcul actuel par 3 formules au choix :
+- [x] Remplacer le calcul actuel par 3 formules au choix :
   - **Économique** (transport seul) : 35–60 €/m³
   - **Standard** (démontage/montage inclus) : 50–100 €/m³
   - **Tout compris** (emballage + installation) : 60–160 €/m³
-- [ ] Nouveau calcul de la distance (coût additif au coût volume) :
+- [x] Nouveau calcul de la distance (coût additif au coût volume) :
 
 | Distance | Prix par km |
 |----------|-------------|
@@ -467,6 +467,8 @@ demenagements (1) ──→ (N) checklist_items
 | 51–200 km | 2,00 €/km |
 | 201–500 km | 1,70 €/km |
 | > 500 km | 1,40 €/km |
+
+- [x] Majoration si parking non accessible : ×1.15 (même logique que l'étage sans ascenseur ×1.30) — champ `profil.parking` déjà présent dans `ProfilPanel.jsx` mais jusqu'ici jamais utilisé dans les calculs
 
 ### 4. Checklist
 - [ ] Créer plus de types de démarches (ex : Logement, Administratif, Services…)

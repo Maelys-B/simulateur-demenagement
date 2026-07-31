@@ -16,6 +16,36 @@
   color: var(--color-text);
 }
 
+.calc-formule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.calc-formule-label {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.calc-formule select {
+  width: auto;
+}
+
+.calc-formule-desc {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.calc-formule-desc strong {
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
 .calc-title svg {
   color: var(--color-primary);
 }

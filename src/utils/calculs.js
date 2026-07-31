@@ -113,19 +113,35 @@ export function calculerBudgetSolo(volume, distance, coutCartons) {
   };
 }
 
-export function calculerBudgetPro(volume, distance, etage, ascenseur) {
-  let proMin = volume * 35;
-  let proMax = volume * 90;
+export const FORMULES_PRO = {
+  economique:  { label: 'Économique', prixMin: 35, prixMax: 60 },
+  standard:    { label: 'Standard', prixMin: 50, prixMax: 100 },
+  toutCompris: { label: 'Tout compris', prixMin: 60, prixMax: 160 },
+};
 
-  if (distance > 300) {
-    proMin *= 2; proMax *= 2;
-  } else if (distance > 100) {
-    proMin *= 1.5; proMax *= 1.5;
-  }
+function calculerCoutDistance(distance) {
+  if (distance <= 50)  return distance * 2.50;
+  if (distance <= 200) return 50 * 2.50 + (distance - 50) * 2.00;
+  if (distance <= 500) return 50 * 2.50 + 150 * 2.00 + (distance - 200) * 1.70;
+  return                      50 * 2.50 + 150 * 2.00 + 300 * 1.70 + (distance - 500) * 1.40;
+}
+
+export function calculerBudgetPro(volume, distance, etage, ascenseur, formule = 'economique', parking) {
+  const { prixMin, prixMax } = FORMULES_PRO[formule];
+  let proMin = volume * prixMin;
+  let proMax = volume * prixMax;
+
+  const coutDist = calculerCoutDistance(distance);
+  proMin += coutDist;
+  proMax += coutDist;
 
   if (etage >= 3 && !ascenseur) {
     proMin *= 1.30; proMax *= 1.30;
   }
 
-  return { min: proMin, max: proMax };
+  if (!parking) {
+  proMin *= 1.15; proMax *= 1.15;
+  }
+
+  return { min: Math.round(proMin), max: Math.round(proMax) };
 }
