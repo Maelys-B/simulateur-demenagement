@@ -12,6 +12,7 @@ function App() {
   const [ongletActif, setOngletActif] = useState('inventaire');
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
+  const [formule, setFormule] = useState('economique');
   const [profil, setProfil] = useState({
     type: 'solo',
     distance: '',
@@ -25,7 +26,7 @@ function App() {
   const cartonsParPiece = calculerCartons(pieces);
   const coutCartons = cartonsParPiece.reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0);
   const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
-  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur);
+  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur, formule, profil.parking);
 
 
   return (
@@ -78,7 +79,7 @@ function App() {
       <div className="app-content">
         <div className="app-main">
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
-          {ongletActif === 'calculs' && <Calculs pieces={pieces} profil={profil}/>}
+          {ongletActif === 'calculs' && <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />}
           {ongletActif === 'comparaison' && <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />}
           {ongletActif === 'check-list' && <Checklist profil={profil}/>}
         </div>

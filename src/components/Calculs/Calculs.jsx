@@ -1,6 +1,7 @@
 import { Clock, Euro, Package, Shuffle, Truck, Users } from 'lucide-react';
 import { useState } from 'react';
 import {
+  FORMULES_PRO,
   PRIX_CARTONS,
   calculerBudgetPro,
   calculerBudgetSolo,
@@ -13,7 +14,7 @@ import {
 } from '../../utils/calculs';
 import './Calculs.css';
 
-export default function Calculs({ pieces, profil }) {
+export default function Calculs({ pieces, profil, formule, setFormule }) {
   const [melangerCartons, setMelangerCartons] = useState(false);
   const volumeTotal = calculerVolume(pieces);
   const tailleCamion = determinerCamion(volumeTotal * 1.15);
@@ -41,7 +42,7 @@ export default function Calculs({ pieces, profil }) {
         grand: cartonsParPiece.reduce((acc, p) => acc + p.grand.nb, 0),
       };
   const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
-  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur);
+  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur, formule, profil.parking);
 
   return (
     <div>
@@ -130,6 +131,26 @@ export default function Calculs({ pieces, profil }) {
         <h2 className="calc-budget-title icon">
           <Euro size={20} />Estimation du budget
         </h2>
+        <div className="calc-formule">
+          <label className="calc-formule-label" htmlFor="formule-pro">
+            Quelle formule de déménagement professionnel ?
+          </label>
+          <select
+            id="formule-pro"
+            className="input"
+            value={formule}
+            onChange={(e) => setFormule(e.target.value)}
+          >
+            {Object.entries(FORMULES_PRO).map(([cle, f]) => (
+              <option key={cle} value={cle}>{f.label}</option>
+            ))}
+          </select>
+          <ul className="calc-formule-desc">
+            <li><strong>Économique</strong>: transport seul</li>
+            <li><strong>Standard</strong>: démontage et remontage des meubles inclus</li>
+            <li><strong>Tout compris</strong>: emballage et installation complète</li>
+          </ul>
+        </div>
         <div className="calc-grid">
           <div className="calc-budget-card calc-card--blue calc-border--blue">
             <span className="calc-budget-label">Déménagement solo</span>
@@ -139,7 +160,7 @@ export default function Calculs({ pieces, profil }) {
           <div className="calc-budget-card calc-card--green calc-border--green">
             <span className="calc-budget-label">Déménagement professionnel</span>
             <span className="calc-budget-value">{budgetPro.min.toFixed(0)} – {budgetPro.max.toFixed(0)} €</span>
-            <p className="calc-budget-detail">Service complet avec déménageurs</p>
+            <p className="calc-budget-detail">Formule {FORMULES_PRO[formule].label.toLowerCase()}</p>
           </div>
         </div>
       </div>
