@@ -45,8 +45,7 @@ export function calculerTemps(volume, distance, nbPersonnes = 1) {
   const chargement = volume / (7 * nb);
   const trajet = (distance / 60) * 2;
   const total = emballage + chargement + trajet;
-  const fmt = (h) =>
-    `${Math.floor(h)}h${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
+  const fmt = (h) => `${Math.floor(h)}h${String(Math.round((h % 1) * 60)).padStart(2, '0')}`;
   return {
     emballage: fmt(emballage),
     chargement: fmt(chargement),
@@ -74,7 +73,10 @@ export function calculerCartons(pieces) {
 
 export function calculerCartonsGlobal(pieces) {
   const calculerGroupe = (taille) => {
-    const volume = pieces.reduce((acc, piece) => acc + piece.objetsAEmballer
+    const volume = pieces.reduce(
+      (acc, piece) =>
+        acc +
+        piece.objetsAEmballer
           .filter((o) => o.carton === taille)
           .reduce((a, o) => a + o.volume * o.quantite, 0),
       0,
@@ -94,15 +96,20 @@ export function calculerBudgetSolo(volume, distance, coutCartons) {
   let camionMax;
 
   if (volume <= 5) {
-    camionMin = 80; camionMax = 120;
+    camionMin = 80;
+    camionMax = 120;
   } else if (volume <= 10) {
-    camionMin = 70; camionMax = 170;
+    camionMin = 70;
+    camionMax = 170;
   } else if (volume <= 20) {
-    camionMin = 120; camionMax = 200;
+    camionMin = 120;
+    camionMax = 200;
   } else if (volume <= 30) {
-    camionMin = 150; camionMax = 250;
+    camionMin = 150;
+    camionMax = 250;
   } else {
-    camionMin = 200; camionMax = 300;
+    camionMin = 200;
+    camionMax = 300;
   }
 
   const carburant = distance * 0.55 + 25;
@@ -114,19 +121,26 @@ export function calculerBudgetSolo(volume, distance, coutCartons) {
 }
 
 export const FORMULES_PRO = {
-  economique:  { label: 'Économique', prixMin: 35, prixMax: 60 },
-  standard:    { label: 'Standard', prixMin: 50, prixMax: 100 },
+  economique: { label: 'Économique', prixMin: 35, prixMax: 60 },
+  standard: { label: 'Standard', prixMin: 50, prixMax: 100 },
   toutCompris: { label: 'Tout compris', prixMin: 60, prixMax: 160 },
 };
 
 function calculerCoutDistance(distance) {
-  if (distance <= 50)  return distance * 2.50;
-  if (distance <= 200) return 50 * 2.50 + (distance - 50) * 2.00;
-  if (distance <= 500) return 50 * 2.50 + 150 * 2.00 + (distance - 200) * 1.70;
-  return                      50 * 2.50 + 150 * 2.00 + 300 * 1.70 + (distance - 500) * 1.40;
+  if (distance <= 50) return distance * 2.5;
+  if (distance <= 200) return 50 * 2.5 + (distance - 50) * 2.0;
+  if (distance <= 500) return 50 * 2.5 + 150 * 2.0 + (distance - 200) * 1.7;
+  return 50 * 2.5 + 150 * 2.0 + 300 * 1.7 + (distance - 500) * 1.4;
 }
 
-export function calculerBudgetPro(volume, distance, etage, ascenseur, formule = 'economique', parking) {
+export function calculerBudgetPro(
+  volume,
+  distance,
+  etage,
+  ascenseur,
+  formule = 'economique',
+  parking,
+) {
   const { prixMin, prixMax } = FORMULES_PRO[formule];
   let proMin = volume * prixMin;
   let proMax = volume * prixMax;
@@ -136,11 +150,13 @@ export function calculerBudgetPro(volume, distance, etage, ascenseur, formule = 
   proMax += coutDist;
 
   if (etage >= 3 && !ascenseur) {
-    proMin *= 1.30; proMax *= 1.30;
+    proMin *= 1.3;
+    proMax *= 1.3;
   }
 
   if (!parking) {
-  proMin *= 1.15; proMax *= 1.15;
+    proMin *= 1.15;
+    proMax *= 1.15;
   }
 
   return { min: Math.round(proMin), max: Math.round(proMax) };

@@ -1,3 +1,4 @@
+import { Check, Scale, TrendingDown, TrendingUp, X } from 'lucide-react';
 import {
   Bar,
   BarChart,
@@ -9,7 +10,6 @@ import {
   YAxis,
 } from 'recharts';
 import './Comparaison.css';
-import { Check, Scale, TrendingDown, TrendingUp, X } from 'lucide-react';
 
 export default function Comparaison({ budgetSolo, budgetPro }) {
   const economie = Math.round(budgetPro.min - budgetSolo.min);
@@ -32,13 +32,22 @@ export default function Comparaison({ budgetSolo, budgetPro }) {
     encart = {
       Icone: Scale,
       titre: 'Budgets équivalents',
-      texte: "Les deux options ont un coût similaire. Le choix dépend alors de votre temps disponible et de votre préférence pour le confort ou l'autonomie.",
+      texte:
+        "Les deux options ont un coût similaire. Le choix dépend alors de votre temps disponible et de votre préférence pour le confort ou l'autonomie.",
     };
   }
 
   const donnees = [
-    { categorie: 'Budget min', Solo: Math.round(budgetSolo.min), Professionnel: Math.round(budgetPro.min) },
-    { categorie: 'Budget max', Solo: Math.round(budgetSolo.max), Professionnel: Math.round(budgetPro.max) },
+    {
+      categorie: 'Budget min',
+      Solo: Math.round(budgetSolo.min),
+      Professionnel: Math.round(budgetPro.min),
+    },
+    {
+      categorie: 'Budget max',
+      Solo: Math.round(budgetSolo.max),
+      Professionnel: Math.round(budgetPro.max),
+    },
   ];
 
   const tableaux = [
@@ -46,13 +55,28 @@ export default function Comparaison({ budgetSolo, budgetPro }) {
       titre: 'Déménagement solo',
       couleur: 'blue',
       avantages: ['Coût moins élevé', 'Flexibilité des horaires', 'Contrôle total du déménagement'],
-      inconvenients: ['Effort physique important', 'Risque de casse plus élevé', 'Temps de préparation long', "Besoin d'organiser aide extérieure"],
+      inconvenients: [
+        'Effort physique important',
+        'Risque de casse plus élevé',
+        'Temps de préparation long',
+        "Besoin d'organiser aide extérieure",
+      ],
     },
     {
       titre: 'Déménagement professionnel',
       couleur: 'green',
-      avantages: ["Rapidité d'exécution", 'Assurance en cas de casse', 'Équipement professionnel fourni', 'Expérience et efficacité', 'Moins de stress'],
-      inconvenients: ['Coût plus élevé', 'Dépendance aux horaires du prestataire', "Besoin de réserver à l'avance"],
+      avantages: [
+        "Rapidité d'exécution",
+        'Assurance en cas de casse',
+        'Équipement professionnel fourni',
+        'Expérience et efficacité',
+        'Moins de stress',
+      ],
+      inconvenients: [
+        'Coût plus élevé',
+        'Dépendance aux horaires du prestataire',
+        "Besoin de réserver à l'avance",
+      ],
     },
   ];
 
@@ -85,13 +109,17 @@ export default function Comparaison({ budgetSolo, budgetPro }) {
             <p className="comp-table-section">Avantages</p>
             <ul className="comp-advantages">
               {col.avantages.map((a) => (
-                <li key={a} className="comp-item icon"><Check size={14} color="#16a34a" /> {a}</li>
+                <li key={a} className="comp-item icon">
+                  <Check size={14} color="#16a34a" /> {a}
+                </li>
               ))}
             </ul>
             <p className="comp-table-section">Inconvénients</p>
             <ul>
               {col.inconvenients.map((i) => (
-                <li key={i} className="comp-item comp-item--disadvantage icon"><X size={14} color="#dc2626" /> {i}</li>
+                <li key={i} className="comp-item comp-item--disadvantage icon">
+                  <X size={14} color="#dc2626" /> {i}
+                </li>
               ))}
             </ul>
           </div>

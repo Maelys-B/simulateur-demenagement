@@ -4,7 +4,6 @@ import './Inventaire.css';
 import PieceCard from './PieceCard';
 import { OBJETS_A_EMBALLER, OBJETS_PREDEFINIS } from './listes';
 
-
 export default function Inventaire({ pieces, setPieces }) {
   const [value, setValue] = useState('');
   const [listeObjets, setListeObjets] = useState(OBJETS_PREDEFINIS);
@@ -15,7 +14,6 @@ export default function Inventaire({ pieces, setPieces }) {
   const [persol, setPersol] = useState('');
   const [persoType, setPersoType] = useState('meuble');
   const [persoCarton, setPersoCarton] = useState('petit');
-
 
   function ajouterPiece(e) {
     e.preventDefault();
@@ -33,10 +31,12 @@ export default function Inventaire({ pieces, setPieces }) {
       volume: objetSelectionne.volume,
       quantite,
     };
-    setPieces(pieces.map((piece) => {
-      if (piece.id === pieceId) return { ...piece, objets: [...piece.objets, nouvelObjet] };
-      return piece;
-    }));
+    setPieces(
+      pieces.map((piece) => {
+        if (piece.id === pieceId) return { ...piece, objets: [...piece.objets, nouvelObjet] };
+        return piece;
+      }),
+    );
   }
 
   function ajouterObjetAEmballer(pieceId, objetAEmballerSelectionne, quantiteEmballer) {
@@ -47,10 +47,13 @@ export default function Inventaire({ pieces, setPieces }) {
       quantite: quantiteEmballer,
       carton: objetAEmballerSelectionne.carton,
     };
-    setPieces(pieces.map((piece) => {
-      if (piece.id === pieceId) return { ...piece, objetsAEmballer: [...piece.objetsAEmballer, nouvelObjetAEmballer] };
-      return piece;
-    }));
+    setPieces(
+      pieces.map((piece) => {
+        if (piece.id === pieceId)
+          return { ...piece, objetsAEmballer: [...piece.objetsAEmballer, nouvelObjetAEmballer] };
+        return piece;
+      }),
+    );
   }
   function ajouterObjetPerso() {
     const volume = (Number(persoH) * Number(persoL) * Number(persol)) / 1000000;
@@ -67,7 +70,7 @@ export default function Inventaire({ pieces, setPieces }) {
   }
 
   function supprimerPiece(pieceId) {
-    setPieces(pieces.filter((piece) => piece.id !== pieceId))
+    setPieces(pieces.filter((piece) => piece.id !== pieceId));
   }
 
   function supprimerObjet(pieceId, objetID) {
@@ -83,7 +86,10 @@ export default function Inventaire({ pieces, setPieces }) {
   function supprimerObjetAEmballer(pieceId, objetID) {
     const nouvellesPieces = pieces.map((piece) => {
       if (piece.id === pieceId) {
-        return { ...piece, objetsAEmballer: piece.objetsAEmballer.filter((objet) => objet.id !== objetID) };
+        return {
+          ...piece,
+          objetsAEmballer: piece.objetsAEmballer.filter((objet) => objet.id !== objetID),
+        };
       }
       return piece;
     });
@@ -128,18 +134,37 @@ export default function Inventaire({ pieces, setPieces }) {
         />
       ))}
       <div className="card form-card">
-        <p className="form-title icon"><PackagePlus size={20} />Ajouter un objet personnalisé</p>
-        <p className="inv-desc">Un objet absent de la liste ? Saisis ses dimensions pour calculer son volume, il sera disponible dans la recherche de toutes les pièces.</p>
-          <div className="form-text">
-            <div className='form-grid'>
-            <input className="input" placeholder="Nom de l'objet" value={persoNom} onChange={(e) => setPersoNom(e.target.value)} />
-            <select className="input" value={persoType} onChange={(e) => setPersoType(e.target.value)}>
+        <p className="form-title icon">
+          <PackagePlus size={20} />
+          Ajouter un objet personnalisé
+        </p>
+        <p className="inv-desc">
+          Un objet absent de la liste ? Saisis ses dimensions pour calculer son volume, il sera
+          disponible dans la recherche de toutes les pièces.
+        </p>
+        <div className="form-text">
+          <div className="form-grid">
+            <input
+              className="input"
+              placeholder="Nom de l'objet"
+              value={persoNom}
+              onChange={(e) => setPersoNom(e.target.value)}
+            />
+            <select
+              className="input"
+              value={persoType}
+              onChange={(e) => setPersoType(e.target.value)}
+            >
               <option value="meuble">Meuble / Objet encombrant</option>
               <option value="emballer">Objet à emballer</option>
             </select>
           </div>
           {persoType === 'emballer' && (
-            <select className="input" value={persoCarton} onChange={(e) => setPersoCarton(e.target.value)}>
+            <select
+              className="input"
+              value={persoCarton}
+              onChange={(e) => setPersoCarton(e.target.value)}
+            >
               <option value="petit">Petit carton</option>
               <option value="standard">Carton standard</option>
               <option value="grand">Grand carton</option>
@@ -147,9 +172,30 @@ export default function Inventaire({ pieces, setPieces }) {
           )}
         </div>
         <div className="form-ligne">
-          <input className="input" type="number" min="0" placeholder="Hauteur (cm)" value={persoH} onChange={(e) => setPersoH(e.target.value)} />
-          <input className="input" type="number" min="0" placeholder="Largeur (cm)" value={persoL} onChange={(e) => setPersoL(e.target.value)} />
-          <input className="input" type="number" min="0" placeholder="Longueur (cm)" value={persol} onChange={(e) => setPersol(e.target.value)} />
+          <input
+            className="input"
+            type="number"
+            min="0"
+            placeholder="Hauteur (cm)"
+            value={persoH}
+            onChange={(e) => setPersoH(e.target.value)}
+          />
+          <input
+            className="input"
+            type="number"
+            min="0"
+            placeholder="Largeur (cm)"
+            value={persoL}
+            onChange={(e) => setPersoL(e.target.value)}
+          />
+          <input
+            className="input"
+            type="number"
+            min="0"
+            placeholder="Longueur (cm)"
+            value={persol}
+            onChange={(e) => setPersol(e.target.value)}
+          />
         </div>
         <button
           className="btn btn-primary icon form-btn"

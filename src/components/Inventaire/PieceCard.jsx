@@ -1,7 +1,16 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-export default function PieceCard({ piece, listeObjets, listeEmballer, onSupprimerPiece, onAjouterObjet, onSupprimerObjet, onAjouterObjetAEmballer, onSupprimerObjetAEmballer }) {
+export default function PieceCard({
+  piece,
+  listeObjets,
+  listeEmballer,
+  onSupprimerPiece,
+  onAjouterObjet,
+  onSupprimerObjet,
+  onAjouterObjetAEmballer,
+  onSupprimerObjetAEmballer,
+}) {
   const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
   const [recherche, setRecherche] = useState('');
@@ -19,12 +28,15 @@ export default function PieceCard({ piece, listeObjets, listeEmballer, onSupprim
     o.nom.toLowerCase().includes(rechercheEmballer.toLowerCase()),
   );
 
-
   return (
     <div className="card inv-piece">
       <div className="inv-piece-header">
         <h3>{piece.nom}</h3>
-        <button className="btn-icon-danger" type="button" onClick={() => onSupprimerPiece(piece.id)}>
+        <button
+          className="btn-icon-danger"
+          type="button"
+          onClick={() => onSupprimerPiece(piece.id)}
+        >
           <Trash2 size={18} />
         </button>
       </div>
@@ -94,7 +106,11 @@ export default function PieceCard({ piece, listeObjets, listeEmballer, onSupprim
             <span>× {objet.quantite}</span>
             <span className="inv-objet-volume">({objet.volume}m³)</span>
           </div>
-          <button className="btn-icon-danger" type="button" onClick={() => onSupprimerObjet(piece.id, objet.id)}>
+          <button
+            className="btn-icon-danger"
+            type="button"
+            onClick={() => onSupprimerObjet(piece.id, objet.id)}
+          >
             <Trash2 size={16} />
           </button>
         </div>
@@ -165,7 +181,11 @@ export default function PieceCard({ piece, listeObjets, listeEmballer, onSupprim
             <span>× {objet.quantite}</span>
             <span className="inv-objet-volume">({objet.volume}m³)</span>
           </div>
-          <button className="btn-icon-danger" type="button" onClick={() => onSupprimerObjetAEmballer(piece.id, objet.id)}>
+          <button
+            className="btn-icon-danger"
+            type="button"
+            onClick={() => onSupprimerObjetAEmballer(piece.id, objet.id)}
+          >
             <Trash2 size={16} />
           </button>
         </div>

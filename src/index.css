@@ -46,7 +46,9 @@ body {
   cursor: pointer;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
-  transition:opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   justify-content: center;
 }
 
@@ -91,7 +93,7 @@ body {
   gap: var(--spacing-sm);
 }
 
-.icon-title{
+.icon-title {
   gap: var(--spacing-md) !important;
 }
 
@@ -140,10 +142,9 @@ body {
   background: transparent;
 }
 
-.header-date-wrapper:focus-within{
+.header-date-wrapper:focus-within {
   border-color: var(--color-primary);
 }
-
 
 .header-date::-webkit-calendar-picker-indicator {
   display: none;

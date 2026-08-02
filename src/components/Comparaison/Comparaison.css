@@ -1,80 +1,80 @@
 .comp-savings {
-    background-color: #FEFCE8;
-    border: 2px solid;
-    border-color: #FFF085;
-    border-radius: var(--radius-lg);
-    margin: var(--spacing-md);
-    padding: var(--spacing-md);
+  background-color: #fefce8;
+  border: 2px solid;
+  border-color: #fff085;
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
 }
 
 .comp-title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text);
-    margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
 }
 
 .comp-savings-title {
-    color: #894B00;
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-md);
+  color: #894b00;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md);
 }
 
 .comp-savings-detail {
-    color: #a65f26;
-    font-size: var(--font-size-base);
-    padding-left: 24px;
+  color: #a65f26;
+  font-size: var(--font-size-base);
+  padding-left: 24px;
 }
 
 p svg {
-    color: #894B00;
+  color: #894b00;
 }
 
 .comp-tables {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--spacing-xl);
-    margin: var(--spacing-lg) 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-xl);
+  margin: var(--spacing-lg) 0;
 }
 
 .comp-table {
-    padding: var(--spacing-lg) !important;
+  padding: var(--spacing-lg) !important;
 }
 
 .comp-table-title {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-md);
-    font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  font-weight: var(--font-weight-medium);
 }
 
 .comp-table-title--green {
-    color: #00A63E;
+  color: #00a63e;
 }
 
 .comp-table-title--blue {
-    color: #155DFC;
+  color: #155dfc;
 }
 
 .comp-table-section {
-    margin-bottom: var(--spacing-base);
-    font-size: var(--font-size-base);
-    color: var(--color-text-muted);
+  margin-bottom: var(--spacing-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
 }
 
 .comp-table ul {
-    padding: 0;
+  padding: 0;
 }
 
 .comp-advantages {
-    margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .comp-item {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: var(--spacing-sm);
-    color: var(--color-text);
-    font-size: var(--font-size-base);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
 }
