@@ -24,7 +24,9 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
   const cartonsGlobal = calculerCartonsGlobal(pieces);
 
   const coutCartons = melangerCartons
-    ? cartonsGlobal.petit.nb * PRIX_CARTONS.petit + cartonsGlobal.standard.nb * PRIX_CARTONS.standard + cartonsGlobal.grand.nb * PRIX_CARTONS.grand
+    ? cartonsGlobal.petit.nb * PRIX_CARTONS.petit +
+      cartonsGlobal.standard.nb * PRIX_CARTONS.standard +
+      cartonsGlobal.grand.nb * PRIX_CARTONS.grand
     : cartonsParPiece.reduce(
         (acc, p) =>
           acc +
@@ -35,14 +37,25 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
       );
 
   const totalCartons = melangerCartons
-    ? { petit: cartonsGlobal.petit.nb, standard: cartonsGlobal.standard.nb, grand: cartonsGlobal.grand.nb }
+    ? {
+        petit: cartonsGlobal.petit.nb,
+        standard: cartonsGlobal.standard.nb,
+        grand: cartonsGlobal.grand.nb,
+      }
     : {
         petit: cartonsParPiece.reduce((acc, p) => acc + p.petit.nb, 0),
         standard: cartonsParPiece.reduce((acc, p) => acc + p.standard.nb, 0),
         grand: cartonsParPiece.reduce((acc, p) => acc + p.grand.nb, 0),
       };
   const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
-  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur, formule, profil.parking);
+  const budgetPro = calculerBudgetPro(
+    volumeTotal,
+    profil.distance,
+    profil.etage,
+    profil.ascenseur,
+    formule,
+    profil.parking,
+  );
 
   return (
     <div>
@@ -60,13 +73,20 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
             <span className="calc-value">{tailleCamion}</span>
           </div>
           <div className="calc-card calc-card--purple">
-            <span className="calc-label icon"><Users size={14} /> Personnes recommandées</span>
+            <span className="calc-label icon">
+              <Users size={14} /> Personnes recommandées
+            </span>
             <span className="calc-value">{personneReco}</span>
           </div>
           <div className="calc-card calc-card--orange">
-            <span className="calc-label icon"><Clock size={14} /> Temps estimé</span>
+            <span className="calc-label icon">
+              <Clock size={14} /> Temps estimé
+            </span>
             <span className="calc-value">{tempsEstime.total}</span>
-            <span className="calc-detail">({tempsEstime.emballage} emballage + {tempsEstime.chargement} chargement + {tempsEstime.trajet} trajet)</span>
+            <span className="calc-detail">
+              ({tempsEstime.emballage} emballage + {tempsEstime.chargement} chargement +{' '}
+              {tempsEstime.trajet} trajet)
+            </span>
           </div>
         </div>
       </div>
@@ -79,36 +99,48 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
           <div>
             {[
               { label: 'Petits cartons', nb: totalCartons.petit, prix: PRIX_CARTONS.petit },
-              { label: 'Cartons standards', nb: totalCartons.standard, prix: PRIX_CARTONS.standard },
+              {
+                label: 'Cartons standards',
+                nb: totalCartons.standard,
+                prix: PRIX_CARTONS.standard,
+              },
               { label: 'Grands cartons', nb: totalCartons.grand, prix: PRIX_CARTONS.grand },
-            ].filter((l) => l.nb > 0).map((l) => (
-              <div key={l.label} className="calc-cartons-line">
-                <span>{l.label} / {l.nb} carton(s)</span>
-                <span>{(l.nb * l.prix).toFixed(2)} €</span>
-              </div>
-            ))}
-          </div>
-        ) : cartonsParPiece.map((piece) => {
-          const lignes = [
-            { label: 'Petits cartons', data: piece.petit, prix: PRIX_CARTONS.petit },
-            { label: 'Cartons standards', data: piece.standard, prix: PRIX_CARTONS.standard },
-            { label: 'Grands cartons', data: piece.grand, prix: PRIX_CARTONS.grand },
-          ].filter((l) => l.data.nb > 0);
-
-          if (lignes.length === 0) return null;
-
-          return (
-            <div key={piece.nom} className="calc-cartons-piece">
-              <span className="calc-cartons-piece-name">{piece.nom}</span>
-              {lignes.map((l) => (
+            ]
+              .filter((l) => l.nb > 0)
+              .map((l) => (
                 <div key={l.label} className="calc-cartons-line">
-                  <span>{l.label} / {l.data.nb} carton(s)</span>
-                  <span>{(l.data.nb * l.prix).toFixed(2)} €</span>
+                  <span>
+                    {l.label} / {l.nb} carton(s)
+                  </span>
+                  <span>{(l.nb * l.prix).toFixed(2)} €</span>
                 </div>
               ))}
-            </div>
-          );
-        })}
+          </div>
+        ) : (
+          cartonsParPiece.map((piece) => {
+            const lignes = [
+              { label: 'Petits cartons', data: piece.petit, prix: PRIX_CARTONS.petit },
+              { label: 'Cartons standards', data: piece.standard, prix: PRIX_CARTONS.standard },
+              { label: 'Grands cartons', data: piece.grand, prix: PRIX_CARTONS.grand },
+            ].filter((l) => l.data.nb > 0);
+
+            if (lignes.length === 0) return null;
+
+            return (
+              <div key={piece.nom} className="calc-cartons-piece">
+                <span className="calc-cartons-piece-name">{piece.nom}</span>
+                {lignes.map((l) => (
+                  <div key={l.label} className="calc-cartons-line">
+                    <span>
+                      {l.label} / {l.data.nb} carton(s)
+                    </span>
+                    <span>{(l.data.nb * l.prix).toFixed(2)} €</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })
+        )}
         <div className="calc-cartons-total">
           <div>
             <label className="icon calc-melanger-label">
@@ -120,7 +152,8 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
               <Shuffle size={14} /> Mélanger les cartons
             </label>
             <p className="calc-melanger-desc">
-              (Regroupe les objets de toutes les pièces par taille de carton, réduit le nombre total grâce à un meilleur remplissage.)
+              (Regroupe les objets de toutes les pièces par taille de carton, réduit le nombre total
+              grâce à un meilleur remplissage.)
             </p>
           </div>
           <span>{coutCartons.toFixed(2)} €</span>
@@ -129,7 +162,8 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
 
       <div className="card calc-section">
         <h2 className="calc-budget-title icon">
-          <Euro size={20} />Estimation du budget
+          <Euro size={20} />
+          Estimation du budget
         </h2>
         <div className="calc-formule">
           <label className="calc-formule-label" htmlFor="formule-pro">
@@ -142,25 +176,39 @@ export default function Calculs({ pieces, profil, formule, setFormule }) {
             onChange={(e) => setFormule(e.target.value)}
           >
             {Object.entries(FORMULES_PRO).map(([cle, f]) => (
-              <option key={cle} value={cle}>{f.label}</option>
+              <option key={cle} value={cle}>
+                {f.label}
+              </option>
             ))}
           </select>
           <ul className="calc-formule-desc">
-            <li><strong>Économique</strong>: transport seul</li>
-            <li><strong>Standard</strong>: démontage et remontage des meubles inclus</li>
-            <li><strong>Tout compris</strong>: emballage et installation complète</li>
+            <li>
+              <strong>Économique</strong>: transport seul
+            </li>
+            <li>
+              <strong>Standard</strong>: démontage et remontage des meubles inclus
+            </li>
+            <li>
+              <strong>Tout compris</strong>: emballage et installation complète
+            </li>
           </ul>
         </div>
         <div className="calc-grid">
           <div className="calc-budget-card calc-card--blue calc-border--blue">
             <span className="calc-budget-label">Déménagement solo</span>
-            <span className="calc-budget-value">{budgetSolo.min.toFixed(0)} – {budgetSolo.max.toFixed(0)} €</span>
+            <span className="calc-budget-value">
+              {budgetSolo.min.toFixed(0)} – {budgetSolo.max.toFixed(0)} €
+            </span>
             <p className="calc-budget-detail">Location camion + cartons + carburant</p>
           </div>
           <div className="calc-budget-card calc-card--green calc-border--green">
             <span className="calc-budget-label">Déménagement professionnel</span>
-            <span className="calc-budget-value">{budgetPro.min.toFixed(0)} – {budgetPro.max.toFixed(0)} €</span>
-            <p className="calc-budget-detail">Formule {FORMULES_PRO[formule].label.toLowerCase()}</p>
+            <span className="calc-budget-value">
+              {budgetPro.min.toFixed(0)} – {budgetPro.max.toFixed(0)} €
+            </span>
+            <p className="calc-budget-detail">
+              Formule {FORMULES_PRO[formule].label.toLowerCase()}
+            </p>
           </div>
         </div>
       </div>

@@ -6,7 +6,12 @@ import Comparaison from './components/Comparaison/Comparaison';
 import Inventaire from './components/Inventaire/Inventaire';
 import Navigation from './components/Navigation/Navigation';
 import ProfilPanel from './components/ProfilPanel/ProfilPanel';
-import { calculerBudgetPro, calculerBudgetSolo, calculerCartons, calculerVolume } from './utils/calculs';
+import {
+  calculerBudgetPro,
+  calculerBudgetSolo,
+  calculerCartons,
+  calculerVolume,
+} from './utils/calculs';
 
 function App() {
   const [ongletActif, setOngletActif] = useState('inventaire');
@@ -24,10 +29,19 @@ function App() {
   });
   const volumeTotal = calculerVolume(pieces);
   const cartonsParPiece = calculerCartons(pieces);
-  const coutCartons = cartonsParPiece.reduce((acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5, 0);
+  const coutCartons = cartonsParPiece.reduce(
+    (acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5,
+    0,
+  );
   const budgetSolo = calculerBudgetSolo(volumeTotal, profil.distance, coutCartons);
-  const budgetPro = calculerBudgetPro(volumeTotal, profil.distance, profil.etage, profil.ascenseur, formule, profil.parking);
-
+  const budgetPro = calculerBudgetPro(
+    volumeTotal,
+    profil.distance,
+    profil.etage,
+    profil.ascenseur,
+    formule,
+    profil.parking,
+  );
 
   return (
     <div className="app-wrapper">
@@ -46,7 +60,7 @@ function App() {
               </span>
             </span>
           </h1>
-          <div className='flex'>
+          <div className="flex">
             <Calendar size={16} color="#4A5565" />
             <div className="header-date-wrapper">
               <input
@@ -58,7 +72,6 @@ function App() {
                 onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
               />
             </div>
-
           </div>
         </div>
 
@@ -79,9 +92,13 @@ function App() {
       <div className="app-content">
         <div className="app-main">
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
-          {ongletActif === 'calculs' && <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />}
-          {ongletActif === 'comparaison' && <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />}
-          {ongletActif === 'check-list' && <Checklist profil={profil}/>}
+          {ongletActif === 'calculs' && (
+            <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />
+          )}
+          {ongletActif === 'comparaison' && (
+            <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />
+          )}
+          {ongletActif === 'check-list' && <Checklist profil={profil} />}
         </div>
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>

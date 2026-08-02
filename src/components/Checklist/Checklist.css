@@ -25,13 +25,13 @@
 }
 
 .chk-card--late {
-  border-color: #FFA2A2;
-  background-color: #FEF2F2;
+  border-color: #ffa2a2;
+  background-color: #fef2f2;
 }
 
 .chk-card--urgent {
-  border-color: #FFDF20;
-  background-color: #FEFCE8;
+  border-color: #ffdf20;
+  background-color: #fefce8;
 }
 
 .chk-card--done {
@@ -39,8 +39,8 @@
 }
 
 .chk-item-badge {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
 }
 
 .chk-item-badge--late {
@@ -69,21 +69,21 @@
 }
 
 .chk-item-type--Resiliation {
-  background-color: #FEF2F2;
-  border: 1px solid #FFC9C9;
-  color: #C10007;
+  background-color: #fef2f2;
+  border: 1px solid #ffc9c9;
+  color: #c10007;
 }
 
 .chk-item-type--Souscription {
-  background-color: #F0FDF4;
-  border: 1px solid #B9F8CF;
+  background-color: #f0fdf4;
+  border: 1px solid #b9f8cf;
   color: #008236;
 }
 
 .chk-item-type--Demarche {
-  background-color: #FAF5FF;
-  border: 1px solid #E9D4FF;
-  color: #8200DB;
+  background-color: #faf5ff;
+  border: 1px solid #e9d4ff;
+  color: #8200db;
 }
 
 .chk-item-title {
@@ -110,20 +110,19 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid #99A1AF;
+  border: 2px solid #99a1af;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   transition: border-color 0.5s;
-  margin-top:var(--spacing-xs);
+  margin-top: var(--spacing-xs);
 }
 
 .chk-checkbox:not(.chk-checkbox--checked):hover {
   border-color: var(--color-primary);
 }
-
 
 .chk-checkbox--checked {
   border-color: #16a34a;
@@ -131,49 +130,55 @@
 }
 
 @keyframes chk-pop {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.3); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.chk-section-date{
-    margin-top: var(--spacing-sm);
-    display:flex;
-    align-items: center;
-    gap: var(--spacing-md)
+.chk-section-date {
+  margin-top: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
-.chk-item-description{
-    font-size: var(--font-size-base);
-    color: var(--color-text-muted);
-    margin-top: var(--spacing-xs);
+.chk-item-description {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
 }
 
-.chk-item-date{
-    color: var(--color-text-muted);
+.chk-item-date {
+  color: var(--color-text-muted);
 }
 
 .chk-calendar::-webkit-calendar-picker-indicator {
   display: none;
 }
 
-.chk-header-top{
+.chk-header-top {
   display: flex;
   justify-content: space-between;
   margin-bottom: var(--spacing-lg);
 }
 
-.chk-title{
+.chk-title {
   color: var(--color-text);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
-} 
-
-.chk-title svg{
-  color:var(--color-primary);
 }
 
-.chk-compteur{
+.chk-title svg {
+  color: var(--color-primary);
+}
+
+.chk-compteur {
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
 }

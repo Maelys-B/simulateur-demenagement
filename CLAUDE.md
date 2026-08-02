@@ -34,16 +34,16 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 
 ## ✅ Avancement général
 
-| Module                   | Statut                                                        |
-| ------------------------ | ------------------------------------------------------------- |
-| Frontend                 | 🟡 En cours                                                   |
-| Backend                  | ⬜ Pas commencé                                               |
-| Middleware               | ⬜ Pas commencé                                               |
-| Base de données (schéma) | 🟡 Réfléchi, pas encore créé                                  |
-| Documentation Swagger    | ⬜ Pas commencé                                               |
-| ESLint + Prettier        | ✅ Installé et configuré (mergé dans `main`)                   |
-| Tests unitaires (Vitest) | ⬜ Pas commencé — prévu une fois Calculs.jsx terminé          |
-| Authentification         | ⬜ Pas commencé                                               |
+| Module                   | Statut                                               |
+| ------------------------ | ---------------------------------------------------- |
+| Frontend                 | 🟡 En cours                                          |
+| Backend                  | ⬜ Pas commencé                                      |
+| Middleware               | ⬜ Pas commencé                                      |
+| Base de données (schéma) | 🟡 Réfléchi, pas encore créé                         |
+| Documentation Swagger    | ⬜ Pas commencé                                      |
+| ESLint + Prettier        | ✅ Installé et configuré (mergé dans `main`)         |
+| Tests unitaires (Vitest) | ✅ Installé et configuré, `utils/calculs.js` couvert |
+| Authentification         | ⬜ Pas commencé                                      |
 
 ---
 
@@ -57,7 +57,7 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 | Bibliothèque de composants logiciels                             | ✅ OK                      | `lucide-react` (icônes), `recharts` (graphiques)                                                                         |
 | SGBD + langage associé                                           | ⬜ À faire                 | MySQL/MariaDB + SQL — confirmé comme 2e langage du projet                                                                |
 | Gestion de versions + suivi de problèmes                         | 🟡 Partiel                 | Git/GitHub ✅ — GitHub Issues à activer pour le suivi de problèmes                                                       |
-| Solution pour tester comportements anormaux                      | ⬜ À faire                 | **Confirmé : Vitest** (tests unitaires) — ex : volume négatif, inventaire vide, distance invalide                        |
+| Solution pour tester comportements anormaux                      | ✅ OK                      | **Vitest** — ex : volume négatif, inventaire vide, distance négative testés dans `calculs.test.js`                       |
 | 3 choix parmi 4 (client lourd / web / mobile / serveur)          | ✅ **Confirmé et complet** | 1. Web (React) — 2. Serveur (Node.js) — 3. Mobile (fait sur l'**autre projet**)                                          |
 | Authentification                                                 | ⬜ Prévu, pas codé         | JWT ou OAuth2.0                                                                                                          |
 | Normes de code (ESLint Airbnb + Prettier)                        | ✅ OK                      | Voir section dédiée ci-dessous — mergé dans `main`                                                                       |
@@ -182,13 +182,13 @@ git branch -d nom-de-la-branche
 
 ### Convention de nommage des branches
 
-| Préfixe        | Usage                                                                             |
-| -------------- | --------------------------------------------------------------------------------- |
-| `feature/...`  | Nouvelle fonctionnalité — ex: `feature/navigation`                                |
-| `fix/...`      | Correction de bug                                                                 |
-| `config/...`   | Mise en place ou changement d'outils/configuration — ex: `config/eslint-prettier` |
-| `backlog/...`  | Amélioration ou ajout mineur issu du backlog — ex: `backlog/profil-inventaire`    |
-| `docs/...`     | Documentation                                                                     |
+| Préfixe       | Usage                                                                             |
+| ------------- | --------------------------------------------------------------------------------- |
+| `feature/...` | Nouvelle fonctionnalité — ex: `feature/navigation`                                |
+| `fix/...`     | Correction de bug                                                                 |
+| `config/...`  | Mise en place ou changement d'outils/configuration — ex: `config/eslint-prettier` |
+| `backlog/...` | Amélioration ou ajout mineur issu du backlog — ex: `backlog/profil-inventaire`    |
+| `docs/...`    | Documentation                                                                     |
 
 ### Convention des messages de commit (Conventional Commits)
 
@@ -322,11 +322,12 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Barre de progression et décompte des tâches complétées
 - [x] Date de déménagement dans le header (input date partagé via profil)
 
-### ⬜ Étape 11 — Tests unitaires (Vitest)
+### ✅ Étape 11 — Tests unitaires (Vitest)
 
-- [ ] `npm install -D vitest`
-- [ ] Tests sur les fonctions de calcul (cas normaux)
-- [ ] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance invalide, etc.
+- [x] `npm install -D vitest` (avec `--legacy-peer-deps`, conflit préexistant entre ESLint 10 et `eslint-plugin-jsx-a11y`)
+- [x] Tests sur les fonctions de calcul (cas normaux) : `calculerVolume`, `determinerCamion`, `determinerPersonne`, `calculerTemps`, `calculerCartons`, `calculerCartonsGlobal`, `calculerBudgetSolo`, `calculerBudgetPro`
+- [x] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance négative, majoration parking
+- [x] Script `npm run test` ajouté dans `package.json`
 
 ### ⬜ Étape 12 — Fonctionnalités transverses
 
@@ -377,18 +378,18 @@ demenagements (1) ──→ (N) checklist_items
 
 ## 📚 Concepts React appris (glossaire perso)
 
-| Concept                 | Explication courte                                                                                              |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Composant**           | Fonction JS qui retourne du JSX (= du HTML dans le JS)                                                          |
-| **JSX**                 | Syntaxe qui mélange HTML et JavaScript                                                                          |
-| **useState**            | Hook pour mémoriser une valeur qui peut changer (`const [val, setVal] = useState(initial)`)                     |
-| **Props**               | Paramètres passés d'un composant parent à un composant enfant                                                   |
-| **SPA**                 | Single Page Application — une seule page HTML, React simule les changements de page                             |
-| **Rendu conditionnel**  | Afficher un composant ou un autre selon une condition (`if`, ternaire, etc.)                                    |
-| **.map()**              | Transformer un tableau de données en une liste de composants JSX                                                |
-| **className dynamique** | Choisir une classe CSS selon une condition avec un ternaire : `className={condition ? 'classe-a' : 'classe-b'}` |
-| **CSS par composant**         | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx`               |
-| **Extraction sous-composant** | Déplacer du JSX répété dans un composant enfant avec ses propres `useState` — évite le state partagé dans `.map()` |
+| Concept                       | Explication courte                                                                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Composant**                 | Fonction JS qui retourne du JSX (= du HTML dans le JS)                                                                                                         |
+| **JSX**                       | Syntaxe qui mélange HTML et JavaScript                                                                                                                         |
+| **useState**                  | Hook pour mémoriser une valeur qui peut changer (`const [val, setVal] = useState(initial)`)                                                                    |
+| **Props**                     | Paramètres passés d'un composant parent à un composant enfant                                                                                                  |
+| **SPA**                       | Single Page Application — une seule page HTML, React simule les changements de page                                                                            |
+| **Rendu conditionnel**        | Afficher un composant ou un autre selon une condition (`if`, ternaire, etc.)                                                                                   |
+| **.map()**                    | Transformer un tableau de données en une liste de composants JSX                                                                                               |
+| **className dynamique**       | Choisir une classe CSS selon une condition avec un ternaire : `className={condition ? 'classe-a' : 'classe-b'}`                                                |
+| **CSS par composant**         | Chaque composant a son propre fichier `.css` dans son dossier, importé directement dans le `.jsx`                                                              |
+| **Extraction sous-composant** | Déplacer du JSX répété dans un composant enfant avec ses propres `useState` — évite le state partagé dans `.map()`                                             |
 | **Constante de module**       | `const` déclarée en dehors du composant (au niveau du fichier) — partageable entre plusieurs fonctions, recréée à chaque rendu si elle était dans le composant |
 
 ## 📚 Méthodes JavaScript utilisées
@@ -407,7 +408,7 @@ demenagements (1) ──→ (N) checklist_items
 | **`Math.ceil()`**              | Arrondit vers le haut — ex : nombre de cartons nécessaires (on ne peut pas avoir un demi-carton)            |
 | **`Math.floor()`**             | Arrondit vers le bas — ex : partie entière des heures dans un temps formaté                                 |
 | **`Math.round()`**             | Arrondit au plus proche — ex : minutes dans un temps formaté                                                |
-| **`.padStart(n, '0')`**        | Complète une chaîne à gauche jusqu'à n caractères : `'5'` → `'05'` (pour afficher `1h05` et non `1h5`)     |
+| **`.padStart(n, '0')`**        | Complète une chaîne à gauche jusqu'à n caractères : `'5'` → `'05'` (pour afficher `1h05` et non `1h5`)      |
 | **`String()`**                 | Convertit une valeur en chaîne de caractères — nécessaire avant `.padStart()` qui n'existe que sur string   |
 | **Arrow fn dans une variable** | `const fn = (param) => { ... }` — permet de déclarer une fonction locale à l'intérieur d'une autre fonction |
 
@@ -439,6 +440,7 @@ demenagements (1) ──→ (N) checklist_items
 > Idées validées à implémenter, dans l'ordre logique suggéré.
 
 ### 1. CSS / Design (`config/css-variables`)
+
 - [x] Mettre toutes les variables CSS en anglais (déjà en anglais, confirmé)
 - [x] Ajouter les `font-weight` dans `theme.css` et remplacer les valeurs hardcodées dans tous les CSS
 - [x] Supprimer la barre de progression globale du header (inutile — la checklist a la sienne)
@@ -446,45 +448,48 @@ demenagements (1) ──→ (N) checklist_items
 - [x] Rendre le titre principal modifiable par l'utilisateur (input stylisé comme le h1, soulignement bleu au focus)
 
 ### 2. Profil & Inventaire
+
 - [x] Ajouter le nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé
 - [x] Case à cocher "mélanger les cartons entre pièces" → affiche les cartons par taille uniquement, réduit le nombre total par meilleur remplissage
 - [x] Créer plus de catégories d'objets (meubles, objets divers…)
 
 ### 2b. Inventaire amélioré (`backlog/inventaire-ameliore`)
+
 - [x] **Barre de recherche** — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
 - [x] **"Autre objet"** — formulaire global (hors pièce) avec nom + hauteur × largeur × longueur (cm) → volume calculé automatiquement. L'objet est ajouté à `listeObjets` ou `listeEmballer` selon le type choisi (meuble ou objet à emballer + taille de carton). Ces listes sont des copies dynamiques de `OBJETS_PREDEFINIS` et `OBJETS_A_EMBALLER`.
 
 ### 3. Calculs — déménagement professionnel
+
 - [x] Remplacer le calcul actuel par 3 formules au choix :
   - **Économique** (transport seul) : 35–60 €/m³
   - **Standard** (démontage/montage inclus) : 50–100 €/m³
   - **Tout compris** (emballage + installation) : 60–160 €/m³
 - [x] Nouveau calcul de la distance (coût additif au coût volume) :
 
-| Distance | Prix par km |
-|----------|-------------|
-| 0–50 km | 2,50 €/km |
-| 51–200 km | 2,00 €/km |
-| 201–500 km | 1,70 €/km |
-| > 500 km | 1,40 €/km |
+| Distance   | Prix par km |
+| ---------- | ----------- |
+| 0–50 km    | 2,50 €/km   |
+| 51–200 km  | 2,00 €/km   |
+| 201–500 km | 1,70 €/km   |
+| > 500 km   | 1,40 €/km   |
 
 - [x] Majoration si parking non accessible : ×1.15 (même logique que l'étage sans ascenseur ×1.30) — champ `profil.parking` déjà présent dans `ProfilPanel.jsx` mais jusqu'ici jamais utilisé dans les calculs
 
-### 4. Checklist
-- [ ] Créer plus de types de démarches (ex : Logement, Administratif, Services…)
+### 4. Tests unitaires — Étape 11 (`config/tests`)
 
-### 5. Tests unitaires — Étape 11 (`feature/tests`)
-- [ ] Installer Vitest (`npm install -D vitest`)
-- [ ] Tests sur les fonctions de calcul (cas normaux)
-- [ ] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance invalide
+- [x] Installer Vitest (`npm install -D vitest`)
+- [x] Tests sur les fonctions de calcul (cas normaux)
+- [x] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance invalide
 
-### 6. Fonctionnalités transverses — Étape 12 (`feature/transverses`)
+### 5. Fonctionnalités transverses — Étape 12 (`feature/transverses`)
+
 - [ ] Export PDF
 - [ ] Bouton Réinitialiser fonctionnel
 - [ ] Sauvegarde (localStorage ou backend)
-- [ ] Confirmation de suppression 
+- [ ] Confirmation de suppression
 
-### 7. Accessibilité
+### 6. Accessibilité
+
 - [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
 
 ---
@@ -498,12 +503,14 @@ demenagements (1) ──→ (N) checklist_items
 ## 📦 Références tarifaires (sources 2026)
 
 ### Déménagement professionnel — prix au m³
+
 - Fourchette : **30 à 90 €/m³** selon volume, distance et services inclus
 - Formule retenue : `proMin = volume * 35` / `proMax = volume * 90`
 - Ajustement distance : > 100 km → ×1.5 / > 300 km → ×2
 - Ajustement étage sans ascenseur : ×1.30 (+25 à 35%)
 
 ### Déménagement solo — location camion
+
 - Camionnette (~10m³) : 70–170 €/jour
 - Camion 20m³ : 120–200 €/jour
 - Camion 30m³ : 150–250 €/jour
