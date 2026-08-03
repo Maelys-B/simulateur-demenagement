@@ -36,9 +36,9 @@ describe('determinerPersonne', () => {
 });
 
 describe('calculerTemps', () => {
-  it('retourne 5h06 avec les valeurs entrées', () => {
-    const temps = calculerTemps(10, 50, 1);
-    expect(temps.total).toBe('5h06');
+  it('retourne 4h06 avec les valeurs entrées', () => {
+    const temps = calculerTemps(10, 5, 50, 1);
+    expect(temps.total).toBe('4h06');
   });
 });
 

@@ -9,6 +9,7 @@ import {
   calculerCartonsGlobal,
   calculerTemps,
   calculerVolume,
+  calculerVolumeAEmballer,
   determinerCamion,
   determinerPersonne,
 } from '../../utils/calculs';
@@ -17,9 +18,15 @@ import './Calculs.css';
 export default function Calculs({ pieces, profil, formule, setFormule }) {
   const [melangerCartons, setMelangerCartons] = useState(false);
   const volumeTotal = calculerVolume(pieces);
+  const volumeAEmballer = calculerVolumeAEmballer(pieces);
   const tailleCamion = determinerCamion(volumeTotal * 1.15);
   const personneReco = determinerPersonne(volumeTotal);
-  const tempsEstime = calculerTemps(volumeTotal, profil.distance, profil.nbPersonnes);
+  const tempsEstime = calculerTemps(
+    volumeTotal,
+    volumeAEmballer,
+    profil.distance,
+    profil.nbPersonnes,
+  );
   const cartonsParPiece = calculerCartons(pieces);
   const cartonsGlobal = calculerCartonsGlobal(pieces);
 

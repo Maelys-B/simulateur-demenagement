@@ -334,6 +334,169 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [ ] Export PDF
 - [ ] Bouton Réinitialiser fonctionnel
 - [ ] Sauvegarde (localStorage ou backend)
+- [x] Mode sombre — variables CSS redéfinies sous `[data-theme='dark']` dans `theme.css`, toggle soleil/lune dans le Header, state persisté en `localStorage`. Couleurs codées en dur remplacées par des variables (`calc-card--*`, `chk-card--late/urgent`) pour rester lisibles dans les deux thèmes.
+
+---
+
+## 🔧 Backend & Middleware — feuille de route
+
+> Suivre les étapes dans l'ordre : chaque étape dépend de la précédente. À chaque étape, viser le fonctionnel avant le parfait, et tester avant de continuer.
+
+### Contexte du projet
+
+Backend d'une webapp de simulation de déménagement. Le frontend (React/Vite) est déjà construit et stocke actuellement les données en local (state React). Objectif du backend : persister les données par utilisateur, sécuriser l'accès, documenter l'API.
+
+Stack imposée : Node.js + Express, MySQL/MariaDB, JWT, Swagger. Tests avec Vitest.
+
+### Conventions à respecter
+
+- Requêtes SQL préparées uniquement (paramètres `?`), jamais de concaténation directe → protection injection SQL.
+- Mots de passe hachés avec bcrypt, jamais en clair.
+- JWT contient uniquement `userId`, aucune donnée sensible.
+- Secrets (identifiants BDD, clé JWT) dans `.env`, jamais dans le code.
+- Chaque route protégée filtre les données par `req.userId` (jamais les données d'autres utilisateurs).
+- Workflow Git : une branche par étape (`feature/...`), commits en Conventional Commits, PR avant merge dans `main`.
+
+### ⬜ ÉTAPE 1 — Setup serveur Node/Express
+
+**But** : socle fonctionnel sur lequel tout se construit.
+
+À faire :
+
+- Créer un dossier `server/`, `npm init -y`
+- Installer : `express cors dotenv`, et en dev `nodemon`
+- Créer `server.js` : app Express, `cors()`, `express.json()`, une route de test `GET /api/test`
+- Script `"dev": "nodemon server.js"` dans package.json
+- Variables sensibles dans `.env`
+
+Critère de réussite : `http://localhost:3000/api/test` renvoie un JSON de test.
+
+### ⬜ ÉTAPE 2 — Base de données MySQL/MariaDB
+
+**But** : stockage permanent des données. Exigence cahier des charges (SGBD + SQL).
+
+À faire :
+
+- Créer la base et les tables (schéma ci-dessous)
+- Installer `mysql2`, créer `db.js` avec un pool de connexion lisant les variables `.env`
+- Toutes les clés étrangères en `ON DELETE CASCADE` (essentiel RGPD : supprimer un user supprime ses données liées)
+
+Schéma des tables :
+
+```sql
+users (id, email UNIQUE, mot_de_passe [hash bcrypt], nom, date_creation)
+demenagements (id, user_id FK, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, date_creation)
+pieces (id, demenagement_id FK, nom)
+objets_inventaire (id, piece_id FK, nom, volume, quantite)
+objets_personnels (id, user_id FK, nom, volume)
+checklist_items (id, demenagement_id FK, titre, description, date_limite, type, complete)
+```
+
+Rappel : le catalogue des ~500 objets prédéfinis RESTE dans un fichier frontend (donnée de référence statique), il ne va PAS en BDD. Seules les données créées par l'utilisateur sont persistées.
+
+Critère de réussite : une route de test lit la BDD sans erreur.
+
+### ⬜ ÉTAPE 3 — Authentification JWT
+
+**But** : sécuriser l'accès, chaque utilisateur ne voit que ses données. Exigence cahier des charges.
+
+À faire :
+
+- Installer `bcrypt jsonwebtoken`
+- `POST /auth/register` : valider le mot de passe (regex complexe ci-dessous), hacher avec bcrypt (`bcrypt.hash(mdp, 10)`), insérer en BDD
+- `POST /auth/login` : récupérer l'user par email, comparer avec `bcrypt.compare()`, si OK générer un JWT (`jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' })`)
+- Middleware `verifierToken` : lit le token dans `Authorization: Bearer ...`, le vérifie, met `req.userId`, appelle `next()` ; sinon renvoie 401
+
+Regex mot de passe complexe (min 8 car, majuscule, minuscule, chiffre, spécial) :
+
+```js
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+```
+
+Critère de réussite : inscription, connexion, réception d'un token, accès à une route protégée avec ce token.
+
+### ⬜ ÉTAPE 4 — Routes API (CRUD)
+
+**But** : cœur fonctionnel — créer/lire/modifier/supprimer les données utilisateur.
+
+À faire, pour chaque ressource (`demenagements`, `pieces`, `objets_inventaire`, `objets_personnels`, `checklist_items`) :
+
+```
+GET    /api/<ressource>       → lire (filtré par req.userId)
+GET    /api/<ressource>/:id   → lire un élément
+POST   /api/<ressource>       → créer
+PUT    /api/<ressource>/:id   → modifier
+DELETE /api/<ressource>/:id   → supprimer
+```
+
+Règles :
+
+- Toutes protégées par le middleware `verifierToken`
+- Filtrer systématiquement par `req.userId`
+- Requêtes préparées (paramètres `?`)
+- try/catch avec code d'erreur approprié (400 données invalides, 401 non authentifié, 404 introuvable, 500 erreur serveur)
+
+Critère de réussite : CRUD complet testable via Postman/Thunder Client.
+
+### ⬜ ÉTAPE 5 — Middlewares transverses
+
+**But** : robustesse et sécurité de l'API.
+
+À faire :
+
+- CORS (déjà en place étape 1) — restreindre au domaine du front en production
+- Validation des données entrantes (manuelle ou `express-validator`) : renvoyer 400 si invalide
+- Middleware de gestion d'erreurs centralisé en fin de chaîne (log + réponse propre, pas de crash)
+
+Critère de réussite : des données invalides renvoient un message clair, pas un crash.
+
+### ⬜ ÉTAPE 6 — Documentation Swagger
+
+**But** : exigence cahier des charges. Page interactive documentant l'API.
+
+À faire :
+
+- Installer `swagger-ui-express swagger-jsdoc`
+- Configurer Swagger dans `server.js`
+- Documenter chaque route via commentaires `@swagger`
+- Exposer sur `/api-docs`
+
+Critère de réussite : `/api-docs` affiche et permet de tester toutes les routes.
+
+### ⬜ ÉTAPE 7 — Connexion frontend ↔ backend
+
+**But** : relier les deux mondes, remplacer le stockage local par la BDD.
+
+À faire :
+
+- Remplacer les `useState` de données par des appels `fetch` à l'API
+- Stocker le token JWT côté front après login, l'envoyer dans le header `Authorization` des requêtes protégées
+- Gérer états de chargement et erreurs
+- Le catalogue d'objets reste dans le fichier front (ne passe pas par l'API)
+
+Critère de réussite : créer un déménagement, rafraîchir la page, il est toujours là.
+
+### ⬜ ÉTAPE 8 — Tests unitaires (Vitest)
+
+**But** : exigence cahier des charges ("tester les comportements anormaux").
+
+À faire :
+
+- Installer `vitest` (dev)
+- Tester en priorité les fonctions de calcul (volume, cartons, budget) — elles sont pures, faciles à tester
+- Se concentrer sur les cas anormaux : inventaire vide, valeurs négatives, données manquantes
+- Ne pas viser 100% de couverture : une dizaine de tests pertinents suffit
+
+Critère de réussite : `npm run test` tout en vert.
+
+### Ordre & dépendances
+
+```
+1 Serveur → 2 BDD → 3 Auth → 4 CRUD → 5 Middlewares → 6 Swagger → 7 Connexion front-back
+8 Tests : en parallèle dès que des fonctions existent
+```
+
+Tester chaque étape (Postman/Thunder Client pour les routes) avant de passer à la suivante.
 
 ---
 

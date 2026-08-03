@@ -1,5 +1,5 @@
-import { Calendar, Download, Trash2, Truck } from 'lucide-react';
-import { useState } from 'react';
+import { Calendar, Download, Moon, Sun, Trash2, Truck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import Calculs from './components/Calculs/Calculs';
 import Checklist from './components/Checklist/Checklist';
 import Comparaison from './components/Comparaison/Comparaison';
@@ -10,14 +10,25 @@ import {
   calculerBudgetPro,
   calculerBudgetSolo,
   calculerCartons,
+  calculerCartonsGlobal,
+  calculerTemps,
   calculerVolume,
+  calculerVolumeAEmballer,
+  determinerCamion,
+  determinerPersonne,
 } from './utils/calculs';
+import { calculerTachesAvecDates, TACHES_PREDEFINIES } from './utils/checklist';
+import { genererPDF } from './utils/exportPDF';
 
 function App() {
   const [ongletActif, setOngletActif] = useState('inventaire');
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
   const [formule, setFormule] = useState('economique');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const [completes, setCompletes] = useState([]);
+  const [tachesPerso, setTachesPerso] = useState([]);
+  const [tachesPredefinies, setTachesPredefinies] = useState(TACHES_PREDEFINIES);
   const [profil, setProfil] = useState({
     type: 'solo',
     distance: '',
@@ -29,6 +40,7 @@ function App() {
   });
   const volumeTotal = calculerVolume(pieces);
   const cartonsParPiece = calculerCartons(pieces);
+  const cartonsGlobal = calculerCartonsGlobal(pieces);
   const coutCartons = cartonsParPiece.reduce(
     (acc, p) => acc + (p.petit.nb + p.standard.nb + p.grand.nb) * 1.5,
     0,
@@ -42,6 +54,42 @@ function App() {
     formule,
     profil.parking,
   );
+  const volumeAEmballer = calculerVolumeAEmballer(pieces);
+  const tailleCamion = determinerCamion(volumeTotal * 1.15);
+  const personneReco = determinerPersonne(volumeTotal);
+  const tempsEstime = calculerTemps(
+    volumeTotal,
+    volumeAEmballer,
+    profil.distance,
+    profil.nbPersonnes,
+  );
+  const toutesLesTaches = calculerTachesAvecDates(tachesPredefinies, tachesPerso, profil);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }
+
+  function exporterPDF() {
+    genererPDF({
+      titre,
+      profil,
+      pieces,
+      volumeTotal,
+      tailleCamion,
+      personneReco,
+      tempsEstime,
+      cartonsGlobal,
+      budgetSolo,
+      budgetPro,
+      taches: toutesLesTaches,
+      completes,
+    });
+  }
 
   return (
     <div className="app-wrapper">
@@ -76,7 +124,10 @@ function App() {
         </div>
 
         <div className="header-actions">
-          <button className="btn btn-pdf">
+          <button className="btn-theme-toggle" type="button" onClick={toggleTheme}>
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <button className="btn btn-pdf" type="button" onClick={exporterPDF}>
             <span className="icon">
               <Download size={20} /> Exporter en PDF
             </span>
@@ -98,7 +149,17 @@ function App() {
           {ongletActif === 'comparaison' && (
             <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />
           )}
-          {ongletActif === 'check-list' && <Checklist profil={profil} />}
+          {ongletActif === 'check-list' && (
+            <Checklist
+              profil={profil}
+              completes={completes}
+              setCompletes={setCompletes}
+              tachesPerso={tachesPerso}
+              setTachesPerso={setTachesPerso}
+              tachesPredefinies={tachesPredefinies}
+              setTachesPredefinies={setTachesPredefinies}
+            />
+          )}
         </div>
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>
