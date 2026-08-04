@@ -24,6 +24,14 @@ export function calculerVolume(pieces) {
   }, 0);
 }
 
+export function calculerVolumeAEmballer(pieces) {
+  return pieces.reduce(
+    (total, piece) =>
+      total + piece.objetsAEmballer.reduce((acc, o) => acc + o.volume * o.quantite, 0),
+    0,
+  );
+}
+
 export function determinerCamion(volume) {
   if (volume <= 5) return 'Voiture + remorque';
   if (volume <= 10) return 'Camionnette 10m³ (type Trafic)';
@@ -39,9 +47,9 @@ export function determinerPersonne(volume) {
   return '4 personnes +';
 }
 
-export function calculerTemps(volume, distance, nbPersonnes = 1) {
+export function calculerTemps(volume, volumeAEmballer, distance, nbPersonnes = 1) {
   const nb = Math.max(1, Number(nbPersonnes) || 1);
-  const emballage = volume / (5 * nb);
+  const emballage = volumeAEmballer / (5 * nb);
   const chargement = volume / (7 * nb);
   const trajet = (distance / 60) * 2;
   const total = emballage + chargement + trajet;

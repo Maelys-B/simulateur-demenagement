@@ -92,16 +92,16 @@
 }
 
 .calc-card--blue {
-  background-color: #eff6ff;
+  background-color: var(--color-bg-blue-light);
 }
 .calc-card--green {
-  background-color: #f0fdf4;
+  background-color: var(--color-bg-green-light);
 }
 .calc-card--purple {
-  background-color: #faf5ff;
+  background-color: var(--color-bg-purple-light);
 }
 .calc-card--orange {
-  background-color: #fff7ed;
+  background-color: var(--color-bg-orange-light);
 }
 .calc-border--blue {
   border: 2px solid;

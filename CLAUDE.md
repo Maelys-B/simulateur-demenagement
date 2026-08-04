@@ -200,10 +200,6 @@ git branch -d nom-de-la-branche
 | `docs:`     | documentation                           |
 | `refactor:` | réécriture sans changer le comportement |
 
-### ⚠️ Pourquoi une branche même pour une "simple installation"
-
-Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des erreurs en cascade → le projet est dans un état instable pendant qu'on corrige. La branche permet de revenir à un `main` stable instantanément (`git checkout main`) si besoin, sans avoir à annuler les changements à la main.
-
 ### ⚠️ Points importants à retenir
 
 - Les commits sur une branche `feature/...` ou `config/...` **ne comptent PAS** dans le graphique de contributions GitHub tant qu'ils ne sont pas mergés dans `main`. Normal, pas un bug.
@@ -213,7 +209,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 
 ### Branches en cours
 
-- `config/css-variables` → en cours
+- `feature/tranverses` → en cours
 
 ---
 
@@ -240,12 +236,17 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] `App.css` supprimé (fichier de démo Vite, inutile)
 - [x] Styles inline remplacés par des classes CSS dans `index.css`
 - [x] Convention adoptée : un fichier CSS par composant dans son propre dossier (`Navigation/Navigation.css`)
+- [x] Variables CSS harmonisées en anglais dans `theme.css` (branche `config/css-variables`)
+- [x] `--font-weight-*` ajoutés dans `theme.css`, valeurs hardcodées remplacées dans tous les CSS
 
 ### ✅ Étape 3 — Header en composant séparé
 
 - [x] Header intégré directement dans `App.jsx` (pas de fichier séparé)
 - [x] Compris les **props** : `useState` pour `progression`
 - [x] Header affiche : titre, progression, barre de progression (dégradé), boutons PDF/Réinitialiser (visuel statique, pas encore fonctionnel)
+- [x] Barre de progression globale du header supprimée (inutile — la checklist a la sienne)
+- [x] Améliorations CSS (icône calendrier sortie du cadre, padding date wrapper aligné sur `.input`, couleur icône)
+- [x] Titre principal modifiable par l'utilisateur (input stylisé comme le h1, soulignement bleu au focus)
 
 ### ✅ Étape 4 — Navigation (TERMINÉE)
 
@@ -275,6 +276,7 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Mise en page grid : contenu principal à gauche, ProfilPanel fixe à droite
 - [x] Icônes lucide-react intégrées dans les labels
 - [x] Une seule fonction `handleChange` gère tous les types de champs
+- [x] Champ nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé (`calculerTemps`)
 
 ### ✅ Étape 7 — Onglet Inventaire (TERMINÉE)
 
@@ -293,6 +295,9 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Listes externalisées dans `listes.js` (`OBJETS_PREDEFINIS`, `OBJETS_A_EMBALLER`) — importées là où besoin
 - [x] Extraction en sous-composant `PieceCard.jsx` avec states locaux → corrige le bug du compteur partagé entre pièces
 - [x] Bug suppression doublons corrigé : chaque objet ajouté reçoit un `id: Date.now()` unique, utilisé comme `key` et dans `.filter()`
+- [x] Plus de catégories d'objets (meubles, objets divers…)
+- [x] **Barre de recherche** (branche `backlog/inventaire-ameliore`) — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
+- [x] **"Autre objet"** — formulaire global (hors pièce) avec nom + hauteur × largeur × longueur (cm) → volume calculé automatiquement. L'objet est ajouté à `listeObjets` ou `listeEmballer` selon le type choisi (meuble ou objet à emballer + taille de carton). Ces listes sont des copies dynamiques de `OBJETS_PREDEFINIS` et `OBJETS_A_EMBALLER`.
 
 ### ✅ Étape 8 — Onglet Calculs (TERMINÉE)
 
@@ -305,6 +310,10 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] CSS : grille de cartes colorées, section cartons avec total
 - [x] Estimation budgétaire solo vs pro (location camion + carburant + cartons / prix au m³ pro)
 - [x] Fonctions de calcul extraites dans `src/utils/calculs.js` et partagées avec App.jsx et Comparaison.jsx
+- [x] Case à cocher "mélanger les cartons entre pièces" → affiche les cartons par taille uniquement, réduit le nombre total par meilleur remplissage
+- [x] 3 formules de prix pro au choix : **Économique** (transport seul, 35–60 €/m³), **Standard** (démontage/montage inclus, 50–100 €/m³), **Tout compris** (emballage + installation, 60–160 €/m³)
+- [x] Calcul de la distance par tranches (coût additif au coût volume) : 0–50 km → 2,50 €/km, 51–200 km → 2,00 €/km, 201–500 km → 1,70 €/km, > 500 km → 1,40 €/km
+- [x] Majoration si parking non accessible : ×1.15 (même logique que l'étage sans ascenseur ×1.30)
 
 ### ✅ Étape 9 — Onglet Comparaison (TERMINÉE)
 
@@ -329,11 +338,180 @@ Une install (ESLint/Prettier) peut reformater plein de fichiers ou révéler des
 - [x] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance négative, majoration parking
 - [x] Script `npm run test` ajouté dans `package.json`
 
-### ⬜ Étape 12 — Fonctionnalités transverses
+### ✅ Étape 12 — Fonctionnalités transverses (`feature/transverses`)
 
-- [ ] Export PDF
-- [ ] Bouton Réinitialiser fonctionnel
-- [ ] Sauvegarde (localStorage ou backend)
+> Sauvegarde persistante volontairement non faite en `localStorage` — déplacée vers la feuille de route Backend (ÉTAPE 7 : connexion frontend ↔ backend), pour ne pas faire un travail qui serait jeté une fois la vraie persistance en place.
+
+- [x] Export PDF (jsPDF + jspdf-autotable) — couvre profil, résumé des calculs, inventaire par pièce, cartons, budget et checklist
+- [x] Bouton Réinitialiser fonctionnel — remet `pieces`, `profil`, `titre`, `formule` et la checklist à leur valeur de départ
+- [x] Confirmation de suppression — composant réutilisable `ConfirmModal`, branché sur la suppression de pièce/objet/tâche et sur le bouton Réinitialiser
+- [x] Mode sombre — variables CSS redéfinies sous `[data-theme='dark']` dans `theme.css`, toggle soleil/lune dans le Header, state persisté en `localStorage`. Couleurs codées en dur remplacées par des variables (`calc-card--*`, `chk-card--late/urgent`) pour rester lisibles dans les deux thèmes.
+
+### ⬜ Étape 13 — Accessibilité
+
+- [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
+
+---
+
+## 🔧 Backend & Middleware — feuille de route
+
+> Suivre les étapes dans l'ordre : chaque étape dépend de la précédente. À chaque étape, viser le fonctionnel avant le parfait, et tester avant de continuer.
+
+### Contexte du projet
+
+Backend d'une webapp de simulation de déménagement. Le frontend (React/Vite) est déjà construit et stocke actuellement les données en local (state React). Objectif du backend : persister les données par utilisateur, sécuriser l'accès, documenter l'API.
+
+Stack imposée : Node.js + Express, MySQL/MariaDB, JWT, Swagger. Tests avec Vitest.
+
+### Conventions à respecter
+
+- Requêtes SQL préparées uniquement (paramètres `?`), jamais de concaténation directe → protection injection SQL.
+- Mots de passe hachés avec bcrypt, jamais en clair.
+- JWT contient uniquement `userId`, aucune donnée sensible.
+- Secrets (identifiants BDD, clé JWT) dans `.env`, jamais dans le code.
+- Chaque route protégée filtre les données par `req.userId` (jamais les données d'autres utilisateurs).
+- Workflow Git : une branche par étape (`feature/...`), commits en Conventional Commits, PR avant merge dans `main`.
+
+### ⬜ ÉTAPE 1 — Setup serveur Node/Express
+
+**But** : socle fonctionnel sur lequel tout se construit.
+
+À faire :
+
+- Créer un dossier `server/`, `npm init -y`
+- Installer : `express cors dotenv`, et en dev `nodemon`
+- Créer `server.js` : app Express, `cors()`, `express.json()`, une route de test `GET /api/test`
+- Script `"dev": "nodemon server.js"` dans package.json
+- Variables sensibles dans `.env`
+
+Critère de réussite : `http://localhost:3000/api/test` renvoie un JSON de test.
+
+### ⬜ ÉTAPE 2 — Base de données MySQL/MariaDB
+
+**But** : stockage permanent des données. Exigence cahier des charges (SGBD + SQL).
+
+À faire :
+
+- Créer la base et les tables (schéma ci-dessous)
+- Installer `mysql2`, créer `db.js` avec un pool de connexion lisant les variables `.env`
+- Toutes les clés étrangères en `ON DELETE CASCADE` (essentiel RGPD : supprimer un user supprime ses données liées)
+
+Schéma des tables :
+
+```sql
+users (id, email UNIQUE, mot_de_passe [hash bcrypt], nom, date_creation)
+demenagements (id, user_id FK, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, date_creation)
+pieces (id, demenagement_id FK, nom)
+objets_inventaire (id, piece_id FK, nom, volume, quantite)
+objets_personnels (id, user_id FK, nom, volume)
+checklist_items (id, demenagement_id FK, titre, description, date_limite, type, complete)
+```
+
+Rappel : le catalogue des ~500 objets prédéfinis RESTE dans un fichier frontend (donnée de référence statique), il ne va PAS en BDD. Seules les données créées par l'utilisateur sont persistées.
+
+Critère de réussite : une route de test lit la BDD sans erreur.
+
+### ⬜ ÉTAPE 3 — Authentification JWT
+
+**But** : sécuriser l'accès, chaque utilisateur ne voit que ses données. Exigence cahier des charges.
+
+À faire :
+
+- Installer `bcrypt jsonwebtoken`
+- `POST /auth/register` : valider le mot de passe (regex complexe ci-dessous), hacher avec bcrypt (`bcrypt.hash(mdp, 10)`), insérer en BDD
+- `POST /auth/login` : récupérer l'user par email, comparer avec `bcrypt.compare()`, si OK générer un JWT (`jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' })`)
+- Middleware `verifierToken` : lit le token dans `Authorization: Bearer ...`, le vérifie, met `req.userId`, appelle `next()` ; sinon renvoie 401
+
+Regex mot de passe complexe (min 8 car, majuscule, minuscule, chiffre, spécial) :
+
+```js
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+```
+
+Critère de réussite : inscription, connexion, réception d'un token, accès à une route protégée avec ce token.
+
+### ⬜ ÉTAPE 4 — Routes API (CRUD)
+
+**But** : cœur fonctionnel — créer/lire/modifier/supprimer les données utilisateur.
+
+À faire, pour chaque ressource (`demenagements`, `pieces`, `objets_inventaire`, `objets_personnels`, `checklist_items`) :
+
+```
+GET    /api/<ressource>       → lire (filtré par req.userId)
+GET    /api/<ressource>/:id   → lire un élément
+POST   /api/<ressource>       → créer
+PUT    /api/<ressource>/:id   → modifier
+DELETE /api/<ressource>/:id   → supprimer
+```
+
+Règles :
+
+- Toutes protégées par le middleware `verifierToken`
+- Filtrer systématiquement par `req.userId`
+- Requêtes préparées (paramètres `?`)
+- try/catch avec code d'erreur approprié (400 données invalides, 401 non authentifié, 404 introuvable, 500 erreur serveur)
+
+Critère de réussite : CRUD complet testable via Postman/Thunder Client.
+
+### ⬜ ÉTAPE 5 — Middlewares transverses
+
+**But** : robustesse et sécurité de l'API.
+
+À faire :
+
+- CORS (déjà en place étape 1) — restreindre au domaine du front en production
+- Validation des données entrantes (manuelle ou `express-validator`) : renvoyer 400 si invalide
+- Middleware de gestion d'erreurs centralisé en fin de chaîne (log + réponse propre, pas de crash)
+
+Critère de réussite : des données invalides renvoient un message clair, pas un crash.
+
+### ⬜ ÉTAPE 6 — Documentation Swagger
+
+**But** : exigence cahier des charges. Page interactive documentant l'API.
+
+À faire :
+
+- Installer `swagger-ui-express swagger-jsdoc`
+- Configurer Swagger dans `server.js`
+- Documenter chaque route via commentaires `@swagger`
+- Exposer sur `/api-docs`
+
+Critère de réussite : `/api-docs` affiche et permet de tester toutes les routes.
+
+### ⬜ ÉTAPE 7 — Connexion frontend ↔ backend
+
+**But** : relier les deux mondes, remplacer le stockage local par la BDD.
+
+À faire :
+
+- Remplacer les `useState` de données par des appels `fetch` à l'API
+- Stocker le token JWT côté front après login, l'envoyer dans le header `Authorization` des requêtes protégées
+- Gérer états de chargement et erreurs
+- Le catalogue d'objets reste dans le fichier front (ne passe pas par l'API)
+
+Critère de réussite : créer un déménagement, rafraîchir la page, il est toujours là.
+
+### ⬜ ÉTAPE 8 — Tests unitaires (Vitest)
+
+**But** : exigence cahier des charges ("tester les comportements anormaux").
+
+À faire :
+
+- Installer `vitest` (dev)
+- Tester en priorité les fonctions de calcul (volume, cartons, budget) — elles sont pures, faciles à tester
+- Se concentrer sur les cas anormaux : inventaire vide, valeurs négatives, données manquantes
+- Ne pas viser 100% de couverture : une dizaine de tests pertinents suffit
+
+Critère de réussite : `npm run test` tout en vert.
+
+### Ordre & dépendances
+
+```
+1 Serveur → 2 BDD → 3 Auth → 4 CRUD → 5 Middlewares → 6 Swagger → 7 Connexion front-back
+8 Tests : en parallèle dès que des fonctions existent
+```
+
+Tester chaque étape (Postman/Thunder Client pour les routes) avant de passer à la suivante.
 
 ---
 
@@ -432,65 +610,6 @@ demenagements (1) ──→ (N) checklist_items
 | **Norme Airbnb**           | Ensemble de règles de bonnes pratiques JS/React qu'ESLint applique                                                              |
 | **Prettier**               | Reformate automatiquement le style du code (espaces, guillemets...) à la sauvegarde, sans afficher d'erreur                     |
 | **eslint-config-prettier** | Désactive les règles de forme d'ESLint qui entreraient en conflit avec Prettier                                                 |
-
----
-
-## 💡 Améliorations prévues (backlog)
-
-> Idées validées à implémenter, dans l'ordre logique suggéré.
-
-### 1. CSS / Design (`config/css-variables`)
-
-- [x] Mettre toutes les variables CSS en anglais (déjà en anglais, confirmé)
-- [x] Ajouter les `font-weight` dans `theme.css` et remplacer les valeurs hardcodées dans tous les CSS
-- [x] Supprimer la barre de progression globale du header (inutile — la checklist a la sienne)
-- [x] Améliorations CSS du header (icône calendrier sortie du cadre, padding date wrapper aligné sur `.input`, couleur icône)
-- [x] Rendre le titre principal modifiable par l'utilisateur (input stylisé comme le h1, soulignement bleu au focus)
-
-### 2. Profil & Inventaire
-
-- [x] Ajouter le nombre de personnes aidantes (déménagement solo) → impact sur le temps estimé
-- [x] Case à cocher "mélanger les cartons entre pièces" → affiche les cartons par taille uniquement, réduit le nombre total par meilleur remplissage
-- [x] Créer plus de catégories d'objets (meubles, objets divers…)
-
-### 2b. Inventaire amélioré (`backlog/inventaire-ameliore`)
-
-- [x] **Barre de recherche** — champ texte qui filtre la liste d'objets en temps réel au fur et à mesure que l'utilisateur tape
-- [x] **"Autre objet"** — formulaire global (hors pièce) avec nom + hauteur × largeur × longueur (cm) → volume calculé automatiquement. L'objet est ajouté à `listeObjets` ou `listeEmballer` selon le type choisi (meuble ou objet à emballer + taille de carton). Ces listes sont des copies dynamiques de `OBJETS_PREDEFINIS` et `OBJETS_A_EMBALLER`.
-
-### 3. Calculs — déménagement professionnel
-
-- [x] Remplacer le calcul actuel par 3 formules au choix :
-  - **Économique** (transport seul) : 35–60 €/m³
-  - **Standard** (démontage/montage inclus) : 50–100 €/m³
-  - **Tout compris** (emballage + installation) : 60–160 €/m³
-- [x] Nouveau calcul de la distance (coût additif au coût volume) :
-
-| Distance   | Prix par km |
-| ---------- | ----------- |
-| 0–50 km    | 2,50 €/km   |
-| 51–200 km  | 2,00 €/km   |
-| 201–500 km | 1,70 €/km   |
-| > 500 km   | 1,40 €/km   |
-
-- [x] Majoration si parking non accessible : ×1.15 (même logique que l'étage sans ascenseur ×1.30) — champ `profil.parking` déjà présent dans `ProfilPanel.jsx` mais jusqu'ici jamais utilisé dans les calculs
-
-### 4. Tests unitaires — Étape 11 (`config/tests`)
-
-- [x] Installer Vitest (`npm install -D vitest`)
-- [x] Tests sur les fonctions de calcul (cas normaux)
-- [x] Tests sur les comportements anormaux : volume négatif, inventaire vide, distance invalide
-
-### 5. Fonctionnalités transverses — Étape 12 (`feature/transverses`)
-
-- [ ] Export PDF
-- [ ] Bouton Réinitialiser fonctionnel
-- [ ] Sauvegarde (localStorage ou backend)
-- [ ] Confirmation de suppression
-
-### 6. Accessibilité
-
-- [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
 
 ---
 

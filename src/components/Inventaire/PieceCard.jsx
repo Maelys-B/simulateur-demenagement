@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 
 export default function PieceCard({
   piece,
@@ -11,6 +12,7 @@ export default function PieceCard({
   onAjouterObjetAEmballer,
   onSupprimerObjetAEmballer,
 }) {
+  const [confirmation, setConfirmation] = useState(null);
   const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
   const [recherche, setRecherche] = useState('');
@@ -35,7 +37,15 @@ export default function PieceCard({
         <button
           className="btn-icon-danger"
           type="button"
-          onClick={() => onSupprimerPiece(piece.id)}
+          onClick={() =>
+            setConfirmation({
+              message: `Supprimer la pièce ${piece.nom} et tout son contenu ?`,
+              onConfirmer: () => {
+                onSupprimerPiece(piece.id);
+                setConfirmation(null);
+              },
+            })
+          }
         >
           <Trash2 size={18} />
         </button>
@@ -109,7 +119,15 @@ export default function PieceCard({
           <button
             className="btn-icon-danger"
             type="button"
-            onClick={() => onSupprimerObjet(piece.id, objet.id)}
+            onClick={() =>
+              setConfirmation({
+                message: `Supprimer l'objet ${objet.nom} ?`,
+                onConfirmer: () => {
+                  onSupprimerObjet(piece.id, objet.id);
+                  setConfirmation(null);
+                },
+              })
+            }
           >
             <Trash2 size={16} />
           </button>
@@ -184,12 +202,29 @@ export default function PieceCard({
           <button
             className="btn-icon-danger"
             type="button"
-            onClick={() => onSupprimerObjetAEmballer(piece.id, objet.id)}
+            onClick={() =>
+              setConfirmation({
+                message: `Supprimer l'objet ${objet.nom} ?`,
+                onConfirmer: () => {
+                  onSupprimerObjetAEmballer(piece.id, objet.id);
+                  setConfirmation(null);
+                },
+              })
+            }
           >
             <Trash2 size={16} />
           </button>
         </div>
       ))}
+
+      {confirmation && (
+        <ConfirmModal
+          titre="SUPPRESSION"
+          message={confirmation.message}
+          onConfirmer={confirmation.onConfirmer}
+          onAnnuler={() => setConfirmation(null)}
+        />
+      )}
     </div>
   );
 }

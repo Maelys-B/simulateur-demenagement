@@ -26,12 +26,12 @@
 
 .chk-card--late {
   border-color: #ffa2a2;
-  background-color: #fef2f2;
+  background-color: var(--color-bg-red-light);
 }
 
 .chk-card--urgent {
   border-color: #ffdf20;
-  background-color: #fefce8;
+  background-color: var(--color-bg-yellow-light);
 }
 
 .chk-card--done {
