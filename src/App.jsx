@@ -19,6 +19,7 @@ import {
 } from './utils/calculs';
 import { calculerTachesAvecDates, TACHES_PREDEFINIES } from './utils/checklist';
 import { genererPDF } from './utils/exportPDF';
+import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 
 function App() {
   const [ongletActif, setOngletActif] = useState('inventaire');
@@ -26,6 +27,7 @@ function App() {
   const [pieces, setPieces] = useState([]);
   const [formule, setFormule] = useState('economique');
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const [confirmation, setConfirmation] = useState(null);
   const [completes, setCompletes] = useState([]);
   const [tachesPerso, setTachesPerso] = useState([]);
   const [tachesPredefinies, setTachesPredefinies] = useState(TACHES_PREDEFINIES);
@@ -72,6 +74,25 @@ function App() {
 
   function toggleTheme() {
     setTheme(theme === 'light' ? 'dark' : 'light');
+  }
+
+  function reinitialiser() {
+    setTitre('Mon déménagement');
+    setPieces([]);
+    setFormule('economique');
+    setCompletes([]);
+    setTachesPerso([]);
+    setProfil({
+    type: 'solo',
+    distance: '',
+    etage: '',
+    ascenseur: false,
+    parking: false,
+    nbPersonnes: 1,
+    dateDemenagement: new Date().toISOString().split('T')[0],
+  });
+    setOngletActif('inventaire');
+    setTachesPredefinies(TACHES_PREDEFINIES)
   }
 
   function exporterPDF() {
@@ -132,7 +153,19 @@ function App() {
               <Download size={20} /> Exporter en PDF
             </span>
           </button>
-          <button className="btn btn-reset">
+          <button
+            className="btn btn-reset"
+            type="button"
+            onClick={() =>
+              setConfirmation({
+                message: `Voulez-vous tout réinitialiser ?`,
+                onConfirmer: () => {
+                  reinitialiser();
+                  setConfirmation(null);
+                },
+              })
+            }
+          >
             <span className="icon">
               <Trash2 size={20} /> Réinitialiser
             </span>
@@ -163,6 +196,15 @@ function App() {
         </div>
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>
+
+      {confirmation && (
+        <ConfirmModal
+          titre="SUPPRESSION"
+          message={confirmation.message}
+          onConfirmer={confirmation.onConfirmer}
+          onAnnuler={() => setConfirmation(null)}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Calendar, Check, ClipboardList, ListPlus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { calculerTachesAvecDates } from '../../utils/checklist';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import './Checklist.css';
 
 export default function Checklist({
@@ -12,6 +13,7 @@ export default function Checklist({
   tachesPredefinies,
   setTachesPredefinies,
 }) {
+  const [confirmation, setConfirmation] = useState(null);
   const [nouvelleTache, setNouvelleTache] = useState({
     titre: '',
     description: '',
@@ -94,7 +96,15 @@ export default function Checklist({
                   <span className={`chk-item-type chk-item-type--${tache.type}`}>{tache.type}</span>
                   <button
                     className="btn-icon-danger"
-                    onClick={() => supprimerTache(tache.id, tache.personnalisee)}
+                    onClick={() =>
+                      setConfirmation({
+                        message: `Supprimer la tâche ${tache.titre} ?`,
+                        onConfirmer: () => {
+                          supprimerTache(tache.id, tache.personnalisee);
+                          setConfirmation(null);
+                        },
+                      })
+                    }
                   >
                     <Trash2 size={16} />
                   </button>
@@ -170,6 +180,15 @@ export default function Checklist({
           <Plus size={16} /> Ajouter
         </button>
       </div>
+
+      {confirmation && (
+        <ConfirmModal
+          titre="SUPPRESSION"
+          message={confirmation.message}
+          onConfirmer={confirmation.onConfirmer}
+          onAnnuler={() => setConfirmation(null)}
+        />
+      )}
     </div>
   );
 }
