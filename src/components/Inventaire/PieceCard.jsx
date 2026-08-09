@@ -37,6 +37,7 @@ export default function PieceCard({
         <button
           className="btn-icon-danger"
           type="button"
+          aria-label={`Supprimer la pièce ${piece.nom}`}
           onClick={() =>
             setConfirmation({
               message: `Supprimer la pièce ${piece.nom} et tout son contenu ?`,
@@ -52,11 +53,19 @@ export default function PieceCard({
       </div>
 
       <div className="inv-piece-add">
-        <div className="inv-recherche-wrapper">
+        <div
+          className="inv-recherche-wrapper"
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              setListeVisible(false);
+            }
+          }}
+        >
           <input
             type="text"
             className="input inv-recherche-input"
             placeholder="Rechercher un objet..."
+            aria-label="Rechercher un objet à ajouter"
             autoComplete="off"
             value={objetSelectionne ? objetSelectionne.nom : recherche}
             onChange={(e) => {
@@ -65,33 +74,39 @@ export default function PieceCard({
               setListeVisible(true);
             }}
             onFocus={() => setListeVisible(true)}
-            onBlur={() => setTimeout(() => setListeVisible(false), 150)}
           />
           {listeVisible && resultats.length > 0 && (
-            <ul className="inv-recherche-liste">
-              <div className="inv-recherche-liste-inner">
-                {resultats.map((o) => (
-                  <li
-                    key={o.nom}
-                    className="inv-recherche-item"
-                    onMouseDown={() => {
-                      setObjetSelectionne(o);
-                      setRecherche('');
-                      setListeVisible(false);
-                    }}
-                  >
-                    <span>{o.nom}</span>
-                    <span className="inv-recherche-volume">{o.volume} m³</span>
-                  </li>
-                ))}
-              </div>
-            </ul>
+            <div className="inv-recherche-liste">
+              <ul className="inv-recherche-liste-inner">
+                {resultats.map((o) => {
+                  const selectionner = () => {
+                    setObjetSelectionne(o);
+                    setRecherche('');
+                    setListeVisible(false);
+                  };
+                  return (
+                    <li key={o.nom}>
+                      <button
+                        type="button"
+                        className="inv-recherche-item"
+                        onMouseDown={selectionner}
+                        onClick={selectionner}
+                      >
+                        <span>{o.nom}</span>
+                        <span className="inv-recherche-volume">{o.volume} m³</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           )}
         </div>
         <input
           type="number"
           min="1"
           className="input"
+          aria-label="Quantité"
           value={quantite}
           onChange={(e) => setQuantite(Number(e.target.value))}
         />
@@ -119,6 +134,7 @@ export default function PieceCard({
           <button
             className="btn-icon-danger"
             type="button"
+            aria-label={`Supprimer l'objet ${objet.nom}`}
             onClick={() =>
               setConfirmation({
                 message: `Supprimer l'objet ${objet.nom} ?`,
@@ -135,11 +151,19 @@ export default function PieceCard({
       ))}
 
       <div className="inv-piece-add">
-        <div className="inv-recherche-wrapper">
+        <div
+          className="inv-recherche-wrapper"
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              setListeEmballerVisible(false);
+            }
+          }}
+        >
           <input
             type="text"
             className="input inv-recherche-input"
             placeholder="Rechercher un objet à emballer..."
+            aria-label="Rechercher un objet à emballer"
             autoComplete="off"
             value={objetAEmballerSelectionne ? objetAEmballerSelectionne.nom : rechercheEmballer}
             onChange={(e) => {
@@ -148,33 +172,39 @@ export default function PieceCard({
               setListeEmballerVisible(true);
             }}
             onFocus={() => setListeEmballerVisible(true)}
-            onBlur={() => setTimeout(() => setListeEmballerVisible(false), 150)}
           />
           {listeEmballerVisible && resultatsEmballer.length > 0 && (
-            <ul className="inv-recherche-liste">
-              <div className="inv-recherche-liste-inner">
-                {resultatsEmballer.map((o) => (
-                  <li
-                    key={o.nom}
-                    className="inv-recherche-item"
-                    onMouseDown={() => {
-                      setObjetAEmballerSelectionne(o);
-                      setRechercheEmballer('');
-                      setListeEmballerVisible(false);
-                    }}
-                  >
-                    <span>{o.nom}</span>
-                    <span className="inv-recherche-volume">{o.volume} m³</span>
-                  </li>
-                ))}
-              </div>
-            </ul>
+            <div className="inv-recherche-liste">
+              <ul className="inv-recherche-liste-inner">
+                {resultatsEmballer.map((o) => {
+                  const selectionner = () => {
+                    setObjetAEmballerSelectionne(o);
+                    setRechercheEmballer('');
+                    setListeEmballerVisible(false);
+                  };
+                  return (
+                    <li key={o.nom}>
+                      <button
+                        type="button"
+                        className="inv-recherche-item"
+                        onMouseDown={selectionner}
+                        onClick={selectionner}
+                      >
+                        <span>{o.nom}</span>
+                        <span className="inv-recherche-volume">{o.volume} m³</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           )}
         </div>
         <input
           type="number"
           min="1"
           className="input"
+          aria-label="Quantité à emballer"
           value={quantiteEmballer}
           onChange={(e) => setQuantiteEmballer(Number(e.target.value))}
         />
@@ -202,6 +232,7 @@ export default function PieceCard({
           <button
             className="btn-icon-danger"
             type="button"
+            aria-label={`Supprimer l'objet ${objet.nom}`}
             onClick={() =>
               setConfirmation({
                 message: `Supprimer l'objet ${objet.nom} ?`,

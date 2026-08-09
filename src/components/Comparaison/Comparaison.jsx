@@ -11,6 +11,23 @@ import {
 } from 'recharts';
 import './Comparaison.css';
 
+function LegendeAccessible({ payload }) {
+  return (
+    <ul className="comp-legend" aria-label="Légende du graphique">
+      {payload.map((entry) => (
+        <li key={entry.value} className="comp-legend-item">
+          <span
+            className="comp-legend-swatch"
+            style={{ backgroundColor: entry.color }}
+            aria-hidden="true"
+          />
+          {entry.value}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function Comparaison({ budgetSolo, budgetPro }) {
   const economie = Math.round(budgetPro.min - budgetSolo.min);
 
@@ -84,17 +101,24 @@ export default function Comparaison({ budgetSolo, budgetPro }) {
     <div>
       <div className="card">
         <h2 className="comp-title">Comparaison des budgets</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={donnees}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="categorie" />
-            <YAxis />
-            <Tooltip formatter={(value) => `${value} €`} />
-            <Legend />
-            <Bar dataKey="Solo" fill="#2563eb" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="Professionnel" fill="#16a34a" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <p className="sr-only">
+          Budget minimum : solo {Math.round(budgetSolo.min)} euros, professionnel{' '}
+          {Math.round(budgetPro.min)} euros. Budget maximum : solo {Math.round(budgetSolo.max)}{' '}
+          euros, professionnel {Math.round(budgetPro.max)} euros.
+        </p>
+        <div aria-hidden="true">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={donnees}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="categorie" />
+              <YAxis />
+              <Tooltip formatter={(value) => `${value} €`} />
+              <Legend content={<LegendeAccessible />} />
+              <Bar dataKey="Solo" fill="#2563eb" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Professionnel" fill="#16a34a" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
         <div className="comp-savings">
           <p className="comp-savings-title icon">
             <encart.Icone size={16} /> {encart.titre}

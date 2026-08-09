@@ -4,6 +4,12 @@ import { calculerTachesAvecDates } from '../../utils/checklist';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import './Checklist.css';
 
+const LABELS_TYPE = {
+  Resiliation: 'Résiliation',
+  Souscription: 'Souscription',
+  Demarche: 'Démarche',
+};
+
 export default function Checklist({
   profil,
   completes,
@@ -78,6 +84,10 @@ export default function Checklist({
           >
             <button
               className={`chk-checkbox ${completes.includes(tache.id) ? 'chk-checkbox--checked' : ''}`}
+              aria-label={
+                completes.includes(tache.id) ? `${tache.titre} — marquer comme terminée` : tache.titre
+              }
+              aria-pressed={completes.includes(tache.id)}
               onClick={() => toggleComplete(tache.id)}
             >
               {completes.includes(tache.id) && <Check size={14} color="#16a34a " strokeWidth={3} />}
@@ -93,9 +103,13 @@ export default function Checklist({
                   <span className="chk-item-description">{tache.description}</span>
                 </div>
                 <div className="icon">
-                  <span className={`chk-item-type chk-item-type--${tache.type}`}>{tache.type}</span>
+                  <span className={`chk-item-type chk-item-type--${tache.type}`}>
+                    <span className="sr-only">Type de tâche : </span>
+                    {LABELS_TYPE[tache.type] || tache.type}
+                  </span>
                   <button
                     className="btn-icon-danger"
+                    aria-label={`Supprimer ${tache.titre}`}
                     onClick={() =>
                       setConfirmation({
                         message: `Supprimer la tâche ${tache.titre} ?`,
@@ -120,10 +134,16 @@ export default function Checklist({
                   })}
                 </span>
                 {tache.enRetard && (
-                  <span className="chk-item-badge chk-item-badge--late">En retard</span>
+                  <span className="chk-item-badge chk-item-badge--late">
+                    <span className="sr-only">Statut : </span>
+                    En retard
+                  </span>
                 )}
                 {tache.enUrgence && (
-                  <span className="chk-item-badge chk-item-badge--urgent">Urgent</span>
+                  <span className="chk-item-badge chk-item-badge--urgent">
+                    <span className="sr-only">Statut : </span>
+                    Urgent
+                  </span>
                 )}
               </div>
             </div>
@@ -140,12 +160,14 @@ export default function Checklist({
           <input
             type="text"
             placeholder="Titre (ex: Prévenir la crèche)"
+            aria-label="Titre de la tâche"
             value={nouvelleTache.titre}
             onChange={(e) => setNouvelleTache({ ...nouvelleTache, titre: e.target.value })}
             className="input"
           />
           <textarea
             placeholder="Description (facultatif)"
+            aria-label="Description de la tâche"
             rows={2}
             value={nouvelleTache.description}
             onChange={(e) => setNouvelleTache({ ...nouvelleTache, description: e.target.value })}
@@ -161,6 +183,7 @@ export default function Checklist({
               type="date"
               min="2000-01-01"
               max="9999-12-31"
+              aria-label="Date limite de la tâche"
               value={nouvelleTache.dateLimite}
               onChange={(e) => setNouvelleTache({ ...nouvelleTache, dateLimite: e.target.value })}
               className="header-date"
@@ -168,6 +191,7 @@ export default function Checklist({
           </div>
           <select
             value={nouvelleTache.type}
+            aria-label="Type de tâche"
             onChange={(e) => setNouvelleTache({ ...nouvelleTache, type: e.target.value })}
             className="input"
           >

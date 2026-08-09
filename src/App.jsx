@@ -114,7 +114,7 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <div className="header-card">
+      <header className="header-card">
         <div>
           <h1 className="header-title">
             <span className="icon icon-title">
@@ -123,6 +123,9 @@ function App() {
                 className="header-title-input"
                 contentEditable
                 suppressContentEditableWarning
+                role="textbox"
+                aria-label="Titre du déménagement, modifiable"
+                tabIndex={0}
                 onBlur={(e) => setTitre(e.currentTarget.textContent)}
               >
                 {titre}
@@ -137,6 +140,7 @@ function App() {
                 min="2000-01-01"
                 max="9999-12-31"
                 className="header-date"
+                aria-label="Date de déménagement"
                 value={profil.dateDemenagement}
                 onChange={(e) => setProfil({ ...profil, dateDemenagement: e.target.value })}
               />
@@ -145,7 +149,7 @@ function App() {
         </div>
 
         <div className="header-actions">
-          <button className="btn-theme-toggle" type="button" onClick={toggleTheme}>
+          <button className="btn-theme-toggle" type="button" onClick={toggleTheme} aria-label="Changer de thème">
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
           </button>
           <button className="btn btn-pdf" type="button" onClick={exporterPDF}>
@@ -171,10 +175,10 @@ function App() {
             </span>
           </button>
         </div>
-      </div>
+      </header>
       <Navigation ongletActif={ongletActif} setOngletActif={setOngletActif} />
       <div className="app-content">
-        <div className="app-main">
+        <main className="app-main">
           {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
           {ongletActif === 'calculs' && (
             <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />
@@ -193,7 +197,7 @@ function App() {
               setTachesPredefinies={setTachesPredefinies}
             />
           )}
-        </div>
+        </main>
         <ProfilPanel profil={profil} setProfil={setProfil} />
       </div>
 
