@@ -8,7 +8,7 @@ export default function ProfilPanel({ profil, setProfil }) {
   }
 
   return (
-    <form className="profil-panel">
+    <form className="profil-panel" aria-label="Profil du déménagement">
       <h2 className="profil-title icon">
         {' '}
         <User size={20} /> Mon profil

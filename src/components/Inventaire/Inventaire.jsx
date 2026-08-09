@@ -147,11 +147,13 @@ export default function Inventaire({ pieces, setPieces }) {
             <input
               className="input"
               placeholder="Nom de l'objet"
+              aria-label="Nom de l'objet personnalisé"
               value={persoNom}
               onChange={(e) => setPersoNom(e.target.value)}
             />
             <select
               className="input"
+              aria-label="Type d'objet"
               value={persoType}
               onChange={(e) => setPersoType(e.target.value)}
             >
@@ -162,6 +164,7 @@ export default function Inventaire({ pieces, setPieces }) {
           {persoType === 'emballer' && (
             <select
               className="input"
+              aria-label="Taille de carton"
               value={persoCarton}
               onChange={(e) => setPersoCarton(e.target.value)}
             >
@@ -177,6 +180,7 @@ export default function Inventaire({ pieces, setPieces }) {
             type="number"
             min="0"
             placeholder="Hauteur (cm)"
+            aria-label="Hauteur en centimètres"
             value={persoH}
             onChange={(e) => setPersoH(e.target.value)}
           />
@@ -185,6 +189,7 @@ export default function Inventaire({ pieces, setPieces }) {
             type="number"
             min="0"
             placeholder="Largeur (cm)"
+            aria-label="Largeur en centimètres"
             value={persoL}
             onChange={(e) => setPersoL(e.target.value)}
           />
@@ -193,6 +198,7 @@ export default function Inventaire({ pieces, setPieces }) {
             type="number"
             min="0"
             placeholder="Longueur (cm)"
+            aria-label="Longueur en centimètres"
             value={persol}
             onChange={(e) => setPersol(e.target.value)}
           />
