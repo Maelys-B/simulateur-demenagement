@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const verifierToken = require('../middleware/verifierToken');
 
 router.post('/register', async (req, res) => {
   try {
@@ -55,6 +56,10 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
   }
+});
+
+router.get('/profil', verifierToken, (req, res) => {
+  res.json({ message: 'Accès autorisé !', userId: req.userId });
 });
 
 module.exports = router;
