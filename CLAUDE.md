@@ -36,14 +36,14 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 
 | Module                   | Statut                                               |
 | ------------------------ | ---------------------------------------------------- |
-| Frontend                 | 🟡 En cours                                          |
-| Backend                  | ⬜ Pas commencé                                      |
-| Middleware               | ⬜ Pas commencé                                      |
-| Base de données (schéma) | 🟡 Réfléchi, pas encore créé                         |
+| Frontend                 | ✅ Terminé (accessibilité incluse)                   |
+| Backend                  | 🟡 En cours (Étapes 1 à 3 faites)                    |
+| Middleware               | ✅ `verifierToken` créé et testé                     |
+| Base de données (schéma) | ✅ Créée (`schema.sql`, pool `db.js`)                |
 | Documentation Swagger    | ⬜ Pas commencé                                      |
 | ESLint + Prettier        | ✅ Installé et configuré (mergé dans `main`)         |
 | Tests unitaires (Vitest) | ✅ Installé et configuré, `utils/calculs.js` couvert |
-| Authentification         | ⬜ Pas commencé                                      |
+| Authentification         | ✅ JWT (register/login/middleware) fait et testé     |
 
 ---
 
@@ -55,11 +55,11 @@ Webapp de simulation de déménagement (React / Node.js / MySQL) avec :
 | ---------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Environnement de dev + gestion de tests + framework + 2 langages | ✅ OK                      | VS Code + React = environnement/framework. **JavaScript + SQL** = les 2 langages. **Vitest** = outil de gestion de tests |
 | Bibliothèque de composants logiciels                             | ✅ OK                      | `lucide-react` (icônes), `recharts` (graphiques)                                                                         |
-| SGBD + langage associé                                           | ⬜ À faire                 | MySQL/MariaDB + SQL — confirmé comme 2e langage du projet                                                                |
+| SGBD + langage associé                                           | ✅ OK                      | MySQL/MariaDB + SQL — schéma créé, pool de connexion `db.js`                                                             |
 | Gestion de versions + suivi de problèmes                         | 🟡 Partiel                 | Git/GitHub ✅ — GitHub Issues à activer pour le suivi de problèmes                                                       |
 | Solution pour tester comportements anormaux                      | ✅ OK                      | **Vitest** — ex : volume négatif, inventaire vide, distance négative testés dans `calculs.test.js`                       |
 | 3 choix parmi 4 (client lourd / web / mobile / serveur)          | ✅ **Confirmé et complet** | 1. Web (React) — 2. Serveur (Node.js) — 3. Mobile (fait sur l'**autre projet**)                                          |
-| Authentification                                                 | ⬜ Prévu, pas codé         | JWT ou OAuth2.0                                                                                                          |
+| Authentification                                                 | ✅ OK                      | JWT — register/login (bcrypt) + middleware `verifierToken`                                                               |
 | Normes de code (ESLint Airbnb + Prettier)                        | ✅ OK                      | Voir section dédiée ci-dessous — mergé dans `main`                                                                       |
 
 **Plus aucun point bloquant en attente côté répartition des projets.** ✅
@@ -209,7 +209,7 @@ git branch -d nom-de-la-branche
 
 ### Branches en cours
 
-- `feature/tranverses` → en cours
+- `feature/routes-crud` → en cours
 
 ---
 
@@ -347,9 +347,17 @@ git branch -d nom-de-la-branche
 - [x] Confirmation de suppression — composant réutilisable `ConfirmModal`, branché sur la suppression de pièce/objet/tâche et sur le bouton Réinitialiser
 - [x] Mode sombre — variables CSS redéfinies sous `[data-theme='dark']` dans `theme.css`, toggle soleil/lune dans le Header, state persisté en `localStorage`. Couleurs codées en dur remplacées par des variables (`calc-card--*`, `chk-card--late/urgent`) pour rester lisibles dans les deux thèmes.
 
-### ⬜ Étape 13 — Accessibilité
+### ✅ Étape 13 — Accessibilité (TERMINÉE)
 
-- [ ] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
+- [x] Rendre le site accessible (aria-label, contrastes, navigation clavier, lecteurs d'écran)
+- [x] `aria-label` sur les boutons icône-seule et les champs sans `<label>`
+- [x] `.sr-only` pour le texte caché mais lisible (badges Checklist, résumé du graphique Comparaison)
+- [x] `ConfirmModal` : sémantique de dialogue complète (`role="dialog"`, focus trap, fermeture Échap)
+- [x] Recherche d'objets (`PieceCard`) : sélection utilisable au clavier, HTML valide
+- [x] Régions de page : `header`/`nav`/`main`/`form`, `aria-current` sur l'onglet actif
+- [x] `lang="fr"` sur `<html>`
+- [x] Testé en conditions réelles avec Narrator et NVDA
+- [x] Push + Pull Request + Merge dans `main`
 
 ---
 
@@ -372,29 +380,27 @@ Stack imposée : Node.js + Express, MySQL/MariaDB, JWT, Swagger. Tests avec Vite
 - Chaque route protégée filtre les données par `req.userId` (jamais les données d'autres utilisateurs).
 - Workflow Git : une branche par étape (`feature/...`), commits en Conventional Commits, PR avant merge dans `main`.
 
-### ⬜ ÉTAPE 1 — Setup serveur Node/Express
+### ✅ ÉTAPE 1 — Setup serveur Node/Express (TERMINÉE)
 
 **But** : socle fonctionnel sur lequel tout se construit.
 
-À faire :
+- [x] Dossier `server/`, `npm init -y`
+- [x] Installé : `express cors dotenv`, et en dev `nodemon`
+- [x] `server.js` : app Express, `cors()`, `express.json()`, route de test `GET /api/test`
+- [x] Script `"dev": "nodemon server.js"` dans package.json
+- [x] Variables sensibles dans `.env`
+- [x] Push + Pull Request + Merge dans `main`
 
-- Créer un dossier `server/`, `npm init -y`
-- Installer : `express cors dotenv`, et en dev `nodemon`
-- Créer `server.js` : app Express, `cors()`, `express.json()`, une route de test `GET /api/test`
-- Script `"dev": "nodemon server.js"` dans package.json
-- Variables sensibles dans `.env`
+Critère de réussite : `http://localhost:3000/api/test` renvoie un JSON de test. ✅
 
-Critère de réussite : `http://localhost:3000/api/test` renvoie un JSON de test.
-
-### ⬜ ÉTAPE 2 — Base de données MySQL/MariaDB
+### ✅ ÉTAPE 2 — Base de données MySQL/MariaDB (TERMINÉE)
 
 **But** : stockage permanent des données. Exigence cahier des charges (SGBD + SQL).
 
-À faire :
-
-- Créer la base et les tables (schéma ci-dessous)
-- Installer `mysql2`, créer `db.js` avec un pool de connexion lisant les variables `.env`
-- Toutes les clés étrangères en `ON DELETE CASCADE` (essentiel RGPD : supprimer un user supprime ses données liées)
+- [x] Base et tables créées (`server/database/schema.sql`)
+- [x] `mysql2` installé, `db.js` avec un pool de connexion lisant les variables `.env`
+- [x] Toutes les clés étrangères en `ON DELETE CASCADE`
+- [x] Push + Pull Request + Merge dans `main`
 
 Schéma des tables :
 
@@ -409,28 +415,27 @@ checklist_items (id, demenagement_id FK, titre, description, date_limite, type, 
 
 Rappel : le catalogue des ~500 objets prédéfinis RESTE dans un fichier frontend (donnée de référence statique), il ne va PAS en BDD. Seules les données créées par l'utilisateur sont persistées.
 
-Critère de réussite : une route de test lit la BDD sans erreur.
+Critère de réussite : une route de test lit la BDD sans erreur. ✅ (testée puis supprimée, comme convenu pour les routes jetables)
 
-### ⬜ ÉTAPE 3 — Authentification JWT
+### ✅ ÉTAPE 3 — Authentification JWT (TERMINÉE)
 
 **But** : sécuriser l'accès, chaque utilisateur ne voit que ses données. Exigence cahier des charges.
 
-À faire :
+- [x] `bcrypt jsonwebtoken` installés
+- [x] `POST /api/auth/register` : hache le mot de passe avec bcrypt, insère en BDD
+- [x] `POST /api/auth/login` : récupère l'user par email, compare avec `bcrypt.compare()`, génère un JWT (`jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' })`)
+- [x] Middleware `verifierToken` (`server/middleware/verifierToken.js`) : lit le token dans `Authorization: Bearer ...`, le vérifie, met `req.userId`, appelle `next()` ; sinon 401
+- [x] Push + Pull Request + Merge dans `main`
 
-- Installer `bcrypt jsonwebtoken`
-- `POST /auth/register` : valider le mot de passe (regex complexe ci-dessous), hacher avec bcrypt (`bcrypt.hash(mdp, 10)`), insérer en BDD
-- `POST /auth/login` : récupérer l'user par email, comparer avec `bcrypt.compare()`, si OK générer un JWT (`jwt.sign({ userId }, JWT_SECRET, { expiresIn: '24h' })`)
-- Middleware `verifierToken` : lit le token dans `Authorization: Bearer ...`, le vérifie, met `req.userId`, appelle `next()` ; sinon renvoie 401
-
-Regex mot de passe complexe (min 8 car, majuscule, minuscule, chiffre, spécial) :
+Regex mot de passe complexe (min 8 car, majuscule, minuscule, chiffre, spécial) — prévue, pas encore branchée sur `/register` :
 
 ```js
 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 ```
 
-Critère de réussite : inscription, connexion, réception d'un token, accès à une route protégée avec ce token.
+Critère de réussite : inscription, connexion, réception d'un token, accès à une route protégée avec ce token. ✅ (testé avec Thunder Client)
 
-### ⬜ ÉTAPE 4 — Routes API (CRUD)
+### 🟡 ÉTAPE 4 — Routes API (CRUD) — en cours (`feature/routes-crud`)
 
 **But** : cœur fonctionnel — créer/lire/modifier/supprimer les données utilisateur.
 
