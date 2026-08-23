@@ -3,9 +3,13 @@ const router = express.Router();
 const pool = require('../db');
 const verifierToken = require('../middleware/verifierToken');
 
-router.post('/', verifierToken, async (req, res) => {
+router.post('/', verifierToken, async (req, res, next) => {
   try {
     const { piece_id, nom, volume, quantite, type } = req.body;
+
+    if (!piece_id || !nom) {
+      return res.status(400).json({ erreur: 'piece_id et nom sont requis' });
+    }
 
     const [pieces] = await pool.query(
       `SELECT pieces.* FROM pieces
@@ -25,11 +29,11 @@ router.post('/', verifierToken, async (req, res) => {
 
     res.status(201).json({ message: 'Objet créé', id: result.insertId });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/', verifierToken, async (req, res) => {
+router.get('/', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       `SELECT objets_inventaire.* FROM objets_inventaire
@@ -41,11 +45,11 @@ router.get('/', verifierToken, async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/:id', verifierToken, async (req, res) => {
+router.get('/:id', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       `SELECT objets_inventaire.* FROM objets_inventaire
@@ -62,13 +66,17 @@ router.get('/:id', verifierToken, async (req, res) => {
 
     res.json(objet);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.put('/:id', verifierToken, async (req, res) => {
+router.put('/:id', verifierToken, async (req, res, next) => {
   try {
     const { nom, volume, quantite, type } = req.body;
+
+    if (!nom) {
+      return res.status(400).json({ erreur: 'nom est requis' });
+    }
 
     const [result] = await pool.query(
       `UPDATE objets_inventaire
@@ -85,11 +93,11 @@ router.put('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Objet modifié' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', verifierToken, async (req, res) => {
+router.delete('/:id', verifierToken, async (req, res, next) => {
   try {
     const [result] = await pool.query(
       `DELETE objets_inventaire FROM objets_inventaire
@@ -105,7 +113,7 @@ router.delete('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Objet supprimé' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 

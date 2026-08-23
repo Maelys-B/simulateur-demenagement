@@ -5,12 +5,21 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const verifierToken = require('../middleware/verifierToken');
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   try {
     const { email, mot_de_passe, nom } = req.body;
 
     if (!email || !mot_de_passe) {
       return res.status(400).json({ erreur: 'Email et mot de passe requis' });
+    }
+
+    const regexMotDePasse = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!regexMotDePasse.test(mot_de_passe)) {
+      return res.status(400).json({
+        erreur:
+          'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial',
+      });
     }
 
     const hash = await bcrypt.hash(mot_de_passe, 10);
@@ -22,11 +31,11 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ message: 'Compte créé avec succès' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   try {
     const { email, mot_de_passe } = req.body;
 
@@ -54,7 +63,7 @@ router.post('/login', async (req, res) => {
 
     res.json({ token });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 

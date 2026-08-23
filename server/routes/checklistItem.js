@@ -3,9 +3,13 @@ const router = express.Router();
 const pool = require('../db');
 const verifierToken = require('../middleware/verifierToken');
 
-router.post('/', verifierToken, async (req, res) => {
+router.post('/', verifierToken, async (req, res, next) => {
   try {
     const { demenagement_id, titre, description, date_limite, type, complete } = req.body;
+
+    if (!demenagement_id || !titre) {
+      return res.status(400).json({ erreur: 'demenagement_id et titre sont requis' });
+    }
 
     const [demenagements] = await pool.query(
       'SELECT * FROM demenagements WHERE id = ? AND user_id = ?',
@@ -23,11 +27,11 @@ router.post('/', verifierToken, async (req, res) => {
 
     res.status(201).json({ message: 'Tâche créée', id: result.insertId });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/', verifierToken, async (req, res) => {
+router.get('/', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       `SELECT checklist_items.* FROM checklist_items
@@ -38,11 +42,11 @@ router.get('/', verifierToken, async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/:id', verifierToken, async (req, res) => {
+router.get('/:id', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       `SELECT checklist_items.* FROM checklist_items
@@ -58,13 +62,17 @@ router.get('/:id', verifierToken, async (req, res) => {
 
     res.json(tache);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.put('/:id', verifierToken, async (req, res) => {
+router.put('/:id', verifierToken, async (req, res, next) => {
   try {
     const { titre, description, date_limite, type, complete } = req.body;
+
+    if (!titre) {
+      return res.status(400).json({ erreur: 'titre est requis' });
+    }
 
     const [result] = await pool.query(
       `UPDATE checklist_items
@@ -80,11 +88,11 @@ router.put('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Tâche modifiée' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', verifierToken, async (req, res) => {
+router.delete('/:id', verifierToken, async (req, res, next) => {
   try {
     const [result] = await pool.query(
       `DELETE checklist_items FROM checklist_items
@@ -99,7 +107,7 @@ router.delete('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Tâche supprimée' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 

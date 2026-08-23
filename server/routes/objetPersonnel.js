@@ -3,9 +3,13 @@ const router = express.Router();
 const pool = require('../db');
 const verifierToken = require('../middleware/verifierToken');
 
-router.post('/', verifierToken, async (req, res) => {
+router.post('/', verifierToken, async (req, res, next) => {
   try {
     const { nom, volume } = req.body;
+
+    if (!nom) {
+      return res.status(400).json({ erreur: 'nom est requis' });
+    }
 
     const [result] = await pool.query(
       'INSERT INTO objets_personnels (user_id, nom, volume) VALUES (?, ?, ?)',
@@ -14,21 +18,21 @@ router.post('/', verifierToken, async (req, res) => {
 
     res.status(201).json({ message: 'Objet créé', id: result.insertId });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/', verifierToken, async (req, res) => {
+router.get('/', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM objets_personnels WHERE user_id = ?', [req.userId]);
 
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.get('/:id', verifierToken, async (req, res) => {
+router.get('/:id', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query(
       'SELECT * FROM objets_personnels WHERE id = ? AND user_id = ?',
@@ -42,13 +46,17 @@ router.get('/:id', verifierToken, async (req, res) => {
 
     res.json(objet);
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.put('/:id', verifierToken, async (req, res) => {
+router.put('/:id', verifierToken, async (req, res, next) => {
   try {
     const { nom, volume } = req.body;
+
+    if (!nom) {
+      return res.status(400).json({ erreur: 'nom est requis' });
+    }
 
     const [result] = await pool.query(
       'UPDATE objets_personnels SET nom = ?, volume = ? WHERE id = ? AND user_id = ?',
@@ -61,11 +69,11 @@ router.put('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Objet modifié' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', verifierToken, async (req, res) => {
+router.delete('/:id', verifierToken, async (req, res, next) => {
   try {
     const [result] = await pool.query(
       'DELETE FROM objets_personnels WHERE id = ? AND user_id = ?',
@@ -78,7 +86,7 @@ router.delete('/:id', verifierToken, async (req, res) => {
 
     res.json({ message: 'Objet supprimé' });
   } catch (err) {
-    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
+    next(err);
   }
 });
 
