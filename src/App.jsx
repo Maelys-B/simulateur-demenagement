@@ -1,4 +1,4 @@
-import { Calendar, Download, Moon, Sun, Trash2, Truck } from 'lucide-react';
+import { Calendar, Download, LogOut, Moon, Sun, Trash2, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Calculs from './components/Calculs/Calculs';
 import Checklist from './components/Checklist/Checklist';
@@ -20,8 +20,12 @@ import {
 import { calculerTachesAvecDates, TACHES_PREDEFINIES } from './utils/checklist';
 import { genererPDF } from './utils/exportPDF';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
 
 function App() {
+  const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('token'));
+  const [pageAuth, setPageAuth] = useState('login');
   const [ongletActif, setOngletActif] = useState('inventaire');
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
@@ -76,6 +80,11 @@ function App() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }
 
+  function deconnexion() {
+    localStorage.removeItem('token');
+    setEstConnecte(false);
+  }
+
   function reinitialiser() {
     setTitre('Mon déménagement');
     setPieces([]);
@@ -110,6 +119,20 @@ function App() {
       taches: toutesLesTaches,
       completes,
     });
+  }
+
+  if (!estConnecte) {
+    return pageAuth === 'login' ? (
+      <Login
+        onConnexion={() => setEstConnecte(true)}
+        onAllerVersInscription={() => setPageAuth('register')}
+      />
+    ) : (
+      <Register
+        onInscription={() => setEstConnecte(true)}
+        onAllerVersConnexion={() => setPageAuth('login')}
+      />
+    );
   }
 
   return (
@@ -151,6 +174,9 @@ function App() {
         <div className="header-actions">
           <button className="btn-theme-toggle" type="button" onClick={toggleTheme} aria-label="Changer de thème">
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <button className="btn-theme-toggle" type="button" onClick={deconnexion} aria-label="Se déconnecter">
+            <LogOut size={20} />
           </button>
           <button className="btn btn-pdf" type="button" onClick={exporterPDF}>
             <span className="icon">
