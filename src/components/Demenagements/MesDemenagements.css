@@ -1,0 +1,45 @@
+.mes-demenagements {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow);
+}
+
+.mes-demenagements-erreur {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.mes-demenagements-form {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+}
+
+.mes-demenagements-liste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.mes-demenagements-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.mes-demenagements-select {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  text-align: left;
+  flex: 1;
+}

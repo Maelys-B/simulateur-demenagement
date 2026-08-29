@@ -22,10 +22,12 @@ import { genererPDF } from './utils/exportPDF';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import MesDemenagements from './components/Demenagements/MesDemenagements';
 
 function App() {
   const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('token'));
   const [pageAuth, setPageAuth] = useState('login');
+  const [demenagementId, setDemenagementId] = useState('');
   const [ongletActif, setOngletActif] = useState('inventaire');
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
@@ -83,6 +85,7 @@ function App() {
   function deconnexion() {
     localStorage.removeItem('token');
     setEstConnecte(false);
+    setDemenagementId('');
   }
 
   function reinitialiser() {
@@ -133,6 +136,10 @@ function App() {
         onAllerVersConnexion={() => setPageAuth('login')}
       />
     );
+  }
+
+  if (!demenagementId) {
+    return <MesDemenagements onSelectionner={setDemenagementId} />;
   }
 
   return (

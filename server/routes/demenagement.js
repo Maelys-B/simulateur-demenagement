@@ -76,7 +76,7 @@ router.get('/', verifierToken, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM demenagements WHERE user_id = ?', [req.userId]);
 
-    res.json({ rows });
+    res.json(rows);
   } catch (err) {
     next(err);
   }
