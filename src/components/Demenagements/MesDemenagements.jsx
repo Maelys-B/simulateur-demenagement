@@ -5,6 +5,7 @@ import { HandHelping } from 'lucide-react';
 export default function MesDemenagements({ onSelectionner }) {
   const [demenagements, setDemenagements] = useState([]);
   const [erreur, setErreur] = useState('');
+  const [nom, setNom] = useState('');
   const [dateDemenagement, setDateDemenagement] = useState('');
   const [typeProfil, setTypeProfil] = useState('solo');
 
@@ -41,7 +42,7 @@ export default function MesDemenagements({ onSelectionner }) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ date_demenagement: dateDemenagement, type_profil: typeProfil }),
+        body: JSON.stringify({ nom, date_demenagement: dateDemenagement, type_profil: typeProfil }),
       });
 
       const data = await reponse.json();
@@ -51,6 +52,7 @@ export default function MesDemenagements({ onSelectionner }) {
         return;
       }
 
+      setNom('');
       setDateDemenagement('');
       setTypeProfil('solo');
       chargerDemenagements();
@@ -59,7 +61,7 @@ export default function MesDemenagements({ onSelectionner }) {
     }
   }
 
-  async function modifierDemenagement(id, nouvelleDate, nouveauType) {
+  async function modifierDemenagement(id, nouveauNom, nouvelleDate, nouveauType) {
     try {
       const reponse = await fetch(`http://localhost:3000/api/demenagements/${id}`, {
         method: 'PUT',
@@ -67,7 +69,7 @@ export default function MesDemenagements({ onSelectionner }) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ date_demenagement: nouvelleDate, type_profil: nouveauType }),
+        body: JSON.stringify({ nom: nouveauNom, date_demenagement: nouvelleDate, type_profil: nouveauType }),
       });
 
       const data = await reponse.json();
@@ -111,21 +113,20 @@ export default function MesDemenagements({ onSelectionner }) {
 
       <form className="mes-demenagements-form" onSubmit={creerDemenagement}>
         <input
+          type="text"
+          className="input"
+          placeholder="Nom du déménagement"
+          value={nom}
+          onChange={(e) => setNom(e.target.value)}
+          required
+        />
+        <input
           type="date"
           className="input"
           value={dateDemenagement}
           onChange={(e) => setDateDemenagement(e.target.value)}
           required
         />
-        <select
-          className="input"
-          value={typeProfil}
-          onChange={(e) => setTypeProfil(e.target.value)}
-        >
-          <option value="solo">Solo</option>
-          <option value="plusieurs">Je me fais aider</option>
-          <option value="pro">Professionnel</option>
-        </select>
         <button type="submit" className="btn btn-primary">
           Créer
         </button>
@@ -139,13 +140,13 @@ export default function MesDemenagements({ onSelectionner }) {
               className="mes-demenagements-select"
               onClick={() => onSelectionner(d.id)}
             >
-              {d.date_demenagement} — {d.type_profil}
+              {d.nom} — {new Date(d.date_demenagement).toLocaleDateString('fr-FR')}
             </button>
             <button
               type="button"
               className="btn-icon-danger"
               onClick={() => supprimerDemenagement(d.id)}
-              aria-label={`Supprimer le déménagement du ${d.date_demenagement}`}
+              aria-label={`Supprimer ${d.nom}`}
             >
               Supprimer
             </button>

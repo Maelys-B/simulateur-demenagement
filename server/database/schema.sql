@@ -16,6 +16,7 @@ CREATE TABLE users (
 CREATE TABLE demenagements (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
+  nom VARCHAR(255) NOT NULL,
   date_demenagement DATE,
   type_profil VARCHAR(50),
   distance_km INT,
