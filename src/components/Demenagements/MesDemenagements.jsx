@@ -1,8 +1,8 @@
+import { LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import './MesDemenagements.css';
-import { HandHelping } from 'lucide-react';
 
-export default function MesDemenagements({ onSelectionner }) {
+export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
   const [demenagements, setDemenagements] = useState([]);
   const [erreur, setErreur] = useState('');
   const [nom, setNom] = useState('');
@@ -107,30 +107,18 @@ export default function MesDemenagements({ onSelectionner }) {
 
   return (
     <div className="mes-demenagements">
-      <h2>Mes déménagements</h2>
 
-      {erreur && <p className="mes-demenagements-erreur">{erreur}</p>}
-
-      <form className="mes-demenagements-form" onSubmit={creerDemenagement}>
-        <input
-          type="text"
-          className="input"
-          placeholder="Nom du déménagement"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          required
-        />
-        <input
-          type="date"
-          className="input"
-          value={dateDemenagement}
-          onChange={(e) => setDateDemenagement(e.target.value)}
-          required
-        />
-        <button type="submit" className="btn btn-primary">
-          Créer
+      <div className="mes-demenagements-header">
+        <h2>Mes déménagements</h2>
+        <button
+          type="button"
+          className="btn-theme-toggle"
+          onClick={onDeconnexion}
+          aria-label="Se déconnecter"
+        >
+          <LogOut size={20} />
         </button>
-      </form>
+      </div>
 
       <ul className="mes-demenagements-liste">
         {demenagements.map((d) => (
@@ -153,6 +141,37 @@ export default function MesDemenagements({ onSelectionner }) {
           </li>
         ))}
       </ul>
+
+      {erreur && <p className="mes-demenagements-erreur">{erreur}</p>}
+        
+        
+      <form className="mes-demenagements-form" onSubmit={creerDemenagement}>
+        <div className='mes-demenagements-date'> 
+          <h3>Commencer un nouvel déménagement</h3>
+          <input
+          type="text"
+          className="input"
+          placeholder="Nom du déménagement"
+          value={nom}
+          onChange={(e) => setNom(e.target.value)}
+          required
+        />
+        </div>
+        <div className='mes-demenagements-date'>
+        <label htmlFor='date'>Quand déménagez-vous ?</label>
+        <input
+          type="date"
+          className="input"
+          value={dateDemenagement}
+          onChange={(e) => setDateDemenagement(e.target.value)}
+          required
+        />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Créer
+        </button>
+      </form>
+
     </div>
   );
 }

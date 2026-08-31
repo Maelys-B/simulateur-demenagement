@@ -1,10 +1,17 @@
 .mes-demenagements {
   max-width: 600px;
   margin: 80px auto;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-xl);
   background: var(--color-bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--box-shadow);
+}
+
+.mes-demenagements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-base);
 }
 
 .mes-demenagements-erreur {
@@ -14,8 +21,9 @@
 
 .mes-demenagements-form {
   display: flex;
-  gap: var(--spacing-sm);
-  margin: var(--spacing-md) 0;
+  gap: var(--spacing-base);
+  margin: var(--spacing-lg) 0 var(--spacing-base) 0;
+  flex-direction: column;
 }
 
 .mes-demenagements-liste {
@@ -43,3 +51,10 @@
   text-align: left;
   flex: 1;
 }
+
+.mes-demenagements-date{
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md)
+}
+

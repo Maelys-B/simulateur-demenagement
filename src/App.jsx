@@ -139,7 +139,7 @@ function App() {
   }
 
   if (!demenagementId) {
-    return <MesDemenagements onSelectionner={setDemenagementId} />;
+    return <MesDemenagements onSelectionner={setDemenagementId} onDeconnexion={deconnexion} />;
   }
 
   return (
