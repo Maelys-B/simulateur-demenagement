@@ -1,5 +1,5 @@
 import { Calendar, Download, LogOut, Moon, Sun, Trash2, Truck } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Calculs from './components/Calculs/Calculs';
 import Checklist from './components/Checklist/Checklist';
 import Comparaison from './components/Comparaison/Comparaison';
@@ -27,7 +27,9 @@ import MesDemenagements from './components/Demenagements/MesDemenagements';
 function App() {
   const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('token'));
   const [pageAuth, setPageAuth] = useState('login');
-  const [demenagementId, setDemenagementId] = useState('');
+  const [demenagementId, setDemenagementId] = useState(
+    () => localStorage.getItem('demenagementId') || '',
+  );
   const [ongletActif, setOngletActif] = useState('inventaire');
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
@@ -82,8 +84,91 @@ function App() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }
 
+  function appliquerDemenagement(d) {
+    setTitre(d.nom);
+    setProfil({
+      type: d.type_profil || 'solo',
+      distance: d.distance_km ?? '',
+      etage: d.etage ?? '',
+      ascenseur: !!d.ascenseur,
+      parking: !!d.parking,
+      nbPersonnes: d.nb_personnes ?? 1,
+      dateDemenagement: d.date_demenagement.slice(0, 10),
+    });
+  }
+
+  function selectionnerDemenagement(d) {
+    setDemenagementId(d.id);
+    localStorage.setItem('demenagementId', d.id);
+    appliquerDemenagement(d);
+  }
+  useEffect(() => {
+    if (!demenagementId) return;
+
+    fetch(`http://localhost:3000/api/demenagements/${demenagementId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+      .then((reponse) => reponse.json())
+      .then((data) => {
+        if (!data.demenagement) {
+          localStorage.removeItem('demenagementId');
+          setDemenagementId('');
+          return;
+        }
+        appliquerDemenagement(data.demenagement);
+      })
+      .catch(() => {
+        localStorage.removeItem('demenagementId');
+        setDemenagementId('');
+      });
+  }, []);
+
+  async function sauvegarderDemenagement() {
+    try {
+      await fetch(`http://localhost:3000/api/demenagements/${demenagementId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          nom: titre,
+          date_demenagement: profil.dateDemenagement,
+          type_profil: profil.type,
+          distance_km: profil.distance,
+          etage: profil.etage,
+          ascenseur: profil.ascenseur,
+          parking: profil.parking,
+          nb_personnes: profil.nbPersonnes,
+        }),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const chargeInitiale = useRef(true);
+  const timeoutSauvegarde = useRef(null);
+
+  useEffect(() => {
+    if (!demenagementId) return;
+
+    if (chargeInitiale.current) {
+      chargeInitiale.current = false;
+      return;
+    }
+
+    clearTimeout(timeoutSauvegarde.current);
+    timeoutSauvegarde.current = setTimeout(() => {
+      sauvegarderDemenagement();
+    }, 1000);
+
+    return () => clearTimeout(timeoutSauvegarde.current);
+  }, [titre, profil]);
+
   function deconnexion() {
     localStorage.removeItem('token');
+    localStorage.removeItem('demenagementId');
     setEstConnecte(false);
     setDemenagementId('');
   }
@@ -139,7 +224,7 @@ function App() {
   }
 
   if (!demenagementId) {
-    return <MesDemenagements onSelectionner={setDemenagementId} onDeconnexion={deconnexion} />;
+    return <MesDemenagements onSelectionner={selectionnerDemenagement} onDeconnexion={deconnexion} />;
   }
 
   return (

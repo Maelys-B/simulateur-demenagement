@@ -7,7 +7,6 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
   const [erreur, setErreur] = useState('');
   const [nom, setNom] = useState('');
   const [dateDemenagement, setDateDemenagement] = useState('');
-  const [typeProfil, setTypeProfil] = useState('solo');
 
   useEffect(() => {
     chargerDemenagements();
@@ -42,7 +41,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ nom, date_demenagement: dateDemenagement, type_profil: typeProfil }),
+        body: JSON.stringify({ nom, date_demenagement: dateDemenagement }),
       });
 
       const data = await reponse.json();
@@ -52,10 +51,11 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
         return;
       }
 
-      setNom('');
-      setDateDemenagement('');
-      setTypeProfil('solo');
-      chargerDemenagements();
+      onSelectionner({
+        id: data.id,
+        nom,
+        date_demenagement: dateDemenagement,
+      });
     } catch (err) {
       setErreur('Erreur de connexion au serveur');
     }
@@ -126,7 +126,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
             <button
               type="button"
               className="mes-demenagements-select"
-              onClick={() => onSelectionner(d.id)}
+              onClick={() => onSelectionner(d)}
             >
               {d.nom} — {new Date(d.date_demenagement).toLocaleDateString('fr-FR')}
             </button>

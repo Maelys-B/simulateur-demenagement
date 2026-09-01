@@ -23,6 +23,7 @@ CREATE TABLE demenagements (
   etage INT,
   ascenseur BOOLEAN DEFAULT FALSE,
   parking BOOLEAN DEFAULT FALSE,
+  nb_personnes INT DEFAULT 1,
   date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

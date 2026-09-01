@@ -32,6 +32,8 @@ const verifierToken = require('../middleware/verifierToken');
  *                 type: boolean
  *               parking:
  *                 type: boolean
+ *               nb_personnes:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Déménagement créé
@@ -43,15 +45,15 @@ const verifierToken = require('../middleware/verifierToken');
 
 router.post('/', verifierToken, async (req, res, next) => {
   try {
-    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking } = req.body;
+    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes } = req.body;
 
     if (!nom || !date_demenagement) {
       return res.status(400).json({ erreur: 'nom et date_demenagement sont requis' });
     }
 
     const [result] = await pool.query(
-      'INSERT INTO demenagements (user_id, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [req.userId, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking]
+      'INSERT INTO demenagements (user_id, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [req.userId, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes]
     );
 
     res.status(201).json({ message: 'Déménagement créé', id: result.insertId });
@@ -157,6 +159,8 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  *                 type: boolean
  *               parking:
  *                 type: boolean
+ *               nb_personnes:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Déménagement modifié
@@ -171,15 +175,15 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  */
 router.put('/:id', verifierToken, async (req, res, next) => {
   try {
-    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking } = req.body;
+    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes } = req.body;
 
     if (!nom || !date_demenagement) {
       return res.status(400).json({ erreur: 'nom et date_demenagement sont requis' });
     }
 
     const [result] = await pool.query(
-      'UPDATE demenagements SET nom = ?, date_demenagement = ?, type_profil = ?, distance_km = ?, etage = ?, ascenseur = ?, parking = ? WHERE id = ? AND user_id = ?',
-      [nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, req.params.id, req.userId]
+      'UPDATE demenagements SET nom = ?, date_demenagement = ?, type_profil = ?, distance_km = ?, etage = ?, ascenseur = ?, parking = ?, nb_personnes = ? WHERE id = ? AND user_id = ?',
+      [nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, req.params.id, req.userId]
     );
 
     if (result.affectedRows === 0) {
