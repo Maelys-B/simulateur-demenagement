@@ -97,10 +97,40 @@ function App() {
     });
   }
 
+  async function chargerInventaire(id) {
+    try {
+      const [reponsePieces, reponseObjets] = await Promise.all([
+        fetch('http://localhost:3000/api/pieces', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        }),
+        fetch('http://localhost:3000/api/objets', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        }),
+      ]);
+
+      const piecesData = await reponsePieces.json();
+      const objetsData = await reponseObjets.json();
+
+      const piecesDuDemenagement = piecesData.filter((p) => p.demenagement_id === id);
+
+      const piecesReconstruites = piecesDuDemenagement.map((p) => ({
+        id: p.id,
+        nom: p.nom,
+        objets: objetsData.filter((o) => o.piece_id === p.id && o.type === 'meuble'),
+        objetsAEmballer: objetsData.filter((o) => o.piece_id === p.id && o.type === 'emballer'),
+      }));
+
+      setPieces(piecesReconstruites);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function selectionnerDemenagement(d) {
     setDemenagementId(d.id);
     localStorage.setItem('demenagementId', d.id);
     appliquerDemenagement(d);
+    chargerInventaire(d.id);
   }
   useEffect(() => {
     if (!demenagementId) return;
@@ -116,6 +146,7 @@ function App() {
           return;
         }
         appliquerDemenagement(data.demenagement);
+        chargerInventaire(data.demenagement.id);
       })
       .catch(() => {
         localStorage.removeItem('demenagementId');
@@ -297,7 +328,9 @@ function App() {
       <Navigation ongletActif={ongletActif} setOngletActif={setOngletActif} />
       <div className="app-content">
         <main className="app-main">
-          {ongletActif === 'inventaire' && <Inventaire pieces={pieces} setPieces={setPieces} />}
+          {ongletActif === 'inventaire' && (
+            <Inventaire pieces={pieces} setPieces={setPieces} demenagementId={demenagementId} />
+          )}
           {ongletActif === 'calculs' && (
             <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />
           )}

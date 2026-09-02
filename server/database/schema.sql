@@ -42,6 +42,7 @@ CREATE TABLE objets_inventaire (
   volume DECIMAL(6,3),
   quantite INT DEFAULT 1,
   type VARCHAR(20) DEFAULT 'meuble',
+  carton VARCHAR(20),
   FOREIGN KEY (piece_id) REFERENCES pieces(id) ON DELETE CASCADE
 );
 
