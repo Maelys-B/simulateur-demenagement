@@ -1,5 +1,5 @@
 import { Package, PackagePlus, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Inventaire.css';
 import PieceCard from './PieceCard';
 import { OBJETS_A_EMBALLER, OBJETS_PREDEFINIS } from './listes';
@@ -14,6 +14,28 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
   const [persol, setPersol] = useState('');
   const [persoType, setPersoType] = useState('meuble');
   const [persoCarton, setPersoCarton] = useState('petit');
+
+  useEffect(() => {
+    chargerObjetsPersonnels();
+  }, []);
+
+  async function chargerObjetsPersonnels() {
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets-personnels', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      const data = await reponse.json();
+
+      const persoMeubles = data.filter((o) => o.type === 'meuble');
+      const persoEmballer = data.filter((o) => o.type === 'emballer');
+
+      setListeObjets([...OBJETS_PREDEFINIS, ...persoMeubles]);
+      setListeEmballer([...OBJETS_A_EMBALLER, ...persoEmballer]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   async function ajouterPiece(e) {
     e.preventDefault();
@@ -128,18 +150,44 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
       console.error(err);
     }
   }
-  function ajouterObjetPerso() {
-    const volume = (Number(persoH) * Number(persoL) * Number(persol)) / 1000000;
-    const nouvelObjet = { nom: persoNom, volume: Math.round(volume * 1000) / 1000 };
-    if (persoType === 'meuble') {
-      setListeObjets([...listeObjets, nouvelObjet]);
-    } else {
-      setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
+  async function ajouterObjetPerso() {
+    const volume = Math.round(((Number(persoH) * Number(persoL) * Number(persol)) / 1000000) * 1000) / 1000;
+
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets-personnels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          nom: persoNom,
+          volume,
+          type: persoType,
+          carton: persoType === 'emballer' ? persoCarton : null,
+        }),
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
+      }
+
+      const nouvelObjet = { id: data.id, nom: persoNom, volume };
+      if (persoType === 'meuble') {
+        setListeObjets([...listeObjets, nouvelObjet]);
+      } else {
+        setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
+      }
+      setPersoNom('');
+      setPersoH('');
+      setPersoL('');
+      setPersol('');
+    } catch (err) {
+      console.error(err);
     }
-    setPersoNom('');
-    setPersoH('');
-    setPersoL('');
-    setPersol('');
   }
 
   async function supprimerPiece(pieceId) {

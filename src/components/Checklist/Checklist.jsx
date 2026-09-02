@@ -1,6 +1,5 @@
 import { Calendar, Check, ClipboardList, ListPlus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { calculerTachesAvecDates } from '../../utils/checklist';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import './Checklist.css';
 
@@ -10,15 +9,7 @@ const LABELS_TYPE = {
   Demarche: 'Démarche',
 };
 
-export default function Checklist({
-  profil,
-  completes,
-  setCompletes,
-  tachesPerso,
-  setTachesPerso,
-  tachesPredefinies,
-  setTachesPredefinies,
-}) {
+export default function Checklist({ taches, setTaches, demenagementId }) {
   const [confirmation, setConfirmation] = useState(null);
   const [nouvelleTache, setNouvelleTache] = useState({
     titre: '',
@@ -27,39 +18,100 @@ export default function Checklist({
     type: 'Demarche',
   });
 
-  const toggleComplete = (id) => {
-    setCompletes((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
-  };
+  async function toggleComplete(tache) {
+    try {
+      await fetch(`http://localhost:3000/api/checklist/${tache.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          titre: tache.titre,
+          description: tache.description,
+          date_limite: tache.date_limite,
+          type: tache.type,
+          complete: !tache.complete,
+        }),
+      });
 
-  const supprimerTache = (id, personnalisee) => {
-    if (personnalisee) {
-      setTachesPerso((prev) => prev.filter((t) => t.id !== id));
-    } else {
-      setTachesPredefinies((prev) => prev.filter((t) => t.id !== id));
+      setTaches(taches.map((t) => (t.id === tache.id ? { ...t, complete: !t.complete } : t)));
+    } catch (err) {
+      console.error(err);
     }
-  };
+  }
 
-  const toutesLesTaches = calculerTachesAvecDates(tachesPredefinies, tachesPerso, profil);
-
-  const progression = Math.round((completes.length / toutesLesTaches.length) * 100);
-
-  function ajouterTache() {
+  async function ajouterTache() {
     if (!nouvelleTache.titre.trim() || !nouvelleTache.dateLimite) return;
 
-    setTachesPerso((prev) => [
-      ...prev,
-      {
-        id: `perso-${Date.now()}`,
-        titre: nouvelleTache.titre.trim(),
-        description: nouvelleTache.description.trim(),
-        dateEcheance: new Date(nouvelleTache.dateLimite),
-        type: nouvelleTache.type,
-        personnalisee: true,
-      },
-    ]);
+    try {
+      const reponse = await fetch('http://localhost:3000/api/checklist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          demenagement_id: demenagementId,
+          titre: nouvelleTache.titre.trim(),
+          description: nouvelleTache.description.trim(),
+          date_limite: nouvelleTache.dateLimite,
+          type: nouvelleTache.type,
+        }),
+      });
 
-    setNouvelleTache({ titre: '', description: '', dateLimite: '', type: 'Demarche' });
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
+      }
+
+      setTaches([
+        ...taches,
+        {
+          id: data.id,
+          titre: nouvelleTache.titre.trim(),
+          description: nouvelleTache.description.trim(),
+          date_limite: nouvelleTache.dateLimite,
+          dateEcheance: new Date(nouvelleTache.dateLimite),
+          type: nouvelleTache.type,
+          complete: false,
+        },
+      ]);
+
+      setNouvelleTache({ titre: '', description: '', dateLimite: '', type: 'Demarche' });
+    } catch (err) {
+      console.error(err);
+    }
   }
+
+  async function supprimerTache(id) {
+    try {
+      await fetch(`http://localhost:3000/api/checklist/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      setTaches(taches.filter((t) => t.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const now = new Date();
+  const tachesAffichees = [...taches]
+    .map((t) => {
+      const enRetard = t.dateEcheance < now;
+      const enUrgence =
+        !enRetard && t.dateEcheance <= new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      return { ...t, enRetard, enUrgence };
+    })
+    .sort((a, b) => a.dateEcheance - b.dateEcheance);
+
+  const nbCompletes = taches.filter((t) => t.complete).length;
+  const progression = taches.length > 0 ? Math.round((nbCompletes / taches.length) * 100) : 0;
+
   return (
     <div>
       <div className="card chk-header">
@@ -69,7 +121,7 @@ export default function Checklist({
             Checklist administrative
           </h2>
           <span className="chk-compteur">
-            {completes.length}/{toutesLesTaches.length} tâches complétées
+            {nbCompletes}/{taches.length} tâches complétées
           </span>
         </div>
         <div className="progress-bar-track">
@@ -77,27 +129,23 @@ export default function Checklist({
         </div>
       </div>
       <div className="card">
-        {toutesLesTaches.map((tache) => (
+        {tachesAffichees.map((tache) => (
           <div
             key={tache.id}
-            className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${completes.includes(tache.id) ? 'chk-card--done' : ''}`}
+            className={`chk-card ${tache.enRetard ? 'chk-card--late' : ''} ${tache.enUrgence ? 'chk-card--urgent' : ''} ${tache.complete ? 'chk-card--done' : ''}`}
           >
             <button
-              className={`chk-checkbox ${completes.includes(tache.id) ? 'chk-checkbox--checked' : ''}`}
-              aria-label={
-                completes.includes(tache.id) ? `${tache.titre} — marquer comme terminée` : tache.titre
-              }
-              aria-pressed={completes.includes(tache.id)}
-              onClick={() => toggleComplete(tache.id)}
+              className={`chk-checkbox ${tache.complete ? 'chk-checkbox--checked' : ''}`}
+              aria-label={tache.complete ? `${tache.titre} — marquer comme terminée` : tache.titre}
+              aria-pressed={tache.complete}
+              onClick={() => toggleComplete(tache)}
             >
-              {completes.includes(tache.id) && <Check size={14} color="#16a34a " strokeWidth={3} />}
+              {tache.complete && <Check size={14} color="#16a34a " strokeWidth={3} />}
             </button>
             <div className="chk-card-item">
               <div className="chk-section-badge">
                 <div className="chk-section-texte">
-                  <span
-                    className={`chk-item-title ${completes.includes(tache.id) ? 'chk-item-title--done' : ''}`}
-                  >
+                  <span className={`chk-item-title ${tache.complete ? 'chk-item-title--done' : ''}`}>
                     {tache.titre}
                   </span>
                   <span className="chk-item-description">{tache.description}</span>
@@ -114,7 +162,7 @@ export default function Checklist({
                       setConfirmation({
                         message: `Supprimer la tâche ${tache.titre} ?`,
                         onConfirmer: () => {
-                          supprimerTache(tache.id, tache.personnalisee);
+                          supprimerTache(tache.id);
                           setConfirmation(null);
                         },
                       })

@@ -1,5 +1,4 @@
 import { Clock, Euro, Package, Shuffle, Truck, Users } from 'lucide-react';
-import { useState } from 'react';
 import {
   FORMULES_PRO,
   PRIX_CARTONS,
@@ -15,8 +14,14 @@ import {
 } from '../../utils/calculs';
 import './Calculs.css';
 
-export default function Calculs({ pieces, profil, formule, setFormule }) {
-  const [melangerCartons, setMelangerCartons] = useState(false);
+export default function Calculs({
+  pieces,
+  profil,
+  formule,
+  setFormule,
+  melangerCartons,
+  setMelangerCartons,
+}) {
   const volumeTotal = calculerVolume(pieces);
   const volumeAEmballer = calculerVolumeAEmballer(pieces);
   const tailleCamion = determinerCamion(volumeTotal * 1.15);

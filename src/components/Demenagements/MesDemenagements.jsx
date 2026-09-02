@@ -1,5 +1,6 @@
 import { LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { TACHES_PREDEFINIES } from '../../utils/checklist';
 import './MesDemenagements.css';
 
 export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
@@ -31,6 +32,30 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
     }
   }
 
+  async function semerChecklist(demenagementIdCree, dateDemenagementChoisie) {
+    const requetes = TACHES_PREDEFINIES.map((tache) => {
+      const dateLimite = new Date(dateDemenagementChoisie);
+      dateLimite.setDate(dateLimite.getDate() - tache.joursAvant);
+
+      return fetch('http://localhost:3000/api/checklist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          demenagement_id: demenagementIdCree,
+          titre: tache.titre,
+          description: tache.description,
+          date_limite: dateLimite.toISOString().slice(0, 10),
+          type: tache.type,
+        }),
+      });
+    });
+
+    await Promise.all(requetes);
+  }
+
   async function creerDemenagement(e) {
     e.preventDefault();
 
@@ -50,6 +75,8 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
         setErreur(data.erreur);
         return;
       }
+
+      await semerChecklist(data.id, dateDemenagement);
 
       onSelectionner({
         id: data.id,

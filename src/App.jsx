@@ -17,7 +17,6 @@ import {
   determinerCamion,
   determinerPersonne,
 } from './utils/calculs';
-import { calculerTachesAvecDates, TACHES_PREDEFINIES } from './utils/checklist';
 import { genererPDF } from './utils/exportPDF';
 import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 import Login from './components/Auth/Login';
@@ -34,11 +33,10 @@ function App() {
   const [titre, setTitre] = useState('Mon déménagement');
   const [pieces, setPieces] = useState([]);
   const [formule, setFormule] = useState('economique');
+  const [melangerCartons, setMelangerCartons] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [confirmation, setConfirmation] = useState(null);
-  const [completes, setCompletes] = useState([]);
-  const [tachesPerso, setTachesPerso] = useState([]);
-  const [tachesPredefinies, setTachesPredefinies] = useState(TACHES_PREDEFINIES);
+  const [taches, setTaches] = useState([]);
   const [profil, setProfil] = useState({
     type: 'solo',
     distance: '',
@@ -73,8 +71,6 @@ function App() {
     profil.distance,
     profil.nbPersonnes,
   );
-  const toutesLesTaches = calculerTachesAvecDates(tachesPredefinies, tachesPerso, profil);
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -95,6 +91,8 @@ function App() {
       nbPersonnes: d.nb_personnes ?? 1,
       dateDemenagement: d.date_demenagement.slice(0, 10),
     });
+    setFormule(d.formule || 'economique');
+    setMelangerCartons(!!d.melanger_cartons);
   }
 
   async function chargerInventaire(id) {
@@ -126,11 +124,30 @@ function App() {
     }
   }
 
+  async function chargerChecklist(id) {
+    try {
+      const reponse = await fetch('http://localhost:3000/api/checklist', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      const data = await reponse.json();
+
+      const tachesDuDemenagement = data
+        .filter((t) => t.demenagement_id === id)
+        .map((t) => ({ ...t, dateEcheance: new Date(t.date_limite) }));
+
+      setTaches(tachesDuDemenagement);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function selectionnerDemenagement(d) {
     setDemenagementId(d.id);
     localStorage.setItem('demenagementId', d.id);
     appliquerDemenagement(d);
     chargerInventaire(d.id);
+    chargerChecklist(d.id);
   }
   useEffect(() => {
     if (!demenagementId) return;
@@ -147,6 +164,7 @@ function App() {
         }
         appliquerDemenagement(data.demenagement);
         chargerInventaire(data.demenagement.id);
+        chargerChecklist(data.demenagement.id);
       })
       .catch(() => {
         localStorage.removeItem('demenagementId');
@@ -171,6 +189,8 @@ function App() {
           ascenseur: profil.ascenseur,
           parking: profil.parking,
           nb_personnes: profil.nbPersonnes,
+          formule: formule,
+          melanger_cartons: melangerCartons,
         }),
       });
     } catch (err) {
@@ -195,7 +215,7 @@ function App() {
     }, 1000);
 
     return () => clearTimeout(timeoutSauvegarde.current);
-  }, [titre, profil]);
+  }, [titre, profil, formule, melangerCartons]);
 
   function deconnexion() {
     localStorage.removeItem('token');
@@ -208,8 +228,8 @@ function App() {
     setTitre('Mon déménagement');
     setPieces([]);
     setFormule('economique');
-    setCompletes([]);
-    setTachesPerso([]);
+    setMelangerCartons(false);
+    setTaches([]);
     setProfil({
     type: 'solo',
     distance: '',
@@ -220,7 +240,6 @@ function App() {
     dateDemenagement: new Date().toISOString().split('T')[0],
   });
     setOngletActif('inventaire');
-    setTachesPredefinies(TACHES_PREDEFINIES)
   }
 
   function exporterPDF() {
@@ -235,8 +254,7 @@ function App() {
       cartonsGlobal,
       budgetSolo,
       budgetPro,
-      taches: toutesLesTaches,
-      completes,
+      taches,
     });
   }
 
@@ -332,21 +350,20 @@ function App() {
             <Inventaire pieces={pieces} setPieces={setPieces} demenagementId={demenagementId} />
           )}
           {ongletActif === 'calculs' && (
-            <Calculs pieces={pieces} profil={profil} formule={formule} setFormule={setFormule} />
+            <Calculs
+              pieces={pieces}
+              profil={profil}
+              formule={formule}
+              setFormule={setFormule}
+              melangerCartons={melangerCartons}
+              setMelangerCartons={setMelangerCartons}
+            />
           )}
           {ongletActif === 'comparaison' && (
             <Comparaison budgetSolo={budgetSolo} budgetPro={budgetPro} />
           )}
           {ongletActif === 'check-list' && (
-            <Checklist
-              profil={profil}
-              completes={completes}
-              setCompletes={setCompletes}
-              tachesPerso={tachesPerso}
-              setTachesPerso={setTachesPerso}
-              tachesPredefinies={tachesPredefinies}
-              setTachesPredefinies={setTachesPredefinies}
-            />
+            <Checklist taches={taches} setTaches={setTaches} demenagementId={demenagementId} />
           )}
         </main>
         <ProfilPanel profil={profil} setProfil={setProfil} />

@@ -21,6 +21,10 @@ const verifierToken = require('../middleware/verifierToken');
  *                 type: string
  *               volume:
  *                 type: number
+ *               type:
+ *                 type: string
+ *               carton:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Objet créé
@@ -33,15 +37,15 @@ const verifierToken = require('../middleware/verifierToken');
  */
 router.post('/', verifierToken, async (req, res, next) => {
   try {
-    const { nom, volume } = req.body;
+    const { nom, volume, type, carton } = req.body;
 
     if (!nom) {
       return res.status(400).json({ erreur: 'nom est requis' });
     }
 
     const [result] = await pool.query(
-      'INSERT INTO objets_personnels (user_id, nom, volume) VALUES (?, ?, ?)',
-      [req.userId, nom, volume]
+      'INSERT INTO objets_personnels (user_id, nom, volume, type, carton) VALUES (?, ?, ?, ?, ?)',
+      [req.userId, nom, volume, type, carton]
     );
 
     res.status(201).json({ message: 'Objet créé', id: result.insertId });
@@ -138,6 +142,10 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  *                 type: string
  *               volume:
  *                 type: number
+ *               type:
+ *                 type: string
+ *               carton:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Objet modifié
@@ -152,15 +160,15 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  */
 router.put('/:id', verifierToken, async (req, res, next) => {
   try {
-    const { nom, volume } = req.body;
+    const { nom, volume, type, carton } = req.body;
 
     if (!nom) {
       return res.status(400).json({ erreur: 'nom est requis' });
     }
 
     const [result] = await pool.query(
-      'UPDATE objets_personnels SET nom = ?, volume = ? WHERE id = ? AND user_id = ?',
-      [nom, volume, req.params.id, req.userId]
+      'UPDATE objets_personnels SET nom = ?, volume = ?, type = ?, carton = ? WHERE id = ? AND user_id = ?',
+      [nom, volume, type, carton, req.params.id, req.userId]
     );
 
     if (result.affectedRows === 0) {
