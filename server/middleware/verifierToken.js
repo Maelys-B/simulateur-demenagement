@@ -12,7 +12,7 @@ function verifierToken(req, res, next) {
     req.userId = decode.userId;
     next();
   } catch {
-    return res.status(401).json({ erreur: 'Token invalide' });
+    return res.status(401).json({ erreur: 'Veuillez vous reconnecter' });
   }
 }
 

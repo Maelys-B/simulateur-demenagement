@@ -27,6 +27,8 @@ const verifierToken = require('../middleware/verifierToken');
  *                 type: integer
  *               type:
  *                 type: string
+ *               carton:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Objet créé
@@ -41,7 +43,7 @@ const verifierToken = require('../middleware/verifierToken');
  */
 router.post('/', verifierToken, async (req, res, next) => {
   try {
-    const { piece_id, nom, volume, quantite, type } = req.body;
+    const { piece_id, nom, volume, quantite, type, carton } = req.body;
 
     if (!piece_id || !nom) {
       return res.status(400).json({ erreur: 'piece_id et nom sont requis' });
@@ -59,8 +61,8 @@ router.post('/', verifierToken, async (req, res, next) => {
     }
 
     const [result] = await pool.query(
-      'INSERT INTO objets_inventaire (piece_id, nom, volume, quantite, type) VALUES (?, ?, ?, ?, ?)',
-      [piece_id, nom, volume, quantite, type]
+      'INSERT INTO objets_inventaire (piece_id, nom, volume, quantite, type, carton) VALUES (?, ?, ?, ?, ?, ?)',
+      [piece_id, nom, volume, quantite, type, carton]
     );
 
     res.status(201).json({ message: 'Objet créé', id: result.insertId });
@@ -170,6 +172,8 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  *                 type: integer
  *               type:
  *                 type: string
+ *               carton:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Objet modifié
@@ -184,7 +188,7 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  */
 router.put('/:id', verifierToken, async (req, res, next) => {
   try {
-    const { nom, volume, quantite, type } = req.body;
+    const { nom, volume, quantite, type, carton } = req.body;
 
     if (!nom) {
       return res.status(400).json({ erreur: 'nom est requis' });
@@ -194,9 +198,9 @@ router.put('/:id', verifierToken, async (req, res, next) => {
       `UPDATE objets_inventaire
       JOIN pieces ON objets_inventaire.piece_id = pieces.id
       JOIN demenagements ON pieces.demenagement_id = demenagements.id
-      SET objets_inventaire.nom = ?, objets_inventaire.volume = ?, objets_inventaire.quantite = ?, objets_inventaire.type = ?
+      SET objets_inventaire.nom = ?, objets_inventaire.volume = ?, objets_inventaire.quantite = ?, objets_inventaire.type = ?, objets_inventaire.carton = ?
       WHERE objets_inventaire.id = ? AND demenagements.user_id = ?`,
-      [nom, volume, quantite, type, req.params.id, req.userId]
+      [nom, volume, quantite, type, carton, req.params.id, req.userId]
     );
 
     if (result.affectedRows === 0) {

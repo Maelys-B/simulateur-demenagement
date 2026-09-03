@@ -20,7 +20,6 @@ export function genererPDF({
   budgetSolo,
   budgetPro,
   taches,
-  completes,
 }) {
   const doc = new jsPDF();
   let yPosition = 20;
@@ -172,7 +171,7 @@ export function genererPDF({
   yPosition += 8;
 
   const lignesTaches = taches.map((tache) => [
-    completes.includes(tache.id) ? 'X' : '',
+    tache.complete ? 'X' : '',
     tache.titre,
     tache.dateEcheance.toLocaleDateString('fr-FR'),
     LABELS_TYPE[tache.type] || tache.type,

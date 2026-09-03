@@ -1,10 +1,10 @@
 import { Package, PackagePlus, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Inventaire.css';
 import PieceCard from './PieceCard';
 import { OBJETS_A_EMBALLER, OBJETS_PREDEFINIS } from './listes';
 
-export default function Inventaire({ pieces, setPieces }) {
+export default function Inventaire({ pieces, setPieces, demenagementId }) {
   const [value, setValue] = useState('');
   const [listeObjets, setListeObjets] = useState(OBJETS_PREDEFINIS);
   const [listeEmballer, setListeEmballer] = useState(OBJETS_A_EMBALLER);
@@ -15,85 +15,233 @@ export default function Inventaire({ pieces, setPieces }) {
   const [persoType, setPersoType] = useState('meuble');
   const [persoCarton, setPersoCarton] = useState('petit');
 
-  function ajouterPiece(e) {
+  useEffect(() => {
+    chargerObjetsPersonnels();
+  }, []);
+
+  async function chargerObjetsPersonnels() {
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets-personnels', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      const data = await reponse.json();
+
+      const persoMeubles = data.filter((o) => o.type === 'meuble');
+      const persoEmballer = data.filter((o) => o.type === 'emballer');
+
+      setListeObjets([...OBJETS_PREDEFINIS, ...persoMeubles]);
+      setListeEmballer([...OBJETS_A_EMBALLER, ...persoEmballer]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function ajouterPiece(e) {
     e.preventDefault();
-    if (value !== '') {
-      const nouvellePiece = { id: Date.now(), nom: value, objets: [], objetsAEmballer: [] };
+    if (value === '') return;
+
+    try {
+      const reponse = await fetch('http://localhost:3000/api/pieces', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ demenagement_id: demenagementId, nom: value }),
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
+      }
+
+      const nouvellePiece = { id: data.id, nom: value, objets: [], objetsAEmballer: [] };
       setPieces([nouvellePiece, ...pieces]);
       setValue('');
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  function ajouterObjet(pieceId, objetSelectionne, quantite) {
-    const nouvelObjet = {
-      id: Date.now(),
-      nom: objetSelectionne.nom,
-      volume: objetSelectionne.volume,
-      quantite,
-    };
-    setPieces(
-      pieces.map((piece) => {
-        if (piece.id === pieceId) return { ...piece, objets: [...piece.objets, nouvelObjet] };
-        return piece;
-      }),
-    );
-  }
+  async function ajouterObjet(pieceId, objetSelectionne, quantite) {
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          piece_id: pieceId,
+          nom: objetSelectionne.nom,
+          volume: objetSelectionne.volume,
+          quantite,
+          type: 'meuble',
+        }),
+      });
 
-  function ajouterObjetAEmballer(pieceId, objetAEmballerSelectionne, quantiteEmballer) {
-    const nouvelObjetAEmballer = {
-      id: Date.now(),
-      nom: objetAEmballerSelectionne.nom,
-      volume: objetAEmballerSelectionne.volume,
-      quantite: quantiteEmballer,
-      carton: objetAEmballerSelectionne.carton,
-    };
-    setPieces(
-      pieces.map((piece) => {
-        if (piece.id === pieceId)
-          return { ...piece, objetsAEmballer: [...piece.objetsAEmballer, nouvelObjetAEmballer] };
-        return piece;
-      }),
-    );
-  }
-  function ajouterObjetPerso() {
-    const volume = (Number(persoH) * Number(persoL) * Number(persol)) / 1000000;
-    const nouvelObjet = { nom: persoNom, volume: Math.round(volume * 1000) / 1000 };
-    if (persoType === 'meuble') {
-      setListeObjets([...listeObjets, nouvelObjet]);
-    } else {
-      setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
+      }
+
+      const nouvelObjet = {
+        id: data.id,
+        nom: objetSelectionne.nom,
+        volume: objetSelectionne.volume,
+        quantite,
+      };
+      setPieces(
+        pieces.map((piece) => {
+          if (piece.id === pieceId) return { ...piece, objets: [...piece.objets, nouvelObjet] };
+          return piece;
+        }),
+      );
+    } catch (err) {
+      console.error(err);
     }
-    setPersoNom('');
-    setPersoH('');
-    setPersoL('');
-    setPersol('');
   }
 
-  function supprimerPiece(pieceId) {
-    setPieces(pieces.filter((piece) => piece.id !== pieceId));
-  }
+  async function ajouterObjetAEmballer(pieceId, objetAEmballerSelectionne, quantiteEmballer) {
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          piece_id: pieceId,
+          nom: objetAEmballerSelectionne.nom,
+          volume: objetAEmballerSelectionne.volume,
+          quantite: quantiteEmballer,
+          type: 'emballer',
+          carton: objetAEmballerSelectionne.carton,
+        }),
+      });
 
-  function supprimerObjet(pieceId, objetID) {
-    const nouvellesPieces = pieces.map((piece) => {
-      if (piece.id === pieceId) {
-        return { ...piece, objets: piece.objets.filter((objet) => objet.id !== objetID) };
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
       }
-      return piece;
-    });
-    setPieces(nouvellesPieces);
+
+      const nouvelObjetAEmballer = {
+        id: data.id,
+        nom: objetAEmballerSelectionne.nom,
+        volume: objetAEmballerSelectionne.volume,
+        quantite: quantiteEmballer,
+        carton: objetAEmballerSelectionne.carton,
+      };
+      setPieces(
+        pieces.map((piece) => {
+          if (piece.id === pieceId)
+            return { ...piece, objetsAEmballer: [...piece.objetsAEmballer, nouvelObjetAEmballer] };
+          return piece;
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  async function ajouterObjetPerso() {
+    const volume = Math.round(((Number(persoH) * Number(persoL) * Number(persol)) / 1000000) * 1000) / 1000;
+
+    try {
+      const reponse = await fetch('http://localhost:3000/api/objets-personnels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          nom: persoNom,
+          volume,
+          type: persoType,
+          carton: persoType === 'emballer' ? persoCarton : null,
+        }),
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        console.error(data.erreur);
+        return;
+      }
+
+      const nouvelObjet = { id: data.id, nom: persoNom, volume };
+      if (persoType === 'meuble') {
+        setListeObjets([...listeObjets, nouvelObjet]);
+      } else {
+        setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
+      }
+      setPersoNom('');
+      setPersoH('');
+      setPersoL('');
+      setPersol('');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function supprimerObjetAEmballer(pieceId, objetID) {
-    const nouvellesPieces = pieces.map((piece) => {
-      if (piece.id === pieceId) {
-        return {
-          ...piece,
-          objetsAEmballer: piece.objetsAEmballer.filter((objet) => objet.id !== objetID),
-        };
-      }
-      return piece;
-    });
-    setPieces(nouvellesPieces);
+  async function supprimerPiece(pieceId) {
+    try {
+      await fetch(`http://localhost:3000/api/pieces/${pieceId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      setPieces(pieces.filter((piece) => piece.id !== pieceId));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function supprimerObjet(pieceId, objetID) {
+    try {
+      await fetch(`http://localhost:3000/api/objets/${objetID}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      const nouvellesPieces = pieces.map((piece) => {
+        if (piece.id === pieceId) {
+          return { ...piece, objets: piece.objets.filter((objet) => objet.id !== objetID) };
+        }
+        return piece;
+      });
+      setPieces(nouvellesPieces);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function supprimerObjetAEmballer(pieceId, objetID) {
+    try {
+      await fetch(`http://localhost:3000/api/objets/${objetID}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      const nouvellesPieces = pieces.map((piece) => {
+        if (piece.id === pieceId) {
+          return {
+            ...piece,
+            objetsAEmballer: piece.objetsAEmballer.filter((objet) => objet.id !== objetID),
+          };
+        }
+        return piece;
+      });
+      setPieces(nouvellesPieces);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (

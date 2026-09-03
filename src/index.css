@@ -16,10 +16,23 @@
   border: 0;
 }
 
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: var(--font-family);
   background-color: var(--color-bg);
   min-height: 100vh;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .app-wrapper {
@@ -94,6 +107,7 @@ body {
   color: var(--color-text);
   cursor: pointer;
   transition: background-color 0.2s;
+  padding: var(--spacing-base);
 }
 
 .btn-theme-toggle:hover {

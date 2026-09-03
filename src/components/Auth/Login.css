@@ -1,0 +1,53 @@
+.login-form {
+  max-width: 460px;
+  margin: 80px auto;
+  padding: var(--spacing-xl);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.login-mdp-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.login-mdp-wrapper .input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.login-mdp-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.login-erreur {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.login-lien {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
