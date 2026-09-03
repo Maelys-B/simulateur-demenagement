@@ -187,3 +187,9 @@
   margin-top: var(--spacing-xs);
   font-weight: var(--font-weight-regular);
 }
+
+@media (max-width: 600px) {
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -59,3 +59,16 @@
 .profil-title svg {
   color: var(--color-primary);
 }
+
+@media (max-width: 768px) {
+  .profil-panel {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .profil-panel {
+    padding: var(--spacing-sm) var(--spacing-md);
+    gap: 14px;
+  }
+}

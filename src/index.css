@@ -272,3 +272,85 @@ body::-webkit-scrollbar {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-sm);
 }
+
+@media (max-width: 960px) {
+  .app-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-wrapper {
+    padding: 20px 16px;
+  }
+
+  .header-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
+  .card {
+    padding: var(--spacing-md);
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 600px) {
+  .header-title {
+    font-size: 20px;
+  }
+
+  .icon-title {
+    gap: var(--spacing-sm) !important;
+  }
+
+  .header-title svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-actions svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-theme-toggle {
+    width: 40px;
+  }
+
+  .header-date-wrapper {
+    padding-right: 14px;
+  }
+
+  .form-ligne {
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-wrapper {
+    padding: 16px 12px;
+  }
+
+  .header-card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}

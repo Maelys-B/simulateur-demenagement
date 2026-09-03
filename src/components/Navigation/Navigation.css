@@ -36,3 +36,17 @@
   background-color: var(--color-primary);
   color: white;
 }
+
+@media (max-width: 480px) {
+  .nav-bar {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .nav-btn {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 2px;
+    font-size: var(--font-size-sm);
+  }
+}

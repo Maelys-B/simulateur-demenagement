@@ -67,3 +67,15 @@
   gap: var(--spacing-md)
 }
 
+@media (max-width: 600px) {
+  .mes-demenagements {
+    margin: 40px auto;
+    padding: var(--spacing-md);
+  }
+
+  .mes-demenagements-item {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+}
+
