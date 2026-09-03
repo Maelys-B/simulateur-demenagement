@@ -1,13 +1,15 @@
 import { LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TACHES_PREDEFINIES } from '../../utils/checklist';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import './MesDemenagements.css';
 
-export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
+export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPopup = false }) {
   const [demenagements, setDemenagements] = useState([]);
   const [erreur, setErreur] = useState('');
   const [nom, setNom] = useState('');
   const [dateDemenagement, setDateDemenagement] = useState('');
+  const [confirmation, setConfirmation] = useState(null);
 
   useEffect(() => {
     chargerDemenagements();
@@ -133,19 +135,21 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
   }
 
   return (
-    <div className="mes-demenagements">
+    <div className={dansPopup ? 'mes-demenagements mes-demenagements--popup' : 'mes-demenagements'}>
 
-      <div className="mes-demenagements-header">
-        <h2>Mes déménagements</h2>
-        <button
-          type="button"
-          className="btn-theme-toggle"
-          onClick={onDeconnexion}
-          aria-label="Se déconnecter"
-        >
-          <LogOut size={20} />
-        </button>
-      </div>
+      {!dansPopup && (
+        <div className="mes-demenagements-header">
+          <h2>Mes déménagements</h2>
+          <button
+            type="button"
+            className="btn-theme-toggle"
+            onClick={onDeconnexion}
+            aria-label="Se déconnecter"
+          >
+            <LogOut size={20} />
+          </button>
+        </div>
+      )}
 
       <ul className="mes-demenagements-liste">
         {demenagements.map((d) => (
@@ -160,7 +164,15 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
             <button
               type="button"
               className="btn-icon-danger"
-              onClick={() => supprimerDemenagement(d.id)}
+              onClick={() =>
+                setConfirmation({
+                  message: `Voulez-vous supprimer "${d.nom}" ?`,
+                  onConfirmer: () => {
+                    supprimerDemenagement(d.id);
+                    setConfirmation(null);
+                  },
+                })
+              }
               aria-label={`Supprimer ${d.nom}`}
             >
               Supprimer
@@ -198,6 +210,15 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion }) {
           Créer
         </button>
       </form>
+
+      {confirmation && (
+        <ConfirmModal
+          titre="SUPPRESSION"
+          message={confirmation.message}
+          onConfirmer={confirmation.onConfirmer}
+          onAnnuler={() => setConfirmation(null)}
+        />
+      )}
 
     </div>
   );
