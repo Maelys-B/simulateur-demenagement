@@ -99,11 +99,14 @@
 
 .chk-card-item {
   flex: 1;
+  min-width: 0;
 }
 
 .chk-section-texte {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .chk-checkbox {
@@ -181,4 +184,16 @@
 .chk-compteur {
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
+}
+
+@media (max-width: 600px) {
+  .chk-header-top {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .chk-section-badge {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
 }

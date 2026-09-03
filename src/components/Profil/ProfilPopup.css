@@ -80,6 +80,14 @@
   margin-bottom: var(--spacing-sm);
 }
 
+@media (max-width: 600px) {
+  .profil-popup {
+    margin-top: 40px;
+    max-height: calc(100vh - 80px);
+    padding: var(--spacing-md);
+  }
+}
+
 @keyframes profil-popup-fade-in {
   from {
     opacity: 0;

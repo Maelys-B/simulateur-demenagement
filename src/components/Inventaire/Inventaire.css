@@ -128,3 +128,22 @@
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-md);
 }
+
+@media (max-width: 600px) {
+  .inv-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-piece-add {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-piece-add .btn {
+    width: 100%;
+  }
+
+  .inv-objet {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+}

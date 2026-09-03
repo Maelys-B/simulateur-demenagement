@@ -51,3 +51,10 @@
   cursor: pointer;
   font-size: var(--font-size-sm);
 }
+
+@media (max-width: 600px) {
+  .login-form {
+    margin: 40px auto;
+    padding: var(--spacing-md);
+  }
+}
