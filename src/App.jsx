@@ -1,4 +1,4 @@
-import { Calendar, Download, LogOut, Moon, Sun, Trash2, Truck } from 'lucide-react';
+import { Calendar, Download, Trash2, Truck, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Calculs from './components/Calculs/Calculs';
 import Checklist from './components/Checklist/Checklist';
@@ -22,6 +22,7 @@ import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import MesDemenagements from './components/Demenagements/MesDemenagements';
+import ProfilPopup from './components/Profil/ProfilPopup';
 
 function App() {
   const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('token'));
@@ -36,6 +37,7 @@ function App() {
   const [melangerCartons, setMelangerCartons] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [confirmation, setConfirmation] = useState(null);
+  const [popupProfilOuvert, setPopupProfilOuvert] = useState(false);
   const [taches, setTaches] = useState([]);
   const [profil, setProfil] = useState({
     type: 'solo',
@@ -313,11 +315,13 @@ function App() {
         </div>
 
         <div className="header-actions">
-          <button className="btn-theme-toggle" type="button" onClick={toggleTheme} aria-label="Changer de thème">
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
-          <button className="btn-theme-toggle" type="button" onClick={deconnexion} aria-label="Se déconnecter">
-            <LogOut size={20} />
+          <button
+            className="btn-theme-toggle"
+            type="button"
+            onClick={() => setPopupProfilOuvert(true)}
+            aria-label="Ouvrir le profil"
+          >
+            <User size={20} />
           </button>
           <button className="btn btn-pdf" type="button" onClick={exporterPDF}>
             <span className="icon">
@@ -375,6 +379,16 @@ function App() {
           message={confirmation.message}
           onConfirmer={confirmation.onConfirmer}
           onAnnuler={() => setConfirmation(null)}
+        />
+      )}
+
+      {popupProfilOuvert && (
+        <ProfilPopup
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onDeconnexion={deconnexion}
+          onSelectionner={selectionnerDemenagement}
+          onFermer={() => setPopupProfilOuvert(false)}
         />
       )}
     </div>

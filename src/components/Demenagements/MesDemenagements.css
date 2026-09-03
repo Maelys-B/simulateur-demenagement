@@ -7,6 +7,15 @@
   box-shadow: var(--box-shadow);
 }
 
+.mes-demenagements--popup {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .mes-demenagements-header {
   display: flex;
   align-items: center;
