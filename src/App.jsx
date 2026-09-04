@@ -37,6 +37,7 @@ function App() {
   const [melangerCartons, setMelangerCartons] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [confirmation, setConfirmation] = useState(null);
+  const [annonce, setAnnonce] = useState('');
   const [popupProfilOuvert, setPopupProfilOuvert] = useState(false);
   const [taches, setTaches] = useState([]);
   const [profil, setProfil] = useState({
@@ -260,26 +261,33 @@ function App() {
     });
   }
 
+  let contenu;
+
   if (!estConnecte) {
-    return pageAuth === 'login' ? (
-      <Login
-        onConnexion={() => setEstConnecte(true)}
-        onAllerVersInscription={() => setPageAuth('register')}
-      />
-    ) : (
-      <Register
-        onInscription={() => setEstConnecte(true)}
-        onAllerVersConnexion={() => setPageAuth('login')}
+    contenu =
+      pageAuth === 'login' ? (
+        <Login
+          onConnexion={() => setEstConnecte(true)}
+          onAllerVersInscription={() => setPageAuth('register')}
+        />
+      ) : (
+        <Register
+          onInscription={() => setEstConnecte(true)}
+          onAllerVersConnexion={() => setPageAuth('login')}
+        />
+      );
+  } else if (!demenagementId) {
+    contenu = (
+      <MesDemenagements
+        onSelectionner={selectionnerDemenagement}
+        onDeconnexion={deconnexion}
+        onAnnoncer={setAnnonce}
       />
     );
-  }
-
-  if (!demenagementId) {
-    return <MesDemenagements onSelectionner={selectionnerDemenagement} onDeconnexion={deconnexion} />;
-  }
-
-  return (
+  } else {
+    contenu = (
     <div className="app-wrapper">
+      <div inert={popupProfilOuvert}>
       <header className="header-card">
         <div>
           <h1 className="header-title">
@@ -337,6 +345,7 @@ function App() {
                 onConfirmer: () => {
                   reinitialiser();
                   setConfirmation(null);
+                  setAnnonce('Vous avez réinitialisé le déménagement');
                 },
               })
             }
@@ -381,6 +390,7 @@ function App() {
           onAnnuler={() => setConfirmation(null)}
         />
       )}
+      </div>
 
       {popupProfilOuvert && (
         <ProfilPopup
@@ -389,9 +399,20 @@ function App() {
           onDeconnexion={deconnexion}
           onSelectionner={selectionnerDemenagement}
           onFermer={() => setPopupProfilOuvert(false)}
+          onAnnoncer={setAnnonce}
         />
       )}
     </div>
+    );
+  }
+
+  return (
+    <>
+      <p className="sr-only" role="status" aria-live="polite">
+        {annonce}
+      </p>
+      {contenu}
+    </>
   );
 }
 

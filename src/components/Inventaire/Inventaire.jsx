@@ -14,6 +14,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
   const [persol, setPersol] = useState('');
   const [persoType, setPersoType] = useState('meuble');
   const [persoCarton, setPersoCarton] = useState('petit');
+  const [annonce, setAnnonce] = useState('');
 
   useEffect(() => {
     chargerObjetsPersonnels();
@@ -60,6 +61,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
 
       const nouvellePiece = { id: data.id, nom: value, objets: [], objetsAEmballer: [] };
       setPieces([nouvellePiece, ...pieces]);
+      setAnnonce(`Vous avez ajouté la pièce ${value}`);
       setValue('');
     } catch (err) {
       console.error(err);
@@ -102,6 +104,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
           return piece;
         }),
       );
+      setAnnonce(`Vous avez ajouté ${objetSelectionne.nom}`);
     } catch (err) {
       console.error(err);
     }
@@ -146,6 +149,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
           return piece;
         }),
       );
+      setAnnonce(`Vous avez ajouté ${objetAEmballerSelectionne.nom} à emballer`);
     } catch (err) {
       console.error(err);
     }
@@ -181,6 +185,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
       } else {
         setListeEmballer([...listeEmballer, { ...nouvelObjet, carton: persoCarton }]);
       }
+      setAnnonce(`Vous avez ajouté ${persoNom} à la liste`);
       setPersoNom('');
       setPersoH('');
       setPersoL('');
@@ -190,7 +195,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
     }
   }
 
-  async function supprimerPiece(pieceId) {
+  async function supprimerPiece(pieceId, nomSupprime) {
     try {
       await fetch(`http://localhost:3000/api/pieces/${pieceId}`, {
         method: 'DELETE',
@@ -198,6 +203,7 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
       });
 
       setPieces(pieces.filter((piece) => piece.id !== pieceId));
+      setAnnonce(`Vous avez supprimé la pièce ${nomSupprime}`);
     } catch (err) {
       console.error(err);
     }
@@ -246,6 +252,9 @@ export default function Inventaire({ pieces, setPieces, demenagementId }) {
 
   return (
     <form onSubmit={ajouterPiece}>
+      <p className="sr-only" role="status" aria-live="polite">
+        {annonce}
+      </p>
       <div className="card inv-ajout">
         <label htmlFor="pièce" className="icon">
           <Package size={22} />

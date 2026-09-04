@@ -3,8 +3,20 @@ import { useEffect, useRef } from 'react';
 import MesDemenagements from '../Demenagements/MesDemenagements';
 import './ProfilPopup.css';
 
-export default function ProfilPopup({ theme, onToggleTheme, onDeconnexion, onSelectionner, onFermer }) {
+export default function ProfilPopup({
+  theme,
+  onToggleTheme,
+  onDeconnexion,
+  onSelectionner,
+  onFermer,
+  onAnnoncer,
+}) {
   const popupRef = useRef(null);
+  const fermerRef = useRef(null);
+
+  useEffect(() => {
+    fermerRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     function gererClicExterieur(e) {
@@ -33,10 +45,16 @@ export default function ProfilPopup({ theme, onToggleTheme, onDeconnexion, onSel
 
   return (
     <div className="profil-popup-overlay">
-      <div className="profil-popup" ref={popupRef} role="dialog" aria-label="Profil">
+      <div className="profil-popup" ref={popupRef} role="dialog" aria-modal="true" aria-label="Profil">
         <div className="profil-popup-header">
           <h2 className='icon'><User size={20} />Profil</h2>
-          <button type="button" className="btn-theme-toggle" onClick={onFermer} aria-label="Fermer">
+          <button
+            ref={fermerRef}
+            type="button"
+            className="btn-theme-toggle"
+            onClick={onFermer}
+            aria-label="Fermer"
+          >
             <X size={20} />
           </button>
         </div>
@@ -53,7 +71,7 @@ export default function ProfilPopup({ theme, onToggleTheme, onDeconnexion, onSel
         </div>
 
         <h3 className="profil-popup-soustitre">Mes déménagements</h3>
-        <MesDemenagements onSelectionner={selectionnerEtFermer} dansPopup />
+        <MesDemenagements onSelectionner={selectionnerEtFermer} dansPopup onAnnoncer={onAnnoncer} />
       </div>
     </div>
   );

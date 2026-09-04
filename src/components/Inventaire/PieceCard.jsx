@@ -13,6 +13,7 @@ export default function PieceCard({
   onSupprimerObjetAEmballer,
 }) {
   const [confirmation, setConfirmation] = useState(null);
+  const [annonce, setAnnonce] = useState('');
   const [objetSelectionne, setObjetSelectionne] = useState(null);
   const [quantite, setQuantite] = useState(1);
   const [recherche, setRecherche] = useState('');
@@ -32,6 +33,9 @@ export default function PieceCard({
 
   return (
     <div className="card inv-piece">
+      <p className="sr-only" role="status" aria-live="polite">
+        {annonce}
+      </p>
       <div className="inv-piece-header">
         <h3>{piece.nom}</h3>
         <button
@@ -42,7 +46,7 @@ export default function PieceCard({
             setConfirmation({
               message: `Supprimer la pièce ${piece.nom} et tout son contenu ?`,
               onConfirmer: () => {
-                onSupprimerPiece(piece.id);
+                onSupprimerPiece(piece.id, piece.nom);
                 setConfirmation(null);
               },
             })
@@ -141,6 +145,7 @@ export default function PieceCard({
                 onConfirmer: () => {
                   onSupprimerObjet(piece.id, objet.id);
                   setConfirmation(null);
+                  setAnnonce(`Vous avez supprimé l'objet ${objet.nom}`);
                 },
               })
             }
@@ -239,6 +244,7 @@ export default function PieceCard({
                 onConfirmer: () => {
                   onSupprimerObjetAEmballer(piece.id, objet.id);
                   setConfirmation(null);
+                  setAnnonce(`Vous avez supprimé l'objet ${objet.nom}`);
                 },
               })
             }

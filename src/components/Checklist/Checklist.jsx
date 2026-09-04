@@ -11,6 +11,7 @@ const LABELS_TYPE = {
 
 export default function Checklist({ taches, setTaches, demenagementId }) {
   const [confirmation, setConfirmation] = useState(null);
+  const [annonce, setAnnonce] = useState('');
   const [nouvelleTache, setNouvelleTache] = useState({
     titre: '',
     description: '',
@@ -80,13 +81,14 @@ export default function Checklist({ taches, setTaches, demenagementId }) {
         },
       ]);
 
+      setAnnonce(`Vous avez ajouté la tâche ${nouvelleTache.titre.trim()}`);
       setNouvelleTache({ titre: '', description: '', dateLimite: '', type: 'Demarche' });
     } catch (err) {
       console.error(err);
     }
   }
 
-  async function supprimerTache(id) {
+  async function supprimerTache(id, titreSupprime) {
     try {
       await fetch(`http://localhost:3000/api/checklist/${id}`, {
         method: 'DELETE',
@@ -94,6 +96,7 @@ export default function Checklist({ taches, setTaches, demenagementId }) {
       });
 
       setTaches(taches.filter((t) => t.id !== id));
+      setAnnonce(`Vous avez supprimé la tâche ${titreSupprime}`);
     } catch (err) {
       console.error(err);
     }
@@ -114,6 +117,9 @@ export default function Checklist({ taches, setTaches, demenagementId }) {
 
   return (
     <div>
+      <p className="sr-only" role="status" aria-live="polite">
+        {annonce}
+      </p>
       <div className="card chk-header">
         <div className="chk-header-top">
           <h2 className="icon chk-title">
@@ -162,7 +168,7 @@ export default function Checklist({ taches, setTaches, demenagementId }) {
                       setConfirmation({
                         message: `Supprimer la tâche ${tache.titre} ?`,
                         onConfirmer: () => {
-                          supprimerTache(tache.id);
+                          supprimerTache(tache.id, tache.titre);
                           setConfirmation(null);
                         },
                       })
