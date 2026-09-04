@@ -4,12 +4,22 @@ import { TACHES_PREDEFINIES } from '../../utils/checklist';
 import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import './MesDemenagements.css';
 
-export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPopup = false }) {
+function ordinal(n) {
+  return n === 1 ? '1er' : `${n}ème`;
+}
+
+export default function MesDemenagements({
+  onSelectionner,
+  onDeconnexion,
+  dansPopup = false,
+  onAnnoncer,
+}) {
   const [demenagements, setDemenagements] = useState([]);
   const [erreur, setErreur] = useState('');
   const [nom, setNom] = useState('');
   const [dateDemenagement, setDateDemenagement] = useState('');
   const [confirmation, setConfirmation] = useState(null);
+  const [annonce, setAnnonce] = useState('');
 
   useEffect(() => {
     chargerDemenagements();
@@ -80,6 +90,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
 
       await semerChecklist(data.id, dateDemenagement);
 
+      onAnnoncer?.(`Vous avez créé le déménagement ${nom}`);
       onSelectionner({
         id: data.id,
         nom,
@@ -114,7 +125,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
     }
   }
 
-  async function supprimerDemenagement(id) {
+  async function supprimerDemenagement(id, nomSupprime) {
     try {
       const reponse = await fetch(`http://localhost:3000/api/demenagements/${id}`, {
         method: 'DELETE',
@@ -129,6 +140,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
       }
 
       chargerDemenagements();
+      setAnnonce(`Vous avez supprimé le déménagement ${nomSupprime}`);
     } catch (err) {
       setErreur('Erreur de connexion au serveur');
     }
@@ -151,13 +163,18 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
         </div>
       )}
 
+      <p className="sr-only" role="status" aria-live="polite">
+        {annonce}
+      </p>
+
       <ul className="mes-demenagements-liste">
-        {demenagements.map((d) => (
+        {demenagements.map((d, index) => (
           <li key={d.id} className="mes-demenagements-item">
             <button
               type="button"
               className="mes-demenagements-select"
               onClick={() => onSelectionner(d)}
+              aria-label={`${ordinal(index + 1)} déménagement : ${d.nom}, ${new Date(d.date_demenagement).toLocaleDateString('fr-FR')}`}
             >
               {d.nom} — {new Date(d.date_demenagement).toLocaleDateString('fr-FR')}
             </button>
@@ -168,12 +185,12 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
                 setConfirmation({
                   message: `Voulez-vous supprimer "${d.nom}" ?`,
                   onConfirmer: () => {
-                    supprimerDemenagement(d.id);
+                    supprimerDemenagement(d.id, d.nom);
                     setConfirmation(null);
                   },
                 })
               }
-              aria-label={`Supprimer ${d.nom}`}
+              aria-label={`Supprimer le ${ordinal(index + 1)} déménagement : ${d.nom}`}
             >
               Supprimer
             </button>
@@ -186,7 +203,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
         
       <form className="mes-demenagements-form" onSubmit={creerDemenagement}>
         <div className='mes-demenagements-date'> 
-          <h3>Commencer un nouvel déménagement</h3>
+          <h3>Commencer un nouveau déménagement</h3>
           <input
           type="text"
           className="input"
@@ -194,6 +211,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
           value={nom}
           onChange={(e) => setNom(e.target.value)}
           required
+          aria-label='Entrer le nom du déménagement que vous souhaitez créer'
         />
         </div>
         <div className='mes-demenagements-date'>
@@ -204,6 +222,7 @@ export default function MesDemenagements({ onSelectionner, onDeconnexion, dansPo
           value={dateDemenagement}
           onChange={(e) => setDateDemenagement(e.target.value)}
           required
+          aria-label='Entrer la date du déménagement que vous souhaitez créer'
         />
         </div>
         <button type="submit" className="btn btn-primary">
