@@ -23,6 +23,9 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import MesDemenagements from './components/Demenagements/MesDemenagements';
 import ProfilPopup from './components/Profil/ProfilPopup';
+import { TACHES_PREDEFINIES } from './utils/checklist';
+
+const TITRES_TACHES_PREDEFINIES = new Set(TACHES_PREDEFINIES.map((t) => t.titre));
 
 function App() {
   const [estConnecte, setEstConnecte] = useState(!!localStorage.getItem('token'));
@@ -227,21 +230,41 @@ function App() {
     setDemenagementId('');
   }
 
-  function reinitialiser() {
-    setTitre('Mon déménagement');
+  async function reinitialiser() {
+    const tachesPerso = taches.filter((tache) => !TITRES_TACHES_PREDEFINIES.has(tache.titre));
+
+    try {
+      await Promise.all([
+        ...pieces.map((piece) =>
+          fetch(`http://localhost:3000/api/pieces/${piece.id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          }),
+        ),
+        ...tachesPerso.map((tache) =>
+          fetch(`http://localhost:3000/api/checklist/${tache.id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          }),
+        ),
+      ]);
+    } catch (err) {
+      console.error(err);
+    }
+
     setPieces([]);
     setFormule('economique');
     setMelangerCartons(false);
-    setTaches([]);
-    setProfil({
-    type: 'solo',
-    distance: '',
-    etage: '',
-    ascenseur: false,
-    parking: false,
-    nbPersonnes: 1,
-    dateDemenagement: new Date().toISOString().split('T')[0],
-  });
+    setTaches(taches.filter((tache) => TITRES_TACHES_PREDEFINIES.has(tache.titre)));
+    setProfil((profilActuel) => ({
+      type: 'solo',
+      distance: '',
+      etage: '',
+      ascenseur: false,
+      parking: false,
+      nbPersonnes: 1,
+      dateDemenagement: profilActuel.dateDemenagement,
+    }));
     setOngletActif('inventaire');
   }
 

@@ -164,6 +164,7 @@
 .calc-budget-value {
   font-size: var(--font-size-2xl);
   padding: var(--spacing-sm) 0 var(--spacing-xs);
+  color: var(--color-text);
 }
 
 .calc-budget-detail {
@@ -175,6 +176,7 @@
   cursor: pointer;
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-base);
+  color: var(--color-text);
 }
 
 .calc-melanger-label input {
