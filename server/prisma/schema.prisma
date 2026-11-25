@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  relationMode = "prisma"
+}
+
+model User {
+  id            Int               @id @default(autoincrement())
+  email         String            @unique @db.VarChar(190)
+  mot_de_passe  String            @db.VarChar(255)
+  nom           String?           @db.VarChar(255)
+  date_creation DateTime?         @default(now()) @db.DateTime(0)
+  demenagements Demenagement[]
+  objets_perso  ObjetPersonnel[]
+
+  @@map("users")
+}
+
+model Demenagement {
+  id                Int             @id @default(autoincrement())
+  user_id           Int
+  nom               String          @db.VarChar(255)
+  date_demenagement DateTime?       @db.Date
+  type_profil       String?         @db.VarChar(50)
+  distance_km       Int?
+  etage             Int?
+  ascenseur         Boolean?        @default(false)
+  parking           Boolean?        @default(false)
+  nb_personnes      Int?            @default(1)
+  formule           String?         @default("economique") @db.VarChar(20)
+  melanger_cartons  Boolean?        @default(false)
+  date_creation     DateTime?       @default(now()) @db.DateTime(0)
+  user              User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  pieces            Piece[]
+  checklist_items   ChecklistItem[]
+
+  @@index([user_id])
+  @@map("demenagements")
+}
+
+model Piece {
+  id              Int               @id @default(autoincrement())
+  demenagement_id Int
+  nom             String            @db.VarChar(255)
+  demenagement    Demenagement      @relation(fields: [demenagement_id], references: [id], onDelete: Cascade)
+  objets          ObjetInventaire[]
+
+  @@index([demenagement_id])
+  @@map("pieces")
+}
+
+model ObjetInventaire {
+  id       Int      @id @default(autoincrement())
+  piece_id Int
+  nom      String   @db.VarChar(255)
+  volume   Decimal? @db.Decimal(6, 3)
+  quantite Int?     @default(1)
+  type     String?  @default("meuble") @db.VarChar(20)
+  carton   String?  @db.VarChar(20)
+  piece    Piece    @relation(fields: [piece_id], references: [id], onDelete: Cascade)
+
+  @@index([piece_id])
+  @@map("objets_inventaire")
+}
+
+model ObjetPersonnel {
+  id      Int      @id @default(autoincrement())
+  user_id Int
+  nom     String   @db.VarChar(255)
+  volume  Decimal? @db.Decimal(6, 3)
+  type    String?  @default("meuble") @db.VarChar(20)
+  carton  String?  @db.VarChar(20)
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("objets_personnels")
+}
+
+model ChecklistItem {
+  id              Int          @id @default(autoincrement())
+  demenagement_id Int
+  titre           String       @db.VarChar(255)
+  description     String?      @db.Text
+  date_limite     DateTime?    @db.Date
+  type            String?      @default("demarche") @db.VarChar(50)
+  complete        Boolean?     @default(false)
+  demenagement    Demenagement @relation(fields: [demenagement_id], references: [id], onDelete: Cascade)
+
+  @@index([demenagement_id])
+  @@map("checklist_items")
+}

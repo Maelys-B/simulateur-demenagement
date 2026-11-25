@@ -1,7 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const pool = require('../db');
 const verifierToken = require('../middleware/verifierToken');
+const objetPersonnelController = require('../controllers/objetPersonnelController');
+
+const router = express.Router();
+
+router.use(verifierToken);
 
 /**
  * @swagger
@@ -35,24 +38,7 @@ const verifierToken = require('../middleware/verifierToken');
  *       500:
  *         description: Erreur serveur
  */
-router.post('/', verifierToken, async (req, res, next) => {
-  try {
-    const { nom, volume, type, carton } = req.body;
-
-    if (!nom) {
-      return res.status(400).json({ erreur: 'nom est requis' });
-    }
-
-    const [result] = await pool.query(
-      'INSERT INTO objets_personnels (user_id, nom, volume, type, carton) VALUES (?, ?, ?, ?, ?)',
-      [req.userId, nom, volume, type, carton]
-    );
-
-    res.status(201).json({ message: 'Objet créé', id: result.insertId });
-  } catch (err) {
-    next(err);
-  }
-});
+router.post('/', objetPersonnelController.creer);
 
 /**
  * @swagger
@@ -68,15 +54,7 @@ router.post('/', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/', verifierToken, async (req, res, next) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM objets_personnels WHERE user_id = ?', [req.userId]);
-
-    res.json(rows);
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/', objetPersonnelController.lister);
 
 /**
  * @swagger
@@ -100,23 +78,7 @@ router.get('/', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const [rows] = await pool.query(
-      'SELECT * FROM objets_personnels WHERE id = ? AND user_id = ?',
-      [req.params.id, req.userId]
-    );
-    const objet = rows[0];
-
-    if (!objet) {
-      return res.status(404).json({ erreur: 'Objet introuvable' });
-    }
-
-    res.json(objet);
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/:id', objetPersonnelController.trouver);
 
 /**
  * @swagger
@@ -158,28 +120,7 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.put('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const { nom, volume, type, carton } = req.body;
-
-    if (!nom) {
-      return res.status(400).json({ erreur: 'nom est requis' });
-    }
-
-    const [result] = await pool.query(
-      'UPDATE objets_personnels SET nom = ?, volume = ?, type = ?, carton = ? WHERE id = ? AND user_id = ?',
-      [nom, volume, type, carton, req.params.id, req.userId]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ erreur: 'Objet introuvable' });
-    }
-
-    res.json({ message: 'Objet modifié' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.put('/:id', objetPersonnelController.modifier);
 
 /**
  * @swagger
@@ -203,21 +144,6 @@ router.put('/:id', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.delete('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const [result] = await pool.query(
-      'DELETE FROM objets_personnels WHERE id = ? AND user_id = ?',
-      [req.params.id, req.userId]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ erreur: 'Objet introuvable' });
-    }
-
-    res.json({ message: 'Objet supprimé' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.delete('/:id', objetPersonnelController.supprimer);
 
 module.exports = router;

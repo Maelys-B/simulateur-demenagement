@@ -1,7 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const pool = require('../db');
 const verifierToken = require('../middleware/verifierToken');
+const demenagementController = require('../controllers/demenagementController');
+
+const router = express.Router();
+
+router.use(verifierToken);
 
 /**
  * @swagger
@@ -46,25 +49,7 @@ const verifierToken = require('../middleware/verifierToken');
  *       500:
  *         description: Erreur serveur
  */
-
-router.post('/', verifierToken, async (req, res, next) => {
-  try {
-    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, formule, melanger_cartons } = req.body;
-
-    if (!nom || !date_demenagement) {
-      return res.status(400).json({ erreur: 'nom et date_demenagement sont requis' });
-    }
-
-    const [result] = await pool.query(
-      'INSERT INTO demenagements (user_id, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, formule, melanger_cartons) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [req.userId, nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, formule, melanger_cartons]
-    );
-
-    res.status(201).json({ message: 'Déménagement créé', id: result.insertId });
-  } catch (err) {
-    next(err);
-  }
-});
+router.post('/', demenagementController.creer);
 
 /**
  * @swagger
@@ -80,15 +65,7 @@ router.post('/', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/', verifierToken, async (req, res, next) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM demenagements WHERE user_id = ?', [req.userId]);
-
-    res.json(rows);
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/', demenagementController.lister);
 
 /**
  * @swagger
@@ -113,20 +90,7 @@ router.get('/', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM demenagements WHERE id = ? AND user_id = ?', [req.params.id, req.userId]);
-    const demenagement = rows[0];
-
-    if (!demenagement) {
-      return res.status(404).json({ erreur: 'Erreur de chargement' });
-    }
-
-    res.json({demenagement});
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/:id', demenagementController.trouver);
 
 /**
  * @swagger
@@ -181,28 +145,7 @@ router.get('/:id', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.put('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const { nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, formule, melanger_cartons } = req.body;
-
-    if (!nom || !date_demenagement) {
-      return res.status(400).json({ erreur: 'nom et date_demenagement sont requis' });
-    }
-
-    const [result] = await pool.query(
-      'UPDATE demenagements SET nom = ?, date_demenagement = ?, type_profil = ?, distance_km = ?, etage = ?, ascenseur = ?, parking = ?, nb_personnes = ?, formule = ?, melanger_cartons = ? WHERE id = ? AND user_id = ?',
-      [nom, date_demenagement, type_profil, distance_km, etage, ascenseur, parking, nb_personnes, formule, melanger_cartons, req.params.id, req.userId]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ erreur: 'Erreur de chargement' });
-    }
-
-    res.json({ message: 'Changement effectué' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.put('/:id', demenagementController.modifier);
 
 /**
  * @swagger
@@ -226,18 +169,6 @@ router.put('/:id', verifierToken, async (req, res, next) => {
  *       500:
  *         description: Erreur serveur
  */
-router.delete('/:id', verifierToken, async (req, res, next) => {
-  try {
-    const [result] = await pool.query('DELETE FROM demenagements WHERE id = ? AND user_id = ?', [req.params.id, req.userId]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ erreur: 'Erreur de chargement' });
-    }
-
-    res.json({ message: 'Le déménagement est supprimé' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.delete('/:id', demenagementController.supprimer);
 
 module.exports = router;

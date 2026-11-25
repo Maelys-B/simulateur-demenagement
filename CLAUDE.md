@@ -209,7 +209,7 @@ git branch -d nom-de-la-branche
 
 ### Branches en cours
 
-- `feature/routes-crud` → en cours
+- `refactor/architecture-prisma` → en cours (architecture en couches + ORM Prisma)
 
 ---
 
@@ -508,6 +508,34 @@ Critère de réussite : créer un déménagement, rafraîchir la page, il est to
 - Ne pas viser 100% de couverture : une dizaine de tests pertinents suffit
 
 Critère de réussite : `npm run test` tout en vert.
+
+### 🟡 Refactor — Architecture en couches + ORM Prisma (`refactor/architecture-prisma`)
+
+**But** : séparer les responsabilités et ne plus écrire de SQL à la main dans les routes.
+
+```
+server/
+├── server.js            → point d'entrée (dotenv + app.listen)
+├── app.js               → config Express (cors, json, swagger, routes, gestion d'erreurs)
+├── config/prisma.js     → instance unique de PrismaClient (adapter MariaDB)
+├── prisma/schema.prisma → modèles = tables de la BDD (remplace les requêtes SQL)
+├── prisma.config.js     → config du CLI Prisma (URL de connexion depuis .env)
+├── routes/              → URL + méthode HTTP → contrôleur (+ doc Swagger)
+├── controllers/         → lit req, appelle le service, renvoie res
+├── services/            → logique métier : validation (400), propriété (404), bcrypt/JWT
+├── repositories/        → accès BDD via Prisma, filtré par userId
+├── middleware/          → verifierToken, gestionErreurs (centralisé)
+└── utils/               → HttpError, conversions (types JSON → Prisma), validation
+```
+
+Flux d'une requête : `route → (verifierToken) → controller → service → repository → Prisma → BDD`.
+Une erreur levée (`throw new HttpError(404, '...')`) remonte toute seule jusqu'à `gestionErreurs` (Express 5 gère les `async`, plus besoin de `try/catch` partout).
+
+- [x] Prisma 7 installé (`prisma`, `@prisma/client`, `@prisma/adapter-mariadb`), `mysql2` et `db.js` supprimés
+- [x] `schema.prisma` écrit pour correspondre aux tables existantes (vérifié avec `prisma db pull`) — aucune migration nécessaire
+- [x] `relationMode = "prisma"` : les tables sont en **MyISAM** (pas de clés étrangères réelles) → Prisma applique lui-même les `ON DELETE CASCADE`
+- [x] Réponses JSON identiques à l'ancienne API (le frontend ne change pas), sauf email déjà utilisé → 409 au lieu de 500
+- [x] Testé : CRUD complet + cas d'erreur (400/401/404/409) + suppression en cascade
 
 ### Ordre & dépendances
 
